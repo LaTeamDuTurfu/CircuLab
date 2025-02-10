@@ -1,7 +1,14 @@
+import sys
+import os
 import pygame
 import pygame_gui
-from game_code.modules import Tuile
-from game_code.modules import NewSaveWindow
+
+# Permet de charger les modules dans le dossier game_code
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(os.path.join(project_root, "game_code"))
+
+from modules import Tuile
+from modules import NewSaveWindow
 
 class Circulab():
     def __init__(self, height: int = 720, width: int = 1280):

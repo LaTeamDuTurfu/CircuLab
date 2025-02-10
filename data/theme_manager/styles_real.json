@@ -32,5 +32,77 @@
                 "path": "assets/other/btn_placeholder.png"
             }
         }
+    },
+    "#tool_tip_btn_1":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/black.png"
+            }
+        }
+    },
+    "#tool_tip_btn_2":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/blue.png"
+            }
+        }
+    },
+    "#tool_tip_btn_3":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/green.png"
+            }
+        }
+    },
+    "#tool_tip_btn_4":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/pink.png"
+            }
+        }
+    },
+    "#tool_tip_btn_5":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/red.png"
+            }
+        }
+    },
+    "#tool_tip_btn_6":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/orange.png"
+            }
+        }
+    },
+    "#tool_tip_btn_7":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/yellow.png"
+            }
+        }
+    },
+    "#tool_tip_btn_8":
+    {
+        "images":
+        {
+            "normal_image":{
+                "path": "assets/tile_images/white_A.png"
+            }
+        }
     }
 }
