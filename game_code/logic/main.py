@@ -65,7 +65,7 @@ class Circulab():
         self.new_save_window = NewSaveWindow(
             rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)),
             manager=self.manager,
-            default_path=".."
+            default_path="data/saves/[nom de la sauvegarde].json"
             )
 
         # Horloge (pour les FPS)
@@ -278,6 +278,3 @@ class Circulab():
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
                 self.world_data[self.y_pos][self.x_pos] = Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)
-
-game = Circulab()
-game.run()

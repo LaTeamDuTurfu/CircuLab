@@ -78,6 +78,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             container=self.window_container,
             object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#name_text_box"),
             anchors={"centerx": "centerx"},
+            placeholder_text=self.default_path
         )
 
         self.file_explorer_btn = pygame_gui.elements.UIButton(
@@ -111,3 +112,13 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         n_rows = self.rows_text_box.get_text()
         path = self.path_text_box.get_text()
         name = self.name_text_box.get_text()
+
+        save_data = {
+            "name": name,
+            "cols": n_cols,
+            "rows": n_rows,
+            "path": path
+        }
+
+        with open(path, "w") as file:
+            pass
