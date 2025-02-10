@@ -29,5 +29,5 @@ class Tuile(pygame.sprite.Sprite):
     def rotate_clockwise(self):
         self.image = pygame.transform.rotate(self.image, 90)
 
-    def update(self):
-        pass
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)

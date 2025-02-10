@@ -80,6 +80,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             anchors={"centerx": "centerx"},
             placeholder_text=self.default_path
         )
+        self.path_text_box.set_text = self.default_path
 
         self.file_explorer_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.path_text_box.get_relative_rect().width + self.window_container.get_relative_rect().width/16, self.path_text_box.get_relative_rect().y), (self.window_container.get_relative_rect().width/8, 50)),
@@ -97,6 +98,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#save_btn"),
             anchors={"centerx": "centerx"}
         )
+        self.save_btn.bind(pygame_gui.UI_BUTTON_PRESSED, self.save_new)
 
         self.cancel_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.window_container.get_relative_rect().width/4, self.path_text_box.get_relative_rect().y + self.path_text_box.get_relative_rect().height * 2), (self.window_container.get_relative_rect().width/4, 50)),
@@ -107,18 +109,28 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             anchors={"centerx": "centerx"}
         )
 
+    def check_correct_path(self):
+        path = self.path_text_box.get_text()
+        return os.path.exists(path)
+
     def save_new(self):
         n_cols = self.cols_text_box.get_text()
+        self.cols_text_box.set_text("")
+
         n_rows = self.rows_text_box.get_text()
+        self.rows_text_box.set_text("")
+
         path = self.path_text_box.get_text()
+
         name = self.name_text_box.get_text()
 
         save_data = {
             "name": name,
             "cols": n_cols,
             "rows": n_rows,
-            "path": path
+            "world_data": None
         }
 
-        with open(path, "w") as file:
-            pass
+        if self.check_correct_path():
+            with open(path, "w") as file:
+                pickle.dump(save_data, file)

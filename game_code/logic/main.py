@@ -141,7 +141,7 @@ class Circulab():
                 for x, tile in enumerate(row):
                     if tile.image != self.empty_tile:
                         tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
-                        self.screen.blit(tile.image, tile.rect) 
+                        tile.draw(self.screen)
 
     def traiter_inputs(self):
         """
