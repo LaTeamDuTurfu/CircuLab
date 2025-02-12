@@ -104,5 +104,12 @@
                 "path": "assets/tile_images/white_A.png"
             }
         }
-    }
+    },
+    "#error_label":
+    {
+        "colors":
+        {
+            "normal_text": "red"
+        }
+    } 
 }

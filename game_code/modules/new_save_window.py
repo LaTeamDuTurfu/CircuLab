@@ -2,11 +2,26 @@ import pygame
 import pygame_gui
 import pickle
 import os
+import sys
+
+# Permet de charger les modules dans le dossier game_code
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(os.path.join(project_root, "game_code"))
+
+from modules.partie import Partie
 
 class NewSaveWindow(pygame_gui.elements.UIWindow):
+
+    MIN_COLS = 100
+    MAX_COLS = 500
+    MIN_ROWS = 100
+    MAX_ROWS = 500
+
     def __init__(self, rect, manager, default_path):
         # UI Elements
         super().__init__(rect, manager, window_display_title="New Save", object_id="#new_save_window", resizable=False, draggable=True)
+        self.rect = rect
+        self.manager = manager
         self.default_path = default_path
         self.is_blocking = True
         self.window_container = pygame_gui.elements.UIAutoResizingContainer(relative_rect=pygame.Rect((0, 0), (rect.width, rect.height)), manager=manager, container=self, object_id="#new_save_window_container")
@@ -90,6 +105,14 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#file_explorer_btn")
         )
 
+        self.error_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, self.path_text_box.get_relative_rect().y + self.path_text_box.get_relative_rect().height), (self.window_container.get_relative_rect().width, 50)),
+            text="Error Message",
+            manager=manager,
+            container=self.window_container,
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#error_label"),
+            visible=False)
+
         self.save_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((-self.window_container.get_relative_rect().width/4, self.path_text_box.get_relative_rect().y + self.path_text_box.get_relative_rect().height * 2), (self.window_container.get_relative_rect().width/4, 50)),
             text="Créer",
@@ -109,28 +132,35 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             anchors={"centerx": "centerx"}
         )
 
-    def check_correct_path(self):
-        path = self.path_text_box.get_text()
-        return os.path.exists(path)
+    def show_error_msg(self, message):
+        self.error_label.set_text(message)
+        self.error_label.visible = True
 
     def save_new(self):
         n_cols = self.cols_text_box.get_text()
-        self.cols_text_box.set_text("")
-
         n_rows = self.rows_text_box.get_text()
-        self.rows_text_box.set_text("")
-
         path = self.path_text_box.get_text()
-
         name = self.name_text_box.get_text()
+
+        if n_cols == "" or n_rows == "" or path == "" or name == "":
+            self.show_error_msg("Veuillez remplir tous les champs")
+            return
+
+        if not (0 < int(n_cols) < self.MAX_COLS or 0 < int(n_rows) < self.MAX_ROWS):
+            self.show_error_msg(f"Le nombre de colonnes doit être entre {self.MIN_COLS} et {self.MAX_COLS}, puis le nombre de lignes entre {self.MIN_ROWS} et {self.MAX_ROWS}")
+            return
 
         save_data = {
             "name": name,
             "cols": n_cols,
             "rows": n_rows,
+            "path": path,
             "world_data": None
         }
 
-        if self.check_correct_path():
-            with open(path, "w") as file:
-                pickle.dump(save_data, file)
+        new_save = Partie(save_data)
+        if new_save.update_save():
+            print("Partie sauvegardée")
+        else:
+            self.show_error_msg("Le chemin de sauvegarde n'est pas correct")
+
