@@ -65,7 +65,7 @@ class Circulab():
         self.new_save_window = NewSaveWindow(
             rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)),
             manager=self.manager,
-            default_path="data/saves/[nom de la sauvegarde].json"
+            default_path="../Circulab/data/saves/"
             )
 
         # Horloge (pour les FPS)

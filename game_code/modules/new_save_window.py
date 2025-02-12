@@ -1,6 +1,5 @@
 import pygame
 import pygame_gui
-import pickle
 import os
 import sys
 
@@ -22,7 +21,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         super().__init__(rect, manager, window_display_title="New Save", object_id="#new_save_window", resizable=False, draggable=True)
         self.rect = rect
         self.manager = manager
-        self.default_path = default_path
+        self.path = default_path
         self.is_blocking = True
         self.window_container = pygame_gui.elements.UIAutoResizingContainer(relative_rect=pygame.Rect((0, 0), (rect.width, rect.height)), manager=manager, container=self, object_id="#new_save_window_container")
 
@@ -92,13 +91,11 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             manager=manager,
             container=self.window_container,
             object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#name_text_box"),
-            anchors={"centerx": "centerx"},
-            placeholder_text=self.default_path
+            anchors={"centerx": "centerx"}
         )
-        self.path_text_box.set_text = self.default_path
 
         self.file_explorer_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((self.path_text_box.get_relative_rect().width + self.window_container.get_relative_rect().width/16, self.path_text_box.get_relative_rect().y), (self.window_container.get_relative_rect().width/8, 50)),
+            relative_rect=pygame.Rect((self.path_text_box.get_relative_rect().width + self.window_container.get_relative_rect().width/16 + 5, self.path_text_box.get_relative_rect().y), (self.window_container.get_relative_rect().width/8, 50)),
             text="...",
             manager=manager,
             container=self.window_container,
@@ -132,6 +129,27 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             anchors={"centerx": "centerx"}
         )
 
+        self.file_explorer_btn.bind(pygame_gui.UI_BUTTON_PRESSED, self.open_file_explorer)
+
+    def open_file_explorer(self):
+        self.file_explorer_window = pygame_gui.windows.UIFileDialog(
+            rect=self.rect,
+            manager=self.manager,
+            visible=True,
+            window_title="Sélection de chemin de sauvegarde",
+            initial_file_path=self.path,
+            allow_picking_directories=True,
+            always_on_top=True
+        )
+
+        self.file_explorer_window.ok_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.set_new_path)
+
+    def set_new_path(self):
+        self.path = str(self.file_explorer_window.current_directory_path)
+        print(self.path)
+        self.path_text_box.set_text(self.path)
+        self.file_explorer_window.kill()
+
     def show_error_msg(self, message):
         self.error_label.set_text(message)
         self.error_label.visible = True
@@ -163,4 +181,6 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             print("Partie sauvegardée")
         else:
             self.show_error_msg("Le chemin de sauvegarde n'est pas correct")
+        
+        self.kill()
 
