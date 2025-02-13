@@ -72,15 +72,12 @@ class Circulab():
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
 
-        # Variable de jeu
+        # (temp)
         self.ROWS = 150
         self.COLUMNS = 150
         self.TILE_SIZE = 50
-        self.scrollx = (self.COLUMNS * self.TILE_SIZE) / 2  # Set le scroll x au milieu
-        self.scrolly = (self.ROWS * self.TILE_SIZE) / 2  # Set le scroll y au milieu
-        self.scroll_speed = 1
-        self.vertical_scroll = 0
-        self.horizontal_scroll = 0
+        
+        # Variable de jeu
         self.build_orientation = 0
         self.see_build_preview = False
         self.running = True
@@ -92,20 +89,26 @@ class Circulab():
 
         # Data
         self.tuiles = pygame.sprite.Group()
-        self.world_data = []
+        self.road_data = []
         for _ in range(self.ROWS):
             new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles)] * self.COLUMNS
-            self.world_data.append(new_tile)
+            self.road_data.append(new_tile)
 
         save_data = {
             "name": "Game_Test",
             "cols": 300,
             "rows": 300,
+            "tile_size": 64,
+            "scroll_x": 0,
+            "scroll_y": 0,
             "path": "../Circulab/data/saves/",
-            "world_data": self.world_data
+            "road_data": self.road_data
         }
         
         self.current_save = Partie(save_data)
+        
+        # Vérifie si une save est loaded
+        self.loaded_save = False
     
     def run(self):
         while self.running:
@@ -119,18 +122,19 @@ class Circulab():
 
             # Remplit le fond de couleur verte
             self.screen.fill(self.GREY)
+            
+            if self.loaded_save:
+                # Dessine les tuiles
+                self.change_tuiles()
+                self.draw_tuiles()            
 
-            # Dessine les tuiles
-            self.change_tuiles()
-            self.draw_tuiles()            
-
-            # Dessine la grille
-            self.draw_grid()    
+                # Dessine la grille
+                self.draw_grid()    
 
             # Dessine les éléments du GUI
             if self.see_build_preview:
-                pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.TILE_SIZE - self.scrollx, self.y_pos * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE))
-                self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.TILE_SIZE/2) 
+                pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.current_save.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
+                self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2) 
 
             # Affiche le logo
             self.screen.blit(self.logo, (0, 0))    
@@ -147,10 +151,10 @@ class Circulab():
         Dessine les tuiles sur l'écran, en fonction de la
         position actuelle du scroll.
         """
-        for y, row in enumerate(self.world_data):
+        for y, row in enumerate(self.road_data):
                 for x, tile in enumerate(row):
                     if tile.image != self.empty_tile:
-                        tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
+                        tile.rect = pygame.Rect(x * self.current_save.TILE_SIZE - self.current_save.scrollx, y * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE)
                         tile.draw(self.screen)
 
     def traiter_inputs(self):
@@ -179,41 +183,43 @@ class Circulab():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.horizontal_scroll = -1
+                    self.current_save.horizontal_scroll = -1
                 if event.key == pygame.K_RIGHT:
-                    self.horizontal_scroll = 1
+                    self.current_save.horizontal_scroll = 1
                 if event.key == pygame.K_UP:
-                    self.vertical_scroll = -1
+                    self.current_save.vertical_scroll = -1
                 if event.key == pygame.K_DOWN:
-                    self.vertical_scroll = 1
+                    self.current_save.vertical_scroll = 1
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
-                    self.scroll_speed = 5
+                    self.current_save.scroll_speed = 5
                 if event.key == pygame.K_r:
                     self.change_build_orientation()
                 if event.key == pygame.K_p:
                     self.see_build_preview = not self.see_build_preview
+                if event.key == pygame.K_t:
+                    self.loaded_save = not self.loaded_save
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    self.horizontal_scroll = 0
+                    self.current_save.horizontal_scroll = 0
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                    self.vertical_scroll = 0
+                    self.current_save.vertical_scroll = 0
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
-                    self.scroll_speed = 1
+                    self.current_save.scroll_speed = 1
 
             self.manager.process_events(event)
 
     def change_scroll(self):
         #scroll la grip
-        if self.horizontal_scroll == 1 and self.scrollx < (self.COLUMNS * self.TILE_SIZE) - self.WIDTH:
-            self.scrollx += 5 * self.scroll_speed
-        elif self.horizontal_scroll == -1 and self.scrollx > 0:
-            self.scrollx -= 5 * self.scroll_speed
+        if self.current_save.horizontal_scroll == 1 and self.current_save.scrollx < (self.COLUMNS * self.current_save.TILE_SIZE) - self.WIDTH:
+            self.current_save.scrollx += 5 * self.current_save.scroll_speed
+        elif self.current_save.horizontal_scroll == -1 and self.current_save.scrollx > 0:
+            self.current_save.scrollx -= 5 * self.current_save.scroll_speed
         
-        if self.vertical_scroll == 1 and self.scrolly < (self.ROWS * self.TILE_SIZE) - self.HEIGHT:  # Descend l'écran
-            self.scrolly += 5 * self.scroll_speed
-        elif self.vertical_scroll == -1 and self.scrolly > 0:  # Monte l'écran
-            self.scrolly -= 5 * self.scroll_speed
+        if self.current_save.vertical_scroll == 1 and self.current_save.scrolly < (self.ROWS * self.current_save.TILE_SIZE) - self.HEIGHT:  # Descend l'écran
+            self.current_save.scrolly += 5 * self.current_save.scroll_speed
+        elif self.current_save.vertical_scroll == -1 and self.current_save.scrolly > 0:  # Monte l'écran
+            self.current_save.scrolly -= 5 * self.current_save.scroll_speed
 
     def draw_top_UI(self):
         self.tool_bar_window = pygame_gui.elements.UIWindow(
@@ -251,15 +257,15 @@ class Circulab():
 
     def draw_grid(self):
         for c in range(self.COLUMNS + 1):
-            pygame.draw.line(self.screen, self.WHITE, (c * self.TILE_SIZE - self.scrollx, 0), (c * self.TILE_SIZE - self.scrollx, self.HEIGHT))
+            pygame.draw.line(self.screen, self.WHITE, (c * self.current_save.TILE_SIZE - self.current_save.scrollx, 0), (c * self.current_save.TILE_SIZE - self.current_save.scrollx, self.HEIGHT))
         for c in range(self.ROWS + 1):
-            pygame.draw.line(self.screen, self.WHITE, (0, c * self.TILE_SIZE - self.scrolly), (self.WIDTH, c * self.TILE_SIZE - self.scrolly))
+            pygame.draw.line(self.screen, self.WHITE, (0, c * self.current_save.TILE_SIZE - self.current_save.scrolly), (self.WIDTH, c * self.current_save.TILE_SIZE - self.current_save.scrolly))
 
     def get_mouse_pos(self):
         #get mouse position
         self.pos = pygame.mouse.get_pos()
-        self.x_pos = (self.pos[0] + self.scrollx) // self.TILE_SIZE
-        self.y_pos = (self.pos[1] + self.scrolly) // self.TILE_SIZE
+        self.x_pos = (self.pos[0] + self.current_save.scrollx) // self.current_save.TILE_SIZE
+        self.y_pos = (self.pos[1] + self.current_save.scrolly) // self.current_save.TILE_SIZE
 
     def get_selected_btn(self):
         for btn in self.tool_bar_btns:
@@ -282,9 +288,9 @@ class Circulab():
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
-                    if self.world_data[self.y_pos][self.x_pos].image != self.tile_images[int(id_bouton_actif[-1])]:
-                        self.world_data[self.y_pos][self.x_pos] = Tuile(self.TILE_SIZE, self.tile_images[int(id_bouton_actif[-1])], sprite_group=self.tuiles, orientation=self.build_orientation)
+                    if self.road_data[self.y_pos][self.x_pos].image != self.tile_images[int(id_bouton_actif[-1])]:
+                        self.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, self.tile_images[int(id_bouton_actif[-1])], sprite_group=self.tuiles, orientation=self.build_orientation)
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
-                self.world_data[self.y_pos][self.x_pos] = Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)
+                self.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)

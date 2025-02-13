@@ -174,17 +174,20 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             return
 
         self.tuiles = pygame.sprite.Group()
-        self.world_data = []
+        self.road_data = []
         for _ in range(n_rows):
             new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles)] * n_cols
-            self.world_data.append(new_tile)
+            self.road_data.append(new_tile)
         
         save_data = {
             "name": name,
             "cols": n_cols,
             "rows": n_rows,
+            "tile_size": self.TILE_SIZE,
+            "scroll_x": 0,
+            "scroll_y": 0,
             "path": path,
-            "world_data": self.world_data
+            "road_data": self.road_data
         }
 
         new_save = Partie(save_data)
