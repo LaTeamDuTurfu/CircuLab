@@ -8,6 +8,16 @@ class Partie():
         self.columns = save_data["cols"]
         self.rows = save_data["rows"]
         self.path = save_data["path"]
+        
+        self.TILE_SIZE = 50
+        self.scrollx = (self.columns * self.TILE_SIZE) / 2
+        self.scrolly = (self.rows * self.TILE_SIZE) / 2
+        self.scroll_speed = 1
+        self.vertical_scroll = 0
+        self.horizontal_scroll = 0
+        self.build_orientation = 0
+        self.see_build_preview = False
+        self.running = True
     
     def check_correct_path(self):
         print("Chemin Valide")

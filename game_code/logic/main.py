@@ -9,6 +9,7 @@ sys.path.append(os.path.join(project_root, "game_code"))
 
 from modules import Tuile
 from modules import NewSaveWindow
+from modules import Partie
 
 class Circulab():
     def __init__(self, height: int = 720, width: int = 1280):
@@ -83,7 +84,7 @@ class Circulab():
         self.build_orientation = 0
         self.see_build_preview = False
         self.running = True
-
+        
         # Position de la souris
         self.pos = [0, 0]
         self.x_pos = self.pos[0]
@@ -93,9 +94,18 @@ class Circulab():
         self.tuiles = pygame.sprite.Group()
         self.world_data = []
         for _ in range(self.ROWS):
-            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)] * self.COLUMNS
+            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles)] * self.COLUMNS
             self.world_data.append(new_tile)
 
+        save_data = {
+            "name": "Game_Test",
+            "cols": 300,
+            "rows": 300,
+            "path": "../Circulab/data/saves/",
+            "world_data": self.world_data
+        }
+        
+        self.current_save = Partie(save_data)
     
     def run(self):
         while self.running:

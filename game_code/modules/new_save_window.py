@@ -8,6 +8,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "game_code"))
 
 from modules.partie import Partie
+from modules.tuile import Tuile
 
 class NewSaveWindow(pygame_gui.elements.UIWindow):
 
@@ -15,8 +16,12 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
     MAX_COLS = 500
     MIN_ROWS = 100
     MAX_ROWS = 500
+    TILE_SIZE = 64
 
     def __init__(self, rect, manager, default_path):
+        # Load tiles images
+        self.empty_tile = pygame.image.load("assets/tile_images/none.png")
+        
         # UI Elements
         super().__init__(rect, manager, window_display_title="New Save", object_id="#new_save_window", resizable=False, draggable=True)
         self.rect = rect
@@ -155,8 +160,8 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.error_label.visible = True
 
     def save_new(self):
-        n_cols = self.cols_text_box.get_text()
-        n_rows = self.rows_text_box.get_text()
+        n_cols = int(self.cols_text_box.get_text())
+        n_rows = int(self.rows_text_box.get_text())
         path = self.path_text_box.get_text()
         name = self.name_text_box.get_text()
 
@@ -168,12 +173,18 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             self.show_error_msg(f"Le nombre de colonnes doit être entre {self.MIN_COLS} et {self.MAX_COLS}, puis le nombre de lignes entre {self.MIN_ROWS} et {self.MAX_ROWS}")
             return
 
+        self.tuiles = pygame.sprite.Group()
+        self.world_data = []
+        for _ in range(n_rows):
+            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles)] * n_cols
+            self.world_data.append(new_tile)
+        
         save_data = {
             "name": name,
             "cols": n_cols,
             "rows": n_rows,
             "path": path,
-            "world_data": None
+            "world_data": self.world_data
         }
 
         new_save = Partie(save_data)
