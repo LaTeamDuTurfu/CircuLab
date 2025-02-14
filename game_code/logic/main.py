@@ -153,12 +153,13 @@ class Circulab():
                 #     self.loaded_save = not self.loaded_save
 
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    self.current_save.horizontal_scroll = 0
-                if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                    self.current_save.vertical_scroll = 0
-                if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
-                    self.current_save.scroll_speed = 1
+                if self.loaded_save:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                        self.current_save.horizontal_scroll = 0
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        self.current_save.vertical_scroll = 0
+                    if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
+                        self.current_save.scroll_speed = 1
 
             self.manager.process_events(event)  
     

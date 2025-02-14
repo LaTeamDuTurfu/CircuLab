@@ -58,7 +58,8 @@ class Partie():
         """
         Dessine les tuiles sur l'écran, en fonction de la
         position actuelle du scroll.
-        """          
+        """
+
         for y, row in enumerate(self.road_data):
                 for x, tile in enumerate(row):
                     if tile.image != self.empty_tile:
@@ -81,11 +82,5 @@ class Partie():
             pygame.draw.line(surface, "#FFFFFF", (c * self.TILE_SIZE - self.scrollx, 0), (c * self.TILE_SIZE - self.scrollx, surface.get_height()))
         for c in range(self.rows + 1):
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
-    
-    def fill_empty_tile(self, n_rows, n_cols, data_set=[]):
-        for _ in range(n_rows):
-            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile)] * n_cols
-            data_set.append(new_tile)
-        return data_set
     
     
