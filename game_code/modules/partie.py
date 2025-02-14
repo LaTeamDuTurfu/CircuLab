@@ -58,7 +58,7 @@ class Partie():
         """
         Dessine les tuiles sur l'écran, en fonction de la
         position actuelle du scroll.
-        """
+        """          
         for y, row in enumerate(self.road_data):
                 for x, tile in enumerate(row):
                     if tile.image != self.empty_tile:

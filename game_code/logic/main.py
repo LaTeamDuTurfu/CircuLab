@@ -62,25 +62,8 @@ class Circulab():
         self.x_pos = self.pos[0]
         self.y_pos = self.pos[1]
 
-        # Data
-        self.tuiles = pygame.sprite.Group()
-        self.road_data = []
-        for _ in range(self.ROWS):
-            new_tile = [Tuile(self.TILE_SIZE, ToolBar.empty_tile, sprite_group=self.tuiles)] * self.COLUMNS
-            self.road_data.append(new_tile)
-
-        save_data = {
-            "name": "Game_Test",
-            "cols": 300,
-            "rows": 300,
-            "tile_size": 64,
-            "scroll_x": 0,
-            "scroll_y": 0,
-            "path": "../Circulab/data/saves/",
-            "road_data": self.road_data
-        }
-        
-        self.current_save = Partie(save_data)
+        # Data 
+        self.current_save = None
         
         # Vérifie si une save est loaded
         self.loaded_save = False
@@ -89,6 +72,7 @@ class Circulab():
         while self.running:
             # FPS Capping
             time_delta = self.clock.tick(60)/1000
+
 
             # Logic
             self.get_mouse_pos()
@@ -100,13 +84,13 @@ class Circulab():
                     self.loaded_save = True
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
 
-            self.current_save.change_scroll(self.screen)
 
             # Remplit le fond de couleur grise
             self.screen.fill(self.GREY)
             
             if self.loaded_save:
                 # Dessine les tuiles
+                self.current_save.change_scroll(self.screen)
                 self.change_tuiles()
                 self.current_save.draw_tuiles(self.screen)            
 
@@ -187,8 +171,12 @@ class Circulab():
     def get_mouse_pos(self):
         #get mouse position
         self.pos = pygame.mouse.get_pos()
-        self.x_pos = (self.pos[0] + self.current_save.scrollx) // self.current_save.TILE_SIZE
-        self.y_pos = (self.pos[1] + self.current_save.scrolly) // self.current_save.TILE_SIZE
+        try:
+            self.x_pos = (self.pos[0] + self.current_save.scrollx) // self.current_save.TILE_SIZE
+            self.y_pos = (self.pos[1] + self.current_save.scrolly) // self.current_save.TILE_SIZE
+        except AttributeError:
+            pass
+
 
     def change_build_orientation(self):
         self.build_orientation += 1
@@ -207,8 +195,8 @@ class Circulab():
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
                     if self.current_save.road_data[self.y_pos][self.x_pos].image != ToolBar.tile_images[int(id_bouton_actif[-1])]:
-                        self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], sprite_group=self.tuiles, orientation=self.build_orientation)
+                        self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation)
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
-                self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, Tuile.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)
+                self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, Tuile.empty_tile, orientation=self.build_orientation)
