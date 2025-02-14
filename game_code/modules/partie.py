@@ -1,8 +1,10 @@
 import pickle
 import os
+import pygame
 
 class Partie():
     
+    empty_tile = pygame.image.load("assets/tile_images/none.png")
     vertical_scroll = 0
     horizontal_scroll = 0
     scroll_speed = 1
@@ -45,3 +47,33 @@ class Partie():
         
         print("Le chemin de sauvegarde n'est pas correct")
         return False
+    
+    def draw_tuiles(self, surface):
+        """
+        Dessine les tuiles sur l'écran, en fonction de la
+        position actuelle du scroll.
+        """
+        for y, row in enumerate(self.road_data):
+                for x, tile in enumerate(row):
+                    if tile.image != self.empty_tile:
+                        tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
+                        tile.draw(surface)
+
+    def change_scroll(self, surface):
+        if self.horizontal_scroll == 1 and self.scrollx < (self.columns * self.TILE_SIZE) - surface.get_width():
+            self.scrollx += 5 * self.scroll_speed
+        elif self.horizontal_scroll == -1 and self.scrollx > 0:
+            self.scrollx -= 5 * self.scroll_speed
+        
+        if self.vertical_scroll == 1 and self.scrolly < (self.rows * self.TILE_SIZE) - surface.get_height():
+            self.scrolly += 5 * self.scroll_speed
+        elif self.vertical_scroll == -1 and self.scrolly > 0: 
+            self.scrolly -= 5 * self.scroll_speed
+    
+    def draw_grid(self, surface):
+        for c in range(self.columns + 1):
+            pygame.draw.line(surface, "#FFFFFF", (c * self.TILE_SIZE - self.scrollx, 0), (c * self.TILE_SIZE - self.scrollx, surface.get_height()))
+        for c in range(self.rows + 1):
+            pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
+    
+    
