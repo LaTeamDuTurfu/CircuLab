@@ -3,7 +3,7 @@
     {
         "colors":
         {
-            "dark_bg": "#040f0f"
+            "dark_bg": "rgba(0,0,0,0.5)"
         },
         "misc":
         {

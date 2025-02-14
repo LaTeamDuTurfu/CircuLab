@@ -29,6 +29,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.path = default_path
         self.is_blocking = True
         self.window_container = pygame_gui.elements.UIAutoResizingContainer(relative_rect=pygame.Rect((0, 0), (rect.width, rect.height)), manager=manager, container=self, object_id="#new_save_window_container")
+        self.created_game = None
 
         self.name_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((0, 0), (self.window_container.get_relative_rect().width, 50)),
@@ -160,25 +161,30 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.error_label.visible = True
 
     def save_new(self):
-        n_cols = int(self.cols_text_box.get_text())
-        n_rows = int(self.rows_text_box.get_text())
+        # Get save data
+        try:
+            n_cols = int(self.cols_text_box.get_text())
+            n_rows = int(self.rows_text_box.get_text())
+        except ValueError:
+            self.show_error_msg("Veuillez entrer un nombre entier pour le nombre de colonnes et de lignes")
+            return
         path = self.path_text_box.get_text()
         name = self.name_text_box.get_text()
 
+        # Create empty data files
+        road_data = self.fill_empty_tile(n_rows, n_cols)
+        car_data = self.fill_empty_tile(n_rows, n_cols)
+        signalisation_data = self.fill_empty_tile(n_rows, n_cols)
+
+        # Check save data
         if n_cols == "" or n_rows == "" or path == "" or name == "":
             self.show_error_msg("Veuillez remplir tous les champs")
             return
 
-        if not (0 < int(n_cols) < self.MAX_COLS or 0 < int(n_rows) < self.MAX_ROWS):
+        if not (self.MIN_COLS < int(n_cols) < self.MAX_COLS and self.MIN_ROWS < int(n_rows) < self.MAX_ROWS):
             self.show_error_msg(f"Le nombre de colonnes doit être entre {self.MIN_COLS} et {self.MAX_COLS}, puis le nombre de lignes entre {self.MIN_ROWS} et {self.MAX_ROWS}")
             return
 
-        self.tuiles = pygame.sprite.Group()
-        self.road_data = []
-        for _ in range(n_rows):
-            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles)] * n_cols
-            self.road_data.append(new_tile)
-        
         save_data = {
             "name": name,
             "cols": n_cols,
@@ -187,14 +193,27 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             "scroll_x": 0,
             "scroll_y": 0,
             "path": path,
-            "road_data": self.road_data
+            "road_data": road_data,
+            "car_data": car_data,
+            "signalisation_data": signalisation_data
         }
 
         new_save = Partie(save_data)
         if new_save.update_save():
+            self.created_game = new_save
             print("Partie sauvegardée")
         else:
             self.show_error_msg("Le chemin de sauvegarde n'est pas correct")
-        
-        self.kill()
+    
+    def fill_empty_tile(self, n_rows, n_cols, data_set=[]):
+        for _ in range(n_rows):
+            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile)] * n_cols
+            data_set.append(new_tile)
+        return data_set
+
+    def check_save_created(self):
+        if self.created_game != None:
+            self.kill()
+            return True
+        return False
 

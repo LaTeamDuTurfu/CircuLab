@@ -18,18 +18,6 @@ class Circulab():
         # Load Images
         self.logo = pygame.image.load("assets/other/logo.png")
 
-        # Load tiles images
-        self.empty_tile = pygame.image.load("assets/tile_images/none.png")
-        self.black_tile = pygame.image.load("assets/tile_images/black.png")
-        self.blue_tile = pygame.image.load("assets/tile_images/blue.png")
-        self.green_tile = pygame.image.load("assets/tile_images/green.png")
-        self.pink_tile = pygame.image.load("assets/tile_images/pink.png")
-        self.red_tile = pygame.image.load("assets/tile_images/red.png")
-        self.orange_tile = pygame.image.load("assets/tile_images/orange.png")
-        self.yellow_tile = pygame.image.load("assets/tile_images/yellow.png")
-        self.white_tile = pygame.image.load("assets/tile_images/white_A.png")
-        self.tile_images = [self.empty_tile, self.black_tile, self.blue_tile, self.green_tile, self.pink_tile, self.red_tile, self.orange_tile, self.yellow_tile, self.white_tile]
-
         # Load Fonts
         self.font = pygame.font.Font("freesansbold.ttf", 32)
 
@@ -44,9 +32,6 @@ class Circulab():
         # Taille de la fenêtre
         self.HEIGHT = height
         self.WIDTH = width
-        
-        # Transform Images
-        # self.logo = pygame.transform.scale(self.logo, (self.WIDTH - self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT + 10))
 
         # Surface de la fenêtre
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
@@ -59,6 +44,8 @@ class Circulab():
 
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
+
+        self.new_save_window = NewSaveWindow(pygame.Rect((0, 0), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
 
         # (temp)
         self.ROWS = 150
@@ -79,7 +66,7 @@ class Circulab():
         self.tuiles = pygame.sprite.Group()
         self.road_data = []
         for _ in range(self.ROWS):
-            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles)] * self.COLUMNS
+            new_tile = [Tuile(self.TILE_SIZE, ToolBar.empty_tile, sprite_group=self.tuiles)] * self.COLUMNS
             self.road_data.append(new_tile)
 
         save_data = {
@@ -105,10 +92,17 @@ class Circulab():
 
             # Logic
             self.get_mouse_pos()
-            self.current_save.change_scroll(self.screen)
             self.traiter_inputs()
 
-            # Remplit le fond de couleur verte
+            if not self.loaded_save:
+                if self.new_save_window.check_save_created():
+                    self.current_save = self.new_save_window.created_game
+                    self.loaded_save = True
+                    pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
+
+            self.current_save.change_scroll(self.screen)
+
+            # Remplit le fond de couleur grise
             self.screen.fill(self.GREY)
             
             if self.loaded_save:
@@ -119,13 +113,10 @@ class Circulab():
                 # Dessine la grille
                 self.current_save.draw_grid(self.screen)    
 
-            # Dessine les éléments du GUI
-            if self.see_build_preview:
-                pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
-                self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2) 
-
-            # Affiche le logo
-            # self.screen.blit(self.logo, (0, 0))    
+                # Dessine les éléments du GUI
+                if self.see_build_preview:
+                    pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
+                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2) 
 
             # Update l'écran
             self.manager.update(time_delta)
@@ -159,22 +150,23 @@ class Circulab():
                     continue
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    self.current_save.horizontal_scroll = -1
-                if event.key == pygame.K_RIGHT:
-                    self.current_save.horizontal_scroll = 1
-                if event.key == pygame.K_UP:
-                    self.current_save.vertical_scroll = -1
-                if event.key == pygame.K_DOWN:
-                    self.current_save.vertical_scroll = 1
-                if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
-                    self.current_save.scroll_speed = 5
-                if event.key == pygame.K_r:
-                    self.change_build_orientation()
-                if event.key == pygame.K_p:
-                    self.see_build_preview = not self.see_build_preview
-                if event.key == pygame.K_t:
-                    self.loaded_save = not self.loaded_save
+                if self.loaded_save:
+                    if event.key == pygame.K_LEFT:
+                        self.current_save.horizontal_scroll = -1
+                    if event.key == pygame.K_RIGHT:
+                        self.current_save.horizontal_scroll = 1
+                    if event.key == pygame.K_UP:
+                        self.current_save.vertical_scroll = -1
+                    if event.key == pygame.K_DOWN:
+                        self.current_save.vertical_scroll = 1
+                    if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
+                        self.current_save.scroll_speed = 5
+                    if event.key == pygame.K_r:
+                        self.change_build_orientation()
+                    if event.key == pygame.K_p:
+                        self.see_build_preview = not self.see_build_preview
+                # if event.key == pygame.K_t:
+                #     self.loaded_save = not self.loaded_save
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -214,9 +206,9 @@ class Circulab():
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
-                    if self.road_data[self.y_pos][self.x_pos].image != self.tile_images[int(id_bouton_actif[-1])]:
-                        self.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, self.tile_images[int(id_bouton_actif[-1])], sprite_group=self.tuiles, orientation=self.build_orientation)
+                    if self.current_save.road_data[self.y_pos][self.x_pos].image != ToolBar.tile_images[int(id_bouton_actif[-1])]:
+                        self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], sprite_group=self.tuiles, orientation=self.build_orientation)
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
-                self.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, self.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)
+                self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, Tuile.empty_tile, sprite_group=self.tuiles, orientation=self.build_orientation)

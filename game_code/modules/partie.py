@@ -1,6 +1,12 @@
 import pickle
-import os
+import os, sys
 import pygame
+
+# Permet de charger les modules dans le dossier game_code
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(os.path.join(project_root, "game_code"))
+
+from modules.tuile import Tuile
 
 class Partie():
     
@@ -35,10 +41,10 @@ class Partie():
             "scroll_x": self.scrollx,
             "scroll_y": self.scrolly,
             "path": self.path,
-            "road_data": self.road_data
+            "road_data": self.road_data,
+            "car_data": self.car_data,
+            "signalisation_data": self.signalisation_data
         }
-
-        # print(save_data)
 
         if self.check_correct_path():
             with open(self.path + f"/{self.name}.clab", "wb") as file:
@@ -75,5 +81,11 @@ class Partie():
             pygame.draw.line(surface, "#FFFFFF", (c * self.TILE_SIZE - self.scrollx, 0), (c * self.TILE_SIZE - self.scrollx, surface.get_height()))
         for c in range(self.rows + 1):
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
+    
+    def fill_empty_tile(self, n_rows, n_cols, data_set=[]):
+        for _ in range(n_rows):
+            new_tile = [Tuile(self.TILE_SIZE, self.empty_tile)] * n_cols
+            data_set.append(new_tile)
+        return data_set
     
     

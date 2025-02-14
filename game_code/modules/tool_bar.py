@@ -2,6 +2,19 @@ import pygame_gui
 import pygame
 
 class ToolBar:
+
+    # Load tiles images
+    empty_tile = pygame.image.load("assets/tile_images/none.png")
+    black_tile = pygame.image.load("assets/tile_images/black.png")
+    blue_tile = pygame.image.load("assets/tile_images/blue.png")
+    green_tile = pygame.image.load("assets/tile_images/green.png")
+    pink_tile = pygame.image.load("assets/tile_images/pink.png")
+    red_tile = pygame.image.load("assets/tile_images/red.png")
+    orange_tile = pygame.image.load("assets/tile_images/orange.png")
+    yellow_tile = pygame.image.load("assets/tile_images/yellow.png")
+    white_tile = pygame.image.load("assets/tile_images/white_A.png")
+    tile_images = [empty_tile, black_tile, blue_tile, green_tile, pink_tile, red_tile, orange_tile, yellow_tile, white_tile]
+
     def __init__(self, surface, manager, nbr_btns):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
