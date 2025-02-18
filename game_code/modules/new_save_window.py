@@ -11,7 +11,6 @@ from modules.partie import Partie
 from modules.tuile import Tuile
 
 class NewSaveWindow(pygame_gui.elements.UIWindow):
-
     MIN_COLS = 1
     MAX_COLS = 500
     MIN_ROWS = 1
@@ -173,6 +172,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
 
         # Create empty data files
         road_data = self.fill_empty_tile(n_rows, n_cols)
+        print(len(road_data))
         car_data = self.fill_empty_tile(n_rows, n_cols)
         signalisation_data = self.fill_empty_tile(n_rows, n_cols)
 
