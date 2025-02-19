@@ -27,6 +27,15 @@ class ToolBar:
 
         self.tool_bar_btns = pygame.sprite.Group()
 
+        self.change_image_btn(1, "assets/tile_images/black.png")
+        self.change_image_btn(2, "assets/tile_images/blue.png")
+        self.change_image_btn(3, "assets/tile_images/green.png")
+        self.change_image_btn(4, "assets/tile_images/pink.png")
+        self.change_image_btn(5, "assets/tile_images/red.png")
+        self.change_image_btn(6, "assets/tile_images/orange.png")
+        self.change_image_btn(7, "assets/tile_images/yellow.png")
+        self.change_image_btn(8, "assets/tile_images/white_A.png")
+        
         self.draw()
         self.draw_buttons(nbr_btns=nbr_btns)
 

@@ -41,7 +41,6 @@ class Circulab():
 
         # Dessiner les éléments du GUI
         self.tool_bar = ToolBar(self.screen, self.manager, nbr_btns=8)
-        self.tool_bar.change_image_btn(index=1, image_path="assets/tile_images/yellow.png")
 
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
