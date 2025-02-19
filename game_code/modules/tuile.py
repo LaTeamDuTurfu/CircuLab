@@ -34,6 +34,3 @@ class Tuile(pygame.sprite.Sprite):
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
-    
-    def __repr__(self):
-        return f"Tuile({self.orientation})"

@@ -62,7 +62,7 @@ class Partie():
 
         for y, row in enumerate(self.road_data):
                 for x, tile in enumerate(row):
-                    if tile.image != self.empty_tile:
+                    if tile.tile_type != "@empty":
                         tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
                         tile.draw(surface)
 
