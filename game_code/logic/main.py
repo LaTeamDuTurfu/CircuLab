@@ -41,11 +41,12 @@ class Circulab():
 
         # Dessiner les éléments du GUI
         self.tool_bar = ToolBar(self.screen, self.manager, nbr_btns=8)
+        self.tool_bar.change_image_btn(index=1, image_path="assets/tile_images/yellow.png")
 
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
 
-        self.new_save_window = NewSaveWindow(pygame.Rect((0, 0), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
+        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
 
         # (temp)
         self.ROWS = 150

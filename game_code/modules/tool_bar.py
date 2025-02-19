@@ -1,5 +1,6 @@
 import pygame_gui
 import pygame
+import json
 
 class ToolBar:
 
@@ -35,11 +36,7 @@ class ToolBar:
             object_id="#tool_bar_window", 
             manager=self.manager)
         
-        self.tool_bar_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), 
-                                                                           manager=self.manager, 
-                                                                           container=self.tool_bar_window, 
-                                                                           object_id="#tool_bar_container",
-                                                                           allow_scroll_y=True)
+        self.tool_bar_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), manager=self.manager, container=self.tool_bar_window, object_id="#tool_bar_container", allow_scroll_y=True)
     
     def draw_buttons(self, nbr_btns):
         for i in range(nbr_btns):
@@ -52,7 +49,6 @@ class ToolBar:
                         object_id=pygame_gui.core.ObjectID(class_id="@tool_tip_btn", object_id=f"#tool_tip_btn_{i + 1}"))
             
             self.tool_bar_btns.add(new_btn)
-            
     
     def get_selected_btn(self):
         for btn in self.tool_bar_btns:
@@ -62,3 +58,15 @@ class ToolBar:
     def unselect_all_btns(self):
         for btn in self.tool_bar_btns:
             btn.unselect()
+    
+    def change_image_btn(self, index, image_path):
+        with open(f"data/theme_manager/styles_real.json", "r+") as theme_file:
+            theme_data = json.load(theme_file)
+            theme_data[f"#tool_tip_btn_{index}"]["images"]["normal_image"]["path"] = image_path
+        
+        with open(f"data/theme_manager/styles_real.json", "w") as theme_file:
+            json.dump(theme_data, theme_file)
+        
+        # TODO DONE: Faire en sorte d'update le theme après que le nouveau theme file ait été loaded.
+        self.tile_images[index] = pygame.image.load(image_path)
+        self.manager.rebuild_all_from_changed_theme_data()
