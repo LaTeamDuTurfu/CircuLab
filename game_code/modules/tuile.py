@@ -1,7 +1,10 @@
 import pygame
 
 class Tuile(pygame.sprite.Sprite):
-    def __init__(self, size: int, image:pygame.Surface, orientation:int, tile_type: str=None,sprite_group=None):
+    
+    empty_tile = pygame.image.load("assets/tile_images/none.png")
+    
+    def __init__(self, size: int, image:pygame.Surface, orientation:int = 0, tile_type: str=None,sprite_group=None):
         """
         Constructeur de la classe Tuile.
 
