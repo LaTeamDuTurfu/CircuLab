@@ -186,7 +186,7 @@ class Circulab():
             self.build_orientation = 0
 
     def change_tuiles(self):
-        if self.pos[0] < self.WIDTH and self.build_tool_bar.build_tool_bar_HEIGHT < self.pos[1] < self.HEIGHT:
+        if self.pos[0] < self.WIDTH and self.build_tool_bar.tool_bar_HEIGHT < self.pos[1] < self.HEIGHT:
             self.y_pos = int(self.y_pos)
             self.x_pos = int(self.x_pos)
             try:
