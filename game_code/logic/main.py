@@ -40,8 +40,9 @@ class Circulab():
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
 
         # Dessiner les éléments du GUI
-        self.tool_bar = ToolBar(self.screen, self.manager, nbr_btns=8)
-
+        self.build_tool_bar = ToolBar(self.screen, self.manager, nbr_btns=8)
+        self.mode_selector = ModeSelector(self.screen, self.manager)
+        
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
 
@@ -123,10 +124,10 @@ class Circulab():
             if event.type == pygame.QUIT:
                 self.running = False
             
-            if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.tool_bar.tool_bar_btns:
+            if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.build_tool_bar.tool_bar_btns:
                 btn = event.ui_element
                 if not btn.is_selected:
-                    self.tool_bar.unselect_all_btns()
+                    self.build_tool_bar.unselect_all_btns()
                     btn.select()
                     continue
                 elif btn.is_selected:
@@ -185,11 +186,11 @@ class Circulab():
             self.build_orientation = 0
 
     def change_tuiles(self):
-        if self.pos[0] < self.WIDTH and self.tool_bar.TOOL_BAR_HEIGHT < self.pos[1] < self.HEIGHT:
+        if self.pos[0] < self.WIDTH and self.build_tool_bar.build_tool_bar_HEIGHT < self.pos[1] < self.HEIGHT:
             self.y_pos = int(self.y_pos)
             self.x_pos = int(self.x_pos)
             try:
-                bouton_actif = self.tool_bar.get_selected_btn()
+                bouton_actif = self.build_tool_bar.get_selected_btn()
                 id_bouton_actif = bouton_actif.object_ids[-1]
             except AttributeError:
                 pass
