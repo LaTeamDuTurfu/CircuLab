@@ -3,3 +3,4 @@ from .tuile import Tuile
 from .partie import Partie
 from .tool_bar import ToolBar
 from .mode_selector import ModeSelector
+from .window_frame import WindowFrame

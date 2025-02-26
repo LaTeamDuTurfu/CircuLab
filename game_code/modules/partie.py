@@ -83,4 +83,11 @@ class Partie():
         for c in range(self.rows + 1):
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
     
+    def zoom(self, multiplicateur):
+        self.TILE_SIZE *= multiplicateur
+        
+        for _, row in enumerate(self.road_data):
+                for _, tile in enumerate(row):
+                    if tile.tile_type != "@empty":
+                        tile.change_size(multiplicateur)
     

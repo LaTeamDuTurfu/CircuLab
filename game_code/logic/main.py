@@ -40,6 +40,7 @@ class Circulab():
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
 
         # Dessiner les éléments du GUI
+        self.window_border = WindowFrame(self.screen, 10, self.BLUE_GREY, self.manager)
         self.build_tool_bar = ToolBar(self.screen, self.manager, nbr_btns=8)
         self.mode_selector = ModeSelector(self.screen, self.manager)
         
@@ -103,6 +104,10 @@ class Circulab():
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2) 
 
+            # Dessine la bordure de l'écran
+            self.window_border.draw_border()
+
+            
             # Update l'écran
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
@@ -150,8 +155,10 @@ class Circulab():
                         self.change_build_orientation()
                     if event.key == pygame.K_p:
                         self.see_build_preview = not self.see_build_preview
-                # if event.key == pygame.K_t:
-                #     self.loaded_save = not self.loaded_save
+                    if event.key == pygame.K_1:
+                        self.current_save.zoom(1.1)
+                    if event.key == pygame.K_2:
+                        self.current_save.zoom(0.9)
 
             if event.type == pygame.KEYUP:
                 if self.loaded_save:
@@ -186,7 +193,7 @@ class Circulab():
             self.build_orientation = 0
 
     def change_tuiles(self):
-        if self.pos[0] < self.WIDTH and self.build_tool_bar.tool_bar_HEIGHT < self.pos[1] < self.HEIGHT:
+        if self.window_border.thickness < self.pos[0] < (self.WIDTH - self.window_border.thickness) and self.build_tool_bar.TOOL_BAR_HEIGHT < self.pos[1] < (self.HEIGHT - self.window_border.bottom_thickness):
             self.y_pos = int(self.y_pos)
             self.x_pos = int(self.x_pos)
             try:

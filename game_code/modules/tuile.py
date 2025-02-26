@@ -34,3 +34,7 @@ class Tuile(pygame.sprite.Sprite):
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
+    
+    def change_size(self, new_size):
+        self.image = pygame.transform.scale(self.image, (new_size, new_size))
+        self.rect = self.image.get_rect()
