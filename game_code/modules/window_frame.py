@@ -22,11 +22,15 @@ class WindowFrame:
         # Draw Border
         self.build_zoom_scroll()
         
-    def draw_border(self):
-        pygame.draw.rect(self.screen, self.color, self.top)
-        pygame.draw.rect(self.screen, self.color, self.bottom)
-        pygame.draw.rect(self.screen, self.color, self.left)
-        pygame.draw.rect(self.screen, self.color, self.right)
+    def draw_border(self, top: bool = 1, bottom: bool = 1, left: bool = 1, right: bool = 1):
+        if top:
+            pygame.draw.rect(self.screen, self.color, self.top)
+        if bottom:
+            pygame.draw.rect(self.screen, self.color, self.bottom)
+        if left:
+            pygame.draw.rect(self.screen, self.color, self.left)
+        if right:
+            pygame.draw.rect(self.screen, self.color, self.right)
     
     def build_zoom_scroll(self):
         scroller = pygame_gui.elements.ui_2d_slider.UI2DSlider(

@@ -9,10 +9,11 @@ class ModeSelector:
         "3": "Simulation"
     }
     
-    def __init__(self, surface, manager):
+    def __init__(self, surface, manager, window_frame):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
         self.manager = manager
+        self.window_frame = window_frame
 
         self.MODE_SELECTOR_HEIGHT = self.HEIGHT * 1/8
         self.MODE_SELECTOR_WIDTH = self.WIDTH * 1/4
@@ -25,7 +26,7 @@ class ModeSelector:
         
     def draw(self):
         self.tool_bar_window = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((0, 0), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
+            rect=pygame.Rect((0, self.window_frame.thickness), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
             object_id="#mode_selector_window", 
             manager=self.manager)
         
@@ -34,7 +35,7 @@ class ModeSelector:
     def draw_buttons(self, nbr_btns):
         for i in range(nbr_btns):
             new_btn = pygame_gui.elements.UIButton(
-                        relative_rect=pygame.Rect(((5/4 * i * self.MODE_SELECTOR_BTN_SIZE) + self.MODE_SELECTOR_BTN_SIZE/4, 0), (self.MODE_SELECTOR_BTN_SIZE, self.MODE_SELECTOR_BTN_SIZE)),
+                        relative_rect=pygame.Rect(((5/4 * i * self.MODE_SELECTOR_BTN_SIZE) + self.MODE_SELECTOR_BTN_SIZE/4, self.window_frame.thickness/2), (self.MODE_SELECTOR_BTN_SIZE, self.MODE_SELECTOR_BTN_SIZE)),
                         text="",
                         manager=self.manager,
                         anchors={"centery": "centery"},

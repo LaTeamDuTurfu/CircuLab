@@ -1,6 +1,7 @@
 import pygame_gui
 import pygame
 import json
+import os, sys
 
 class ToolBar:
 
@@ -16,16 +17,19 @@ class ToolBar:
     white_tile = pygame.image.load("assets/tile_images/white_A.png")
     tile_images = [empty_tile, black_tile, blue_tile, green_tile, pink_tile, red_tile, orange_tile, yellow_tile, white_tile]
 
-    def __init__(self, surface, manager, nbr_btns):
+    def __init__(self, surface, manager, window_frame, nbr_btns):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
         self.manager = manager
+        self.window_frame = window_frame
 
-        self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
-        self.TOOL_BAR_WIDTH = self.WIDTH * 3/4
         self.TOOL_BAR_BTN_SIZE = 78
+        self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
+        self.TOOL_BAR_WIDTH = self.WIDTH * 3/4 - self.TOOL_BAR_BTN_SIZE/2
 
         self.tool_bar_btns = pygame.sprite.Group()
+        self.close_btn = None
+        self.show = True
 
         self.change_image_btn(1, "assets/tile_images/black.png")
         self.change_image_btn(2, "assets/tile_images/blue.png")
@@ -41,16 +45,27 @@ class ToolBar:
 
     def draw(self):
         self.tool_bar_window = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), 
+            rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), 
             object_id="#tool_bar_window", 
             manager=self.manager)
         
         self.tool_bar_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), manager=self.manager, container=self.tool_bar_window, object_id="#tool_bar_container", allow_scroll_y=True)
     
     def draw_buttons(self, nbr_btns):
+        
+        self.close_btn = pygame_gui.elements.UIButton(
+                        relative_rect=pygame.Rect((self.TOOL_BAR_BTN_SIZE/4, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE/2, self.TOOL_BAR_BTN_SIZE)),
+                        text="",
+                        manager=self.manager,
+                        anchors={"centery": "centery"},
+                        container=self.tool_bar_container,
+                        object_id=pygame_gui.core.ObjectID(class_id="", object_id=f"#tool_bar_close_btn"),
+                        command=self.change_tool_bar_state
+                        )
+        
         for i in range(nbr_btns):
             new_btn = pygame_gui.elements.UIButton(
-                        relative_rect=pygame.Rect(((3/2 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE/2 , 0), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
+                        relative_rect=pygame.Rect(((11/8 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
                         text="",
                         manager=self.manager,
                         anchors={"centery": "centery"},
@@ -79,3 +94,19 @@ class ToolBar:
         # TODO DONE: Faire en sorte d'update le theme après que le nouveau theme file ait été loaded.
         self.tile_images[index] = pygame.image.load(image_path)
         self.manager.rebuild_all_from_changed_theme_data()
+    
+    def change_tool_bar_state(self):
+        if self.show:
+            self.tool_bar_window.rect.x = self.WIDTH - self.window_frame.thickness - self.TOOL_BAR_BTN_SIZE * 3/4
+            self.close_btn.relative_rect.x = self.TOOL_BAR_WIDTH - self.TOOL_BAR_BTN_SIZE * 3/4
+            self.show = False
+            for btn in self.tool_bar_btns:
+                btn.hide()
+            print(f"{self.tool_bar_window.rect.x}, {self.close_btn.relative_rect.x}")
+        else:
+            self.tool_bar_window.rect.x = self.WIDTH - self.TOOL_BAR_WIDTH
+            self.close_btn.relative_rect.x = self.TOOL_BAR_BTN_SIZE/4
+            self.show = True
+            for btn in self.tool_bar_btns:
+                btn.show()
+            print(f"{self.tool_bar_window.rect.x}, {self.close_btn.relative_rect.x}")

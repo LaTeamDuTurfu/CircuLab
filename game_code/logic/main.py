@@ -27,7 +27,7 @@ class Circulab():
         self.GREEN = "#2ba84a"
         self.GREY = "#2d3a3a"
         self.WHITE = "#fcfffc"
-        self.BLUE_GREY = "#77a6b6"
+        self.BLUE_GREY = "#7E99CF"
 
         # Taille de la fenêtre
         self.HEIGHT = height
@@ -41,8 +41,8 @@ class Circulab():
 
         # Dessiner les éléments du GUI
         self.window_border = WindowFrame(self.screen, 10, self.BLUE_GREY, self.manager)
-        self.build_tool_bar = ToolBar(self.screen, self.manager, nbr_btns=8)
-        self.mode_selector = ModeSelector(self.screen, self.manager)
+        self.build_tool_bar = ToolBar(self.screen, self.manager, self.window_border, nbr_btns=8)
+        self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border)
         
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
@@ -106,11 +106,11 @@ class Circulab():
 
             # Dessine la bordure de l'écran
             self.window_border.draw_border()
-
             
             # Update l'écran
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
+            self.window_border.draw_border(bottom=False)
             pygame.display.flip()
     
         pygame.quit()
