@@ -198,13 +198,13 @@ class Circulab():
             self.x_pos = int(self.x_pos)
             try:
                 bouton_actif = self.build_tool_bar.get_selected_btn()
-                id_bouton_actif = bouton_actif.object_ids[-1]
+                id_bouton_actif = bouton_actif.object_ids[-1][-1]
             except AttributeError:
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
-                    if self.current_save.road_data[self.y_pos][self.x_pos].image != ToolBar.tile_images[int(id_bouton_actif[-1])]:
-                        self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation)
+                    if self.current_save.road_data[self.y_pos][self.x_pos].image != ToolBar.tile_images[int(id_bouton_actif)]:
+                        self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:

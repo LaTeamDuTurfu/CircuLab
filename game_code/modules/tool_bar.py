@@ -3,19 +3,34 @@ import pygame
 import json
 import os, sys
 
+# Permet de charger les modules dans le dossier game_code
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(os.path.join(project_root, "game_code"))
+
+from modules import Tuile, NewSaveWindow
+
 class ToolBar:
 
     # Load tiles images
     empty_tile = pygame.image.load("assets/tile_images/none.png")
-    black_tile = pygame.image.load("assets/tile_images/black.png")
-    blue_tile = pygame.image.load("assets/tile_images/blue.png")
+    # black_tile = pygame.image.load("assets/tile_images/black.png")
+    # blue_tile = pygame.image.load("assets/tile_images/blue.png")
     green_tile = pygame.image.load("assets/tile_images/green.png")
     pink_tile = pygame.image.load("assets/tile_images/pink.png")
     red_tile = pygame.image.load("assets/tile_images/red.png")
     orange_tile = pygame.image.load("assets/tile_images/orange.png")
     yellow_tile = pygame.image.load("assets/tile_images/yellow.png")
     white_tile = pygame.image.load("assets/tile_images/white_A.png")
-    tile_images = [empty_tile, black_tile, blue_tile, green_tile, pink_tile, red_tile, orange_tile, yellow_tile, white_tile]
+    
+    straight_road_tile = pygame.image.load("assets/tile_images/road_arrow.png")
+    grass_tile = pygame.image.load("assets/tile_images/grass.png")
+    # walkway_tile = pygame.image.load()
+    # skyscraper_tile = pygame.image.load()
+    # house1_tile = pygame.image.load()
+    # house2_tile = pygame.image.load()
+    # house3_tile = pygame.image.load()
+    # house4_tile = pygame.image.load()
+    tile_images = [empty_tile, straight_road_tile, grass_tile, green_tile, pink_tile, red_tile, orange_tile, yellow_tile, white_tile]
 
     def __init__(self, surface, manager, window_frame, nbr_btns):
         self.WIDTH = surface.get_width()
@@ -23,6 +38,7 @@ class ToolBar:
         self.manager = manager
         self.window_frame = window_frame
 
+        self.TILE_SIZE = NewSaveWindow.TILE_SIZE
         self.TOOL_BAR_BTN_SIZE = 78
         self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
         self.TOOL_BAR_WIDTH = self.WIDTH * 3/4 - self.TOOL_BAR_BTN_SIZE/2
@@ -31,8 +47,8 @@ class ToolBar:
         self.close_btn = None
         self.show = True
 
-        self.change_image_btn(1, "assets/tile_images/black.png")
-        self.change_image_btn(2, "assets/tile_images/blue.png")
+        self.change_image_btn(1, "assets/tile_images/road_arrow.png")
+        self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/green.png")
         self.change_image_btn(4, "assets/tile_images/pink.png")
         self.change_image_btn(5, "assets/tile_images/red.png")
@@ -63,7 +79,7 @@ class ToolBar:
                         command=self.change_tool_bar_state
                         )
         
-        for i in range(nbr_btns):
+        for i in range(len(Tuile.BUILD_TILE_TYPES)):
             new_btn = pygame_gui.elements.UIButton(
                         relative_rect=pygame.Rect(((11/8 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
                         text="",
@@ -86,6 +102,8 @@ class ToolBar:
     def change_image_btn(self, index, image_path):
         with open(f"data/theme_manager/styles_real.json", "r+") as theme_file:
             theme_data = json.load(theme_file)
+            new_img = pygame.image.load(image_path)
+            new_img = pygame.transform.scale(new_img, (self.TILE_SIZE, self.TILE_SIZE))
             theme_data[f"#tool_tip_btn_{index}"]["images"]["normal_image"]["path"] = image_path
         
         with open(f"data/theme_manager/styles_real.json", "w") as theme_file:

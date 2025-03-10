@@ -65,6 +65,7 @@ class Partie():
                     if tile.tile_type != "@empty":
                         tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
                         tile.draw(surface)
+                        print(tile.tile_type)
 
     def change_scroll(self, surface):
         if self.horizontal_scroll == 1 and self.scrollx < (self.columns * self.TILE_SIZE) - surface.get_width():

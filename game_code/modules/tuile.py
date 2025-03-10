@@ -4,6 +4,28 @@ class Tuile(pygame.sprite.Sprite):
     
     empty_tile = pygame.image.load("assets/tile_images/none.png")
     
+    BUILD_TILE_TYPES = {
+        1: "Road",
+        2: "Grass",
+        3: "Walkway",
+        4: "Skyscraper",
+        5: "House1",
+        6: "House2",
+        7: "House3",
+        8: "House4"
+    }
+    
+    SIGNALISATION_TILE_TYPES = {
+        1: "Départs",
+        2: "Arrivées",
+        3: "Stops",
+        4: "Travaux",
+        5: "Accident",
+        6: "",
+        7: "",
+        8: ""
+    }
+    
     def __init__(self, size: int, image:pygame.Surface, orientation:int = 0, tile_type: str=None,sprite_group=None):
         """
         Constructeur de la classe Tuile.
