@@ -23,9 +23,14 @@ class Partie():
         self.scrolly = save_data["scroll_y"]
         self.path = save_data["path"]
         self.TILE_SIZE = save_data["tile_size"]
-        self.road_data = save_data["road_data"]
+        self.building_data = save_data["building_data"]
         self.car_data = None
         self.signalisation_data = None
+        
+        self.game_data = {
+            0: self.building_data,
+            1: self.signalisation_data
+        }
         
     
     def check_correct_path(self):
@@ -41,7 +46,7 @@ class Partie():
             "scroll_x": self.scrollx,
             "scroll_y": self.scrolly,
             "path": self.path,
-            "road_data": self.road_data,
+            "building_data": self.building_data,
             "car_data": self.car_data,
             "signalisation_data": self.signalisation_data
         }
@@ -60,12 +65,12 @@ class Partie():
         position actuelle du scroll.
         """
 
-        for y, row in enumerate(self.road_data):
+        for y, row in enumerate(self.building_data):
                 for x, tile in enumerate(row):
                     if tile.tile_type != "@empty":
                         tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
                         tile.draw(surface)
-                        print(tile.tile_type)
+                        # print(tile.tile_type)
 
     def change_scroll(self, surface):
         if self.horizontal_scroll == 1 and self.scrollx < (self.columns * self.TILE_SIZE) - surface.get_width():
@@ -87,7 +92,7 @@ class Partie():
     def zoom(self, multiplicateur):
         self.TILE_SIZE *= multiplicateur
         
-        for _, row in enumerate(self.road_data):
+        for _, row in enumerate(self.building_data):
                 for _, tile in enumerate(row):
                     if tile.tile_type != "@empty":
                         tile.change_size(multiplicateur)

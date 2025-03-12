@@ -4,9 +4,9 @@ import pygame
 class ModeSelector:
     
     modes = {
-        "1": "Building",
-        "2": "Roads",
-        "3": "Simulation"
+        "Building": 0,
+        "Roads": 1,
+        "Simulation": 2
     }
     
     def __init__(self, surface, manager, window_frame):
@@ -24,6 +24,9 @@ class ModeSelector:
         self.draw()
         self.draw_buttons(nbr_btns=3)
         
+        self.default_mode = self.modes["Building"]
+        self.current_mode = self.default_mode
+                
     def draw(self):
         self.tool_bar_window = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((0, self.window_frame.thickness), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
@@ -40,7 +43,7 @@ class ModeSelector:
                         manager=self.manager,
                         anchors={"centery": "centery"},
                         container=self.tool_bar_container,
-                        object_id=pygame_gui.core.ObjectID(class_id="@mode_selector_btn", object_id=f"#mode_selector_btn_{self.modes[str(i + 1)]}"))
+                        object_id=pygame_gui.core.ObjectID(class_id="@mode_selector_btn", object_id=f"#mode_selector_btn_{str(i + 1)}"))
             
             self.mode_selector_btns.add(new_btn)
     

@@ -48,11 +48,6 @@ class Circulab():
         self.clock = pygame.time.Clock()
 
         self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
-
-        # (temp)
-        self.ROWS = 150
-        self.COLUMNS = 150
-        self.TILE_SIZE = 50
         
         # Variable de jeu
         self.build_orientation = 0
@@ -203,9 +198,14 @@ class Circulab():
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
-                    if self.current_save.road_data[self.y_pos][self.x_pos].image != ToolBar.tile_images[int(id_bouton_actif)]:
-                        self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                    if self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos].image != ToolBar.tile_images[self.mode_selector.current_mode][int(id_bouton_actif)]:
+                        if self.mode_selector.current_mode == 0:
+                            self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                        elif self.mode_selector.current_mode == 1:
+                            self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.SIGNALISATION_TILE_TYPES[int(id_bouton_actif)])
+                        elif self.mode_selector.current_mode == 2:
+                            pass
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
-                self.current_save.road_data[self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, Tuile.empty_tile, orientation=self.build_orientation)
+                self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, Tuile.empty_tile, orientation=self.build_orientation)

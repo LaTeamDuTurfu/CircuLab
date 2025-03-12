@@ -172,7 +172,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         name = self.name_text_box.get_text()
 
         # Create empty data files
-        road_data = self.fill_empty_tile(n_rows, n_cols)
+        building_data = self.fill_empty_tile(n_rows, n_cols)
         car_data = self.fill_empty_tile(n_rows, n_cols)
         signalisation_data = self.fill_empty_tile(n_rows, n_cols)
 
@@ -193,7 +193,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             "scroll_x": 0,
             "scroll_y": 0,
             "path": path,
-            "road_data": road_data,
+            "building_data": building_data,
             "car_data": car_data,
             "signalisation_data": signalisation_data
         }
