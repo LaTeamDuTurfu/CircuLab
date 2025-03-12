@@ -26,6 +26,11 @@ class Tuile(pygame.sprite.Sprite):
         8: ""
     }
     
+    TILE_TYPES = {
+        0: BUILD_TILE_TYPES,
+        1: SIGNALISATION_TILE_TYPES
+    }
+    
     def __init__(self, size: int, image:pygame.Surface, orientation:int = 0, tile_type: str=None,sprite_group=None):
         """
         Constructeur de la classe Tuile.

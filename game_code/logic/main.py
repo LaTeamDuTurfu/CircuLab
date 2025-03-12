@@ -41,8 +41,8 @@ class Circulab():
 
         # Dessiner les éléments du GUI
         self.window_border = WindowFrame(self.screen, 10, self.BLUE_GREY, self.manager)
-        self.build_tool_bar = ToolBar(self.screen, self.manager, self.window_border, nbr_btns=8)
         self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border)
+        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, nbr_btns=8)
         
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()

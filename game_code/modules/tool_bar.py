@@ -36,7 +36,7 @@ class ToolBar:
         1: signalisation_tile_images
     }
     
-    def __init__(self, surface, manager, window_frame, nbr_btns):
+    def __init__(self, surface, manager, mode_selector, window_frame, nbr_btns):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
         self.manager = manager
@@ -51,6 +51,8 @@ class ToolBar:
         self.close_btn = None
         self.show = True
 
+        self.mode_selector = mode_selector
+        
         self.change_image_btn(1, "assets/tile_images/road_arrow.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/green.png")
@@ -61,7 +63,7 @@ class ToolBar:
         self.change_image_btn(8, "assets/tile_images/white_A.png")
         
         self.draw()
-        self.draw_buttons(nbr_btns=nbr_btns)
+        self.draw_buttons()
 
     def draw(self):
         self.tool_bar_window = pygame_gui.elements.UIWindow(
@@ -71,8 +73,7 @@ class ToolBar:
         
         self.tool_bar_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), manager=self.manager, container=self.tool_bar_window, object_id="#tool_bar_container", allow_scroll_y=True)
     
-    def draw_buttons(self, nbr_btns):
-        
+    def draw_buttons(self):
         self.close_btn = pygame_gui.elements.UIButton(
                         relative_rect=pygame.Rect((self.TOOL_BAR_BTN_SIZE/4, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE/2, self.TOOL_BAR_BTN_SIZE)),
                         text="",
@@ -83,7 +84,7 @@ class ToolBar:
                         command=self.change_tool_bar_state
                         )
         
-        for i in range(len(Tuile.BUILD_TILE_TYPES)):
+        for i in range(len(Tuile.TILE_TYPES[self.mode_selector.current_mode])):
             new_btn = pygame_gui.elements.UIButton(
                         relative_rect=pygame.Rect(((11/8 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
                         text="",

@@ -5,7 +5,7 @@ class ModeSelector:
     
     modes = {
         "Building": 0,
-        "Roads": 1,
+        "Signalisation": 1,
         "Simulation": 2
     }
     
@@ -55,3 +55,10 @@ class ModeSelector:
     def unselect_all_btns(self):
         for btn in self.mode_selector_btns:
             btn.unselect()
+    
+    def change_mode(self, new_mode: str):
+        try:
+            self.current_mode = self.modes[new_mode]
+            return True
+        except:
+            return False
