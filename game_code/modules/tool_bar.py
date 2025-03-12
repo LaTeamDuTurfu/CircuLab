@@ -25,12 +25,12 @@ class ToolBar:
     straight_road_tile = pygame.image.load("assets/tile_images/road_arrow.png")
     grass_tile = pygame.image.load("assets/tile_images/grass.png")
     # walkway_tile = pygame.image.load()
-    # skyscraper_tile = pygame.image.load()
+    skyscraper_tile = pygame.image.load("assets/tile_images/Skyscraper.png")
     # house1_tile = pygame.image.load()
     # house2_tile = pygame.image.load()
     # house3_tile = pygame.image.load()
     # house4_tile = pygame.image.load()
-    tile_images = [empty_tile, straight_road_tile, grass_tile, green_tile, pink_tile, red_tile, orange_tile, yellow_tile, white_tile]
+    tile_images = [empty_tile, straight_road_tile, grass_tile, green_tile, skyscraper_tile, red_tile, orange_tile, yellow_tile, white_tile]
 
     def __init__(self, surface, manager, window_frame, nbr_btns):
         self.WIDTH = surface.get_width()
@@ -50,7 +50,7 @@ class ToolBar:
         self.change_image_btn(1, "assets/tile_images/road_arrow.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/green.png")
-        self.change_image_btn(4, "assets/tile_images/pink.png")
+        self.change_image_btn(4, "assets/tile_images/Skyscraper.png")
         self.change_image_btn(5, "assets/tile_images/red.png")
         self.change_image_btn(6, "assets/tile_images/orange.png")
         self.change_image_btn(7, "assets/tile_images/yellow.png")
