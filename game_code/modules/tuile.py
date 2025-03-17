@@ -7,7 +7,7 @@ class Tuile(pygame.sprite.Sprite):
     BUILD_TILE_TYPES = {
         1: "Road",
         2: "Grass",
-        3: "Walkway",
+        3: "Sidewalk",
         4: "Skyscraper",
         5: "House1",
         6: "House2",

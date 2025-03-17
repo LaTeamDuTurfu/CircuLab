@@ -13,22 +13,16 @@ class ToolBar:
 
     # Load tiles images
     empty_tile = pygame.image.load("assets/tile_images/none.png")
-    green_tile = pygame.image.load("assets/tile_images/green.png")
-    pink_tile = pygame.image.load("assets/tile_images/pink.png")
-    red_tile = pygame.image.load("assets/tile_images/red.png")
-    orange_tile = pygame.image.load("assets/tile_images/orange.png")
-    yellow_tile = pygame.image.load("assets/tile_images/yellow.png")
-    white_tile = pygame.image.load("assets/tile_images/white_A.png")
     
     straight_road_tile = pygame.image.load("assets/tile_images/road_arrow.png")
     grass_tile = pygame.image.load("assets/tile_images/grass.png")
-    # walkway_tile = pygame.image.load()
+    sidewalk_tile = pygame.image.load("assets/tile_images/sidewalk.png")
     skyscraper_tile = pygame.image.load("assets/tile_images/Skyscraper.png")
-    # house1_tile = pygame.image.load()
-    # house2_tile = pygame.image.load()
-    # house3_tile = pygame.image.load()
-    # house4_tile = pygame.image.load()
-    building_tile_images = [empty_tile, straight_road_tile, grass_tile, green_tile, skyscraper_tile, red_tile, orange_tile, yellow_tile, white_tile]
+    house1_tile = pygame.image.load("assets/tile_images/house1.png")
+    house2_tile = pygame.image.load("assets/tile_images/house2.png")
+    house3_tile = pygame.image.load("assets/tile_images/house3.png")
+    house4_tile = pygame.image.load("assets/tile_images/house4.png")
+    building_tile_images = [empty_tile, straight_road_tile, grass_tile, sidewalk_tile, skyscraper_tile, house1_tile, house2_tile, house3_tile, house4_tile]
     signalisation_tile_images = []
     
     tile_images = {
@@ -55,12 +49,12 @@ class ToolBar:
         
         self.change_image_btn(1, "assets/tile_images/road_arrow.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
-        self.change_image_btn(3, "assets/tile_images/green.png")
+        self.change_image_btn(3, "assets/tile_images/sidewalk.png")
         self.change_image_btn(4, "assets/tile_images/Skyscraper.png")
-        self.change_image_btn(5, "assets/tile_images/red.png")
-        self.change_image_btn(6, "assets/tile_images/orange.png")
-        self.change_image_btn(7, "assets/tile_images/yellow.png")
-        self.change_image_btn(8, "assets/tile_images/white_A.png")
+        self.change_image_btn(5, "assets/tile_images/house1.png")
+        self.change_image_btn(6, "assets/tile_images/house2.png")
+        self.change_image_btn(7, "assets/tile_images/house3.png")
+        self.change_image_btn(8, "assets/tile_images/house4.png")
         
         self.draw()
         self.draw_buttons()
