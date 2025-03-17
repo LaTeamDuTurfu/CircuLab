@@ -26,6 +26,7 @@ class Partie():
         self.building_data = save_data["building_data"]
         self.car_data = None
         self.signalisation_data = None
+        self.font = pygame.font.Font("freesansbold.ttf", 32)
         
         self.game_data = {
             0: self.building_data,
@@ -70,7 +71,7 @@ class Partie():
                     if tile.tile_type != "@empty":
                         tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
                         tile.draw(surface)
-                        # print(tile.tile_type)
+                        print(f"{tile.tile_type}({tile.orientation}) X:{tile.rect.x // self.TILE_SIZE} Y:{tile.rect.y // self.TILE_SIZE}")
 
     def change_scroll(self, surface):
         if self.horizontal_scroll == 1 and self.scrollx < (self.columns * self.TILE_SIZE) - surface.get_width():
@@ -90,10 +91,5 @@ class Partie():
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
     
     def zoom(self, multiplicateur):
-        self.TILE_SIZE *= multiplicateur
-        
-        for _, row in enumerate(self.building_data):
-                for _, tile in enumerate(row):
-                    if tile.tile_type != "@empty":
-                        tile.change_size(multiplicateur)
+        pass
     

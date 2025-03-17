@@ -209,6 +209,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         for _ in range(n_rows):
             new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, tile_type="@empty")] * n_cols
             data_set.append(new_tile)
+        # print(data_set)
         return data_set
 
     def check_save_created(self):
