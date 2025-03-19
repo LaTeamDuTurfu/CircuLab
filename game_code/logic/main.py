@@ -134,6 +134,15 @@ class Circulab():
                 elif btn.is_selected:
                     btn.unselect()
                     continue
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.mode_selector.mode_selector_btns:
+                btn = event.ui_element
+                if not btn.is_selected:
+                    self.mode_selector.unselect_all_btns()
+                    btn.select()
+                    continue
+                elif btn.is_selected:
+                    btn.unselect()
+                    continue
 
             if event.type == pygame.KEYDOWN:
                 if self.loaded_save:
