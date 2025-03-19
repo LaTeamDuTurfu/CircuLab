@@ -19,7 +19,7 @@ class Circulab():
         self.logo = pygame.image.load("assets/other/logo.png")
 
         # Load Fonts
-        self.font = pygame.font.Font("freesansbold.ttf", 32)
+        self.font = pygame.font.Font("freesansbold.ttf", 24)
 
         # Color palette
         self.BLACK = "#040f0f"
@@ -97,7 +97,8 @@ class Circulab():
                 # Dessine les éléments du GUI
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
-                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2) 
+                    self.draw_text(f"Oritentation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
+                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
 
             # Dessine la bordure de l'écran
             self.window_border.draw_border()
