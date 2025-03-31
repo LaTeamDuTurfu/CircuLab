@@ -8,6 +8,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "game_code"))
 
 from modules import *
+from logic.graphe import *
 
 class Circulab():
     def __init__(self, height: int = 720, width: int = 1280):
@@ -79,6 +80,7 @@ class Circulab():
                 if self.new_save_window.check_save_created():
                     self.current_save = self.new_save_window.created_game
                     self.loaded_save = True
+                    self.graphe = Graphe(current_save=self.current_save)
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
 
 
