@@ -95,8 +95,6 @@ class Circulab():
 
                 # Dessine la grille
                 self.current_save.draw_grid(self.screen)    
-
-                self.current_save.TILE_SIZE -= 1
                 
                 # Dessine les éléments du GUI
                 if self.see_build_preview:
@@ -165,9 +163,11 @@ class Circulab():
                     if event.key == pygame.K_p:
                         self.see_build_preview = not self.see_build_preview
                     if event.key == pygame.K_1:
-                        self.current_save.zoom(1.1)
+                        self.current_save.zoom(1)
+                        self.current_save.draw_tuiles(self.screen)
                     if event.key == pygame.K_2:
-                        self.current_save.zoom(0.9)
+                        self.current_save.zoom(-1)
+                        self.current_save.draw_tuiles(self.screen)
 
             if event.type == pygame.KEYUP:
                 if self.loaded_save:

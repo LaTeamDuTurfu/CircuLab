@@ -71,7 +71,6 @@ class Tuile(pygame.sprite.Sprite):
     
     def change_size(self, new_size):
         self.image = pygame.transform.scale(self.image, (new_size, new_size))
-        self.rect = self.image.get_rect()
     
     def get_x_tile(self, tile_size):
         return self.rect.x // tile_size

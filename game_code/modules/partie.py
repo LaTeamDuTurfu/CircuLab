@@ -90,6 +90,11 @@ class Partie():
         for c in range(self.rows + 1):
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
     
-    def zoom(self, multiplicateur):
-        pass
+    def zoom(self, modificateur):
+        self.TILE_SIZE += modificateur
+        
+        for y, row in enumerate(self.building_data):
+                for x, tile in enumerate(row):
+                    if tile.tile_type != "@empty":
+                        tile.change_size(self.TILE_SIZE)
     
