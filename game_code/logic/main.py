@@ -96,6 +96,8 @@ class Circulab():
                 # Dessine la grille
                 self.current_save.draw_grid(self.screen)    
 
+                self.current_save.TILE_SIZE -= 1
+                
                 # Dessine les éléments du GUI
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))

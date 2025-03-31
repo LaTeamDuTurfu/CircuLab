@@ -8,11 +8,11 @@ sys.path.append(os.path.join(project_root, "game_code"))
 class Graphe:
     def __init__(self, current_save):
         self.current_save = current_save
-        self.name = current_save["name"]
-        self.building_data = current_save["building_data"]
-        self.tile_size = current_save["tile_size"]
-        self.scrollx = current_save["scrollx"]
-        self.scrolly = current_save["scrolly"]
+        self.name = current_save.name
+        self.building_data = current_save.building_data
+        self.tile_size = current_save.TILE_SIZE
+        self.scrollx = current_save.scrollx
+        self.scrolly = current_save.scrolly
         
         """
         Building_data = [
