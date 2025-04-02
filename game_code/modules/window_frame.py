@@ -20,7 +20,7 @@ class WindowFrame:
         self.right = pygame.Rect(self.screen.get_width() - self.thickness, 0, self.thickness, self.screen.get_height())
         
         # Draw Border
-        self.build_zoom_scroll()
+        # self.build_zoom_scroll()
         
     def draw_border(self, top: bool = 1, bottom: bool = 1, left: bool = 1, right: bool = 1):
         if top:

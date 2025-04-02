@@ -9,15 +9,13 @@ sys.path.append(os.path.join(project_root, "game_code"))
 
 from modules import *
 from logic.graphe import *
+from logic.états import *
 
 class Circulab():
     def __init__(self, height: int = 720, width: int = 1280):
         # Setup Window
         pygame.init()
         pygame.display.set_caption('CircuLab')
-
-        # Load Images
-        self.logo = pygame.image.load("assets/other/logo.png")
 
         # Load Fonts
         self.font = pygame.font.Font("freesansbold.ttf", 24)
@@ -39,16 +37,24 @@ class Circulab():
 
         # GUI Manager
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
-
-        # Dessiner les éléments du GUI
+        
+        # State Manager
+        self.state_manager = ÉtatJeu(ÉtatJeu.NEW_GAME)
+        
+        # Dessiner les éléments du GUI (En Game)
         self.window_border = WindowFrame(self.screen, 10, self.BLUE_GREY, self.manager)
+        
         self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border)
+        self.mode_selector.mode_selector_window.hide()
+        
         self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, nbr_btns=8)
+        self.build_tool_bar.tool_bar_window.hide()
         
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
 
         self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
+        self.new_save_window.hide()
         
         # Variable de jeu
         self.build_orientation = 0
@@ -64,30 +70,36 @@ class Circulab():
         self.current_save = None
         
         # Vérifie si une save est loaded
-        self.loaded_save = False
     
     def run(self):
         while self.running:
             # FPS Capping
             time_delta = self.clock.tick(60)/1000
 
-
             # Logic
             self.get_mouse_pos()
             self.traiter_inputs()
-
-            if not self.loaded_save:
-                if self.new_save_window.check_save_created():
-                    self.current_save = self.new_save_window.created_game
-                    self.loaded_save = True
-                    self.graphe = Graphe(current_save=self.current_save)
-                    pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
-
-
+            
             # Remplit le fond de couleur grise
             self.screen.fill(self.GREY)
             
-            if self.loaded_save:
+            if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
+                pass
+            elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
+                pass
+            elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
+                self.new_save_window.show()
+                if self.new_save_window.check_save_created():
+                    self.current_save = self.new_save_window.created_game
+                    self.graphe = Graphe(current_save=self.current_save)
+                    pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
+                    self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
+            elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
+                pass
+            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR:
+                self.mode_selector.mode_selector_window.show()
+                self.build_tool_bar.tool_bar_window.show()
+                
                 # Dessine les tuiles
                 self.current_save.change_scroll(self.screen)
                 self.change_tuiles()
@@ -102,13 +114,15 @@ class Circulab():
                     self.draw_text(f"Oritentation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
 
-            # Dessine la bordure de l'écran
-            self.window_border.draw_border()
-            
-            # Update l'écran
+                    
+                # Dessine la bordure de l'écran
+                self.window_border.draw_border() 
+                 
+                # Update l'écran
+                self.window_border.draw_border(bottom=False)
+                
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
-            self.window_border.draw_border(bottom=False)
             pygame.display.flip()
     
         pygame.quit()
@@ -147,7 +161,7 @@ class Circulab():
                     continue
 
             if event.type == pygame.KEYDOWN:
-                if self.loaded_save:
+                if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
                     if event.key == pygame.K_LEFT:
                         self.current_save.horizontal_scroll = -1
                     if event.key == pygame.K_RIGHT:
@@ -170,7 +184,7 @@ class Circulab():
                         self.current_save.draw_tuiles(self.screen)
 
             if event.type == pygame.KEYUP:
-                if self.loaded_save:
+                if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                         self.current_save.horizontal_scroll = 0
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
@@ -194,7 +208,6 @@ class Circulab():
             self.y_pos = (self.pos[1] + self.current_save.scrolly) // self.current_save.TILE_SIZE
         except AttributeError:
             pass
-
 
     def change_build_orientation(self):
         self.build_orientation += 1

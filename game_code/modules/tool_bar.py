@@ -55,11 +55,7 @@ class ToolBar:
         self.change_image_btn(6, "assets/tile_images/house2.png")
         self.change_image_btn(7, "assets/tile_images/house3.png")
         self.change_image_btn(8, "assets/tile_images/house4.png")
-        
-        self.draw()
-        self.draw_buttons()
 
-    def draw(self):
         self.tool_bar_window = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), 
             object_id="#tool_bar_window", 
@@ -67,7 +63,6 @@ class ToolBar:
         
         self.tool_bar_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), manager=self.manager, container=self.tool_bar_window, object_id="#tool_bar_container", allow_scroll_y=True)
     
-    def draw_buttons(self):
         self.close_btn = pygame_gui.elements.UIButton(
                         relative_rect=pygame.Rect((self.TOOL_BAR_BTN_SIZE/4, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE/2, self.TOOL_BAR_BTN_SIZE)),
                         text="",
