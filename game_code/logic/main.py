@@ -162,10 +162,10 @@ class Circulab():
                         self.change_build_orientation()
                     if event.key == pygame.K_p:
                         self.see_build_preview = not self.see_build_preview
-                    if event.key == pygame.K_1:
+                    if event.key == pygame.K_PLUS or event.key == pygame.K_EQUALS:
                         self.current_save.zoom(1)
                         self.current_save.draw_tuiles(self.screen)
-                    if event.key == pygame.K_2:
+                    if event.key == pygame.K_MINUS:
                         self.current_save.zoom(-1)
                         self.current_save.draw_tuiles(self.screen)
 
