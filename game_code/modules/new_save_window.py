@@ -110,7 +110,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
 
         self.error_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((0, self.path_text_box.get_relative_rect().y + self.path_text_box.get_relative_rect().height), (self.window_container.get_relative_rect().width, 50)),
-            text="Error Message",
+            text="",
             manager=manager,
             container=self.window_container,
             object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#error_label"),
