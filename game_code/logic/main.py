@@ -7,6 +7,7 @@ import pygame_gui
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "game_code"))
 
+
 from modules import *
 from logic.graphe import *
 from logic.états import *
@@ -19,7 +20,8 @@ class Circulab():
 
         # Load Fonts
         self.font = pygame.font.Font("freesansbold.ttf", 24)
-
+        self.jersey_font = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
+        
         # Color palette
         self.BLACK = "#040f0f"
         self.DARK_GREEN = "#248232"
@@ -39,7 +41,7 @@ class Circulab():
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
         
         # State Manager
-        self.state_manager = ÉtatJeu(ÉtatJeu.NEW_GAME)
+        self.state_manager = ÉtatJeu(ÉtatJeu.HOME_PAGE)
         
         # Dessiner les éléments du GUI (En Game)
         self.window_border = WindowFrame(self.screen, 10, self.BLUE_GREY, self.manager)
@@ -72,6 +74,13 @@ class Circulab():
         # Vérifie si une save est loaded
     
     def run(self):
+        
+        """
+        Boucle principale du jeu.
+        
+        Gère les événements clavier et souris, met à jour l'écran
+        en fonction de l'état courant du jeu, et gère les éléments du GUI.
+        """
         while self.running:
             # FPS Capping
             time_delta = self.clock.tick(60)/1000
@@ -84,7 +93,7 @@ class Circulab():
             self.screen.fill(self.GREY)
             
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
-                pass
+                self.draw_text("CircuLab", self.jersey_font, "white", self.WIDTH/2, self.HEIGHT/3)
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pass
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
@@ -111,7 +120,7 @@ class Circulab():
                 # Dessine les éléments du GUI
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
-                    self.draw_text(f"Oritentation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
+                    self.draw_text(f"Oritentation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.jersey_font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
 
                     
@@ -194,14 +203,36 @@ class Circulab():
 
             self.manager.process_events(event)  
     
-    def draw_text(self, text, font, text_col, x, y):
+    def draw_text(self, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int) -> None:
+        """
+        Render the given text on the screen at the given position.
+
+        Args:
+            text (str): The text to render.
+            font (pygame.font.Font): The font to use.
+            text_col (tuple of int): The color of the text in RGB format.
+            x (int): The x-coordinate of the center of the text.
+            y (int): The y-coordinate of the center of the text.
+        """
+        # Render the text using the given font
         img = font.render(text, True, text_col)
+        # Get the bounding rectangle of the rendered text
         img_rect = img.get_rect()
+        # Set the center of the bounding rectangle to the given position
         img_rect.center = (x, y)
+        # Blit the rendered text onto the main surface at the given position
         self.screen.blit(img, img_rect)
 
     def get_mouse_pos(self):
         #get mouse position
+        """
+        Updates the current mouse position and calculates the corresponding tile position.
+
+        This function retrieves the current mouse position and calculates the indices
+        of the tile being hovered over on the grid. The positions are adjusted based
+        on the current scroll offset and tile size.
+        """
+
         self.pos = pygame.mouse.get_pos()
         try:
             self.x_pos = (self.pos[0] + self.current_save.scrollx) // self.current_save.TILE_SIZE
@@ -210,11 +241,29 @@ class Circulab():
             pass
 
     def change_build_orientation(self):
+        """
+        Cycles through the build orientations in a clockwise manner.
+
+        This function increments the 'build_orientation' attribute by 1 to change
+        the orientation of a building. If the orientation exceeds 3, it resets to 0,
+        ensuring the orientation remains within the valid range of 0 to 3.
+        """
         self.build_orientation += 1
         if self.build_orientation > 3:
             self.build_orientation = 0
 
     def change_tuiles(self):
+        """
+        Updates the tile at the current mouse position to the selected tile
+        image from the toolbar, but only if the left mouse button is pressed
+        and the current tile at the mouse position is not the same as the
+        selected tile. If the right mouse button is pressed, the tile is reset
+        to an empty tile.
+
+        This function is used in the game loop to update the tiles on the grid
+        based on the user's input. It is called every frame when the game is in
+        the game editor state.
+        """
         if self.window_border.thickness < self.pos[0] < (self.WIDTH - self.window_border.thickness) and self.build_tool_bar.TOOL_BAR_HEIGHT < self.pos[1] < (self.HEIGHT - self.window_border.bottom_thickness):
             self.y_pos = int(self.y_pos)
             self.x_pos = int(self.x_pos)

@@ -43,15 +43,40 @@ class ModeSelector:
             self.mode_selector_btns.add(new_btn)
     
     def get_selected_btn(self):
+        """
+        Returns the currently selected button in the mode selector.
+
+        Iterates through all buttons in the mode selector and checks 
+        if a button is selected. If a selected button is found, it 
+        returns that button. If no button is selected, the function 
+        will return None.
+        """
+
         for btn in self.mode_selector_btns:
             if  btn.is_selected:
                 return btn
 
     def unselect_all_btns(self):
+        """
+        Unselects all buttons in the mode selector.
+
+        Iterates through all buttons in the mode selector and calls
+        the unselect method on each one. This method is used to make
+        sure no button is selected when the user changes the mode.
+        """
         for btn in self.mode_selector_btns:
             btn.unselect()
     
     def change_mode(self, new_mode: str):
+        """
+        Changes the current mode to a new mode.
+
+        Args:
+        new_mode (str): The name of the new mode to switch to.
+
+        Returns:
+        bool: True if the mode change was successful, False if the mode does not exist.
+        """
         try:
             self.current_mode = self.modes[new_mode]
             return True

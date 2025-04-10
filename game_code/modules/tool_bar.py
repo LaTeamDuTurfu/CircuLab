@@ -85,15 +85,45 @@ class ToolBar:
             self.tool_bar_btns.add(new_btn)
     
     def get_selected_btn(self):
+        """
+        Returns the currently selected button in the toolbar.
+
+        Iterates through all buttons in the toolbar and checks 
+        if a button is selected. If a selected button is found, 
+        it returns that button. If no button is selected, the 
+        function will return None.
+        """
+
         for btn in self.tool_bar_btns:
             if  btn.is_selected:
                 return btn
 
     def unselect_all_btns(self):
+        """
+        Unselects all buttons in the toolbar.
+
+        Iterates through all buttons in the toolbar and calls
+        the unselect method on each one. This method is used to make
+        sure no button is selected when the user changes the mode.
+        """
         for btn in self.tool_bar_btns:
             btn.unselect()
     
     def change_image_btn(self, index, image_path):
+        """
+        Changes the image of a button in the toolbar given its index and the path to the image.
+
+        Args:
+        index (int): The index of the button in the toolbar.
+        image_path (str): The path to the image that will be used to replace the current image on the button.
+
+        Returns:
+        None
+
+        Notes:
+        This method modifies the theme data file to update the image path for the button.
+        It then reloads the theme data and updates the image on the button.
+        """
         with open(f"data/theme_manager/styles_real.json", "r+") as theme_file:
             theme_data = json.load(theme_file)
             new_img = pygame.image.load(image_path)
@@ -108,6 +138,16 @@ class ToolBar:
         self.manager.rebuild_all_from_changed_theme_data()
     
     def change_tool_bar_state(self):
+        """
+        Toggles the visibility state of the toolbar.
+
+        This function checks the current visibility state of the toolbar
+        and toggles it. If the toolbar is currently visible, it hides the
+        toolbar by moving its position off-screen and hiding its buttons.
+        Otherwise, it shows the toolbar by bringing it back on-screen and
+        displaying its buttons. It also updates the position of the close
+        button accordingly and prints the current positions for debugging.
+        """
         if self.show:
             self.tool_bar_window.rect.x = self.WIDTH - self.window_frame.thickness - self.TOOL_BAR_BTN_SIZE * 3/4
             self.close_btn.relative_rect.x = self.TOOL_BAR_WIDTH - self.TOOL_BAR_BTN_SIZE * 3/4

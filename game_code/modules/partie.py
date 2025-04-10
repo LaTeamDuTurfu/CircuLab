@@ -39,6 +39,18 @@ class Partie():
         return os.path.exists(self.path)
 
     def update_save(self):
+        """
+        Met à jour la sauvegarde en cours.
+
+        Crée un dictionnaire `save_data` contenant les données de la partie, puis vérifie si le chemin de sauvegarde est valide.
+        Si le chemin est valide, la méthode stocke les données de la partie dans un fichier .clab à l'emplacement spécifié.
+        Si le chemin est invalide, un message d'erreur est affiché et la méthode renvoie False.
+        Sinon, la méthode renvoie True.
+
+        :return: True si la sauvegarde a réussi, False sinon.
+        :rtype: bool
+        """
+        
         save_data = {
             "name": self.name,
             "cols": self.columns,
@@ -74,6 +86,22 @@ class Partie():
                         # print(f"{tile.tile_type}({tile.orientation}) X:{tile.rect.x // self.TILE_SIZE} Y:{tile.rect.y // self.TILE_SIZE}")
 
     def change_scroll(self, surface):
+        """
+        Adjusts the scroll position based on the current scroll direction and speed.
+
+        This method updates the horizontal and vertical scroll positions (`scrollx` and `scrolly`)
+        of the game display. The scrolling is controlled by the `horizontal_scroll` and `vertical_scroll`
+        attributes, which determine the direction of scrolling. The scroll speed is determined by the
+        `scroll_speed` attribute.
+
+        The method ensures that scrolling does not exceed the boundaries of the game area defined 
+        by the total number of columns and rows times the tile size (`TILE_SIZE`), minus the dimensions
+        of the visible surface.
+
+        :param surface: The surface to which the scrolling constraints are applied.
+        :type surface: pygame.Surface
+        """
+
         if self.horizontal_scroll == 1 and self.scrollx < (self.columns * self.TILE_SIZE) - surface.get_width():
             self.scrollx += 5 * self.scroll_speed
         elif self.horizontal_scroll == -1 and self.scrollx > 0:
@@ -85,12 +113,24 @@ class Partie():
             self.scrolly -= 5 * self.scroll_speed
     
     def draw_grid(self, surface):
+        """
+        Dessine un quadrillage sur la surface.
+        
+        Cette methode dessine un quadrillage sur la surface en fonction de la
+        taille des tuiles (`TILE_SIZE`) et de la position actuelle du scroll.
+        """
         for c in range(self.columns + 1):
             pygame.draw.line(surface, "#FFFFFF", (c * self.TILE_SIZE - self.scrollx, 0), (c * self.TILE_SIZE - self.scrollx, surface.get_height()))
         for c in range(self.rows + 1):
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
     
     def zoom(self, modificateur):
+        """
+        Modifie la taille des tuiles de la partie.
+
+        Cette methode modifie la taille des tuiles (`TILE_SIZE`) de la partie en fonction du modificateur fourni.
+        Ensuite, elle met à jour la taille de chaque tuile non vide en appelant la methode `change_size` de la classe `Tuile`.
+        """
         self.TILE_SIZE += modificateur
         
         for y, row in enumerate(self.building_data):

@@ -20,6 +20,19 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
 
     def __init__(self, rect, manager, default_path):
         # Load tiles images
+        """
+        Crée une nouvelle fenêtre de sauvegarde.
+        Elle permet de définir les paramètres de la sauvegarde (nom, chemin, nombre de colonnes et de lignes) et de l'enregistrer.
+        Si la sauvegarde est créée avec succès, la fenêtre se ferme et la méthode `save_new` est appelée avec en paramètre la partie créée.
+        Sinon, un message d'erreur est affiché en dessous du champ de texte du chemin.
+
+        :param rect: La taille et la position de la fenêtre.
+        :type rect: pygame.Rect
+        :param manager: Le gestionnaire d'événements.
+        :type manager: pygame_gui.UIManager
+        :param default_path: Le chemin par défaut où la sauvegarde sera enregistrée.
+        :type default_path: str
+        """
         self.empty_tile = pygame.image.load("assets/tile_images/none.png")
         
         # UI Elements
@@ -138,6 +151,12 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.file_explorer_btn.bind(pygame_gui.UI_BUTTON_PRESSED, self.open_file_explorer)
 
     def open_file_explorer(self):
+        """
+        Ouvre une fenêtre de sélection de chemin pour que l'utilisateur puisse
+        choisir le chemin de sauvegarde de la partie.
+
+        Lorsque le bouton OK est pressé, la méthode set_new_path est appelée.
+        """
         self.file_explorer_window = pygame_gui.windows.UIFileDialog(
             rect=self.rect,
             manager=self.manager,
@@ -151,17 +170,44 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.file_explorer_window.ok_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.set_new_path)
 
     def set_new_path(self):
+        """
+        Called when the user has selected a directory path in the file explorer window.
+        Sets the text of the path_text_box to the selected path, and kills the file explorer window.
+        """
         self.path = str(self.file_explorer_window.current_directory_path)
         print(self.path)
         self.path_text_box.set_text(self.path)
         self.file_explorer_window.kill()
 
     def show_error_msg(self, message):
+        """
+        Affiche un message d'erreur en haut de la fenêtre de création de partie.
+        
+        :param message: Le message d'erreur à afficher.
+        """
         self.error_label.set_text(message)
         self.error_label.visible = True
 
     def save_new(self):
         # Get save data
+        """
+        Creates a new save for the game based on user input data and validates it.
+
+        Retrieves the number of columns and rows from text boxes, and verifies that 
+        they are integers. Collects the save path and name from text boxes as well.
+        Initializes empty data for building, car, and signalisation elements.
+
+        Validates the input data to ensure all fields are filled and that the number 
+        of columns and rows is within the allowed range. If validation fails, an 
+        error message is displayed.
+
+        Constructs a save data dictionary and attempts to create a new game save. If 
+        the save path is correct, the game is saved and a success message is printed; 
+        otherwise, an error message is shown.
+
+        :raises ValueError: If the number of columns or rows is not an integer.
+        """
+
         try:
             n_cols = int(self.cols_text_box.get_text())
             n_rows = int(self.rows_text_box.get_text())
@@ -206,6 +252,23 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             self.show_error_msg("Le chemin de sauvegarde n'est pas correct")
     
     def fill_empty_tile(self, n_rows, n_cols, data_set=[]):
+        """
+        Fill a 2D array with empty tiles
+
+        Parameters
+        ----------
+        n_rows : int
+            Number of rows to fill
+        n_cols : int
+            Number of columns to fill
+        data_set : list, optional
+            List to which the filled 2D array will be appended. If not provided, a new list is created.
+
+        Returns
+        -------
+        data_set : list
+            A 2D array with n_rows and n_cols of empty tiles
+        """
         for _ in range(n_rows):
             new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, tile_type="@empty")] * n_cols
             data_set.append(new_tile)
@@ -213,6 +276,18 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         return data_set
 
     def check_save_created(self):
+        """
+        Checks if a game instance has been successfully created and saved.
+        
+        If a game instance exists, the current window is closed and the method 
+        returns True, indicating that the save was successful. Otherwise, it 
+        returns False.
+        
+        Returns
+        -------
+        bool
+            True if the game was created and saved successfully, False otherwise.
+        """
         if self.created_game != None:
             self.kill()
             return True
