@@ -20,7 +20,8 @@ class Circulab():
 
         # Load Fonts
         self.font = pygame.font.Font("freesansbold.ttf", 24)
-        self.jersey_font = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
+        self.font_title = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
+        self.font_text = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 24)
         
         # Color palette
         self.BLACK = "#040f0f"
@@ -95,7 +96,7 @@ class Circulab():
             self.screen.fill(self.GREY)
             
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
-                self.draw_text("CircuLab", self.jersey_font, "white", self.WIDTH/2, self.HEIGHT/3)
+                self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/3)
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pass
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
@@ -123,7 +124,7 @@ class Circulab():
                 # Dessine les éléments du GUI
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
-                    self.draw_text(f"Oritentation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.jersey_font, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
+                    self.draw_text(f"Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
 
                     
