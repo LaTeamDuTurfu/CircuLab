@@ -1,29 +1,179 @@
 import sys
 import os
+import pygame
+import networkx as nx
+import random
+
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "game_code"))
 
+from modules import Voiture, Intersection, TrafficLight, Route
+
 class Graphe:
-    def __init__(self, current_save):
-        self.current_save = current_save
-        self.name = current_save.name
-        self.building_data = current_save.building_data
-        self.tile_size = current_save.TILE_SIZE
-        self.scrollx = current_save.scrollx
-        self.scrolly = current_save.scrolly
-        
+    def __init__(self, current_save, nb_voitures = 3, max_lanes=3):
         """
         Building_data = [
             [Tuile, Tuile, Tuile],
             [Tuile, Tuile, Tuile],
             [Tuile, Tuile, Tuile]
         ]
-        
-        Tuile --> 
+
+        Tuile -->
         self.image = image
         self.tile_type = tile_type --> @empty, @road
         self.orientation = orientation --> 0, 1, 2, 3
         self.rect = image.get_rect() --> width, height, x, y
         """
+        self.current_save = current_save
+        self.name = current_save.name
+        self.building_data = current_save.building_data
+        self.tile_size = current_save.TILE_SIZE
+        self.scrollx = current_save.scrollx
+        self.scrolly = current_save.scrolly
+        self.max_lanes = max_lanes
+
+        # Charger l'image de voiture ; si le fichier n'existe pas, utiliser un rectangle rouge
+        try:
+            car_image_raw = pygame.image.load("car.png").convert_alpha()
+            self.car_image = pygame.transform.scale(car_image_raw, (80, 80))
+        except Exception as e:
+            print("Erreur lors du chargement de 'car.png':", e)
+            self.car_image = pygame.Surface((40, 20))
+            self.car_image.fill((255, 0, 0))
+
+        # Créer les intersections avec ou sans feux de circulation
+        self.intersections = {}
+        self.build_intersections()
+
+        # Créer les routes (chaque segment sera décliné en plusieurs voies, sens unique)
+        self.routes = []
+        self.build_routes()
+
+        # Construire le graphe orienté multiple avec networkx
+        self.G = nx.MultiDiGraph()
+        self.build_graph()
+
+        # Créer les véhicules avec départ et arrivée aléatoires et chemin calculé
+        self.voitures = []
+        self.create_vehicles(nb_voitures)
+
+    def build_intersections(self):
+        # Définition d'intersections (position et présence de feu)
+        inter_points = {
+            (100, 100): False,
+            (700, 100): True,  # feu de circulation
+            (700, 500): False,
+            (100, 500): True,  # feu de circulation
+            (400, 300): True  # intersection centrale avec feu
+        }
+        for pos, has_light in inter_points.items():
+            self.intersections[pos] = Intersection(pos, has_traffic_light=has_light)
+
+    def build_routes(self):
+        # Pour simplifier, on définit des segments à sens unique.
+        # Exemple : Pour le rectangle, on choisit la direction suivante (sens horaire) :
+        points_rect = [(100, 100), (700, 100), (700, 500), (100, 500)]
+        # Routes du rectangle (sens unique : de chaque point vers le suivant)
+        for i in range(len(points_rect)):
+            start = self.intersections[
+                points_rect[i]]  # Cherche l'intersection de début d'une route ayant comme points points_rect
+            end = self.intersections[points_rect[(i + 1) % len(points_rect)]]  # Cherche l'intersection de fin
+            for lane in range(1, self.max_lanes + 1):  # Ajoute les différentes voies entre chaque intersection
+                self.routes.append(Route(start, end, lane, self.max_lanes))
+        # Routes reliant les coins au centre (sens : du coin vers le centre)
+        for pos in points_rect:
+            start = self.intersections[pos]
+            end = self.intersections[(400, 300)]
+            for lane in range(1, self.max_lanes + 1):
+                self.routes.append(Route(start, end, lane, self.max_lanes))
+        # Route supplémentaire (sens unique) reliant (700,100) vers (100,500)
+        start = self.intersections[(700, 100)]
+        end = self.intersections[(100, 500)]
+        for lane in range(1, self.max_lanes + 1):
+            self.routes.append(Route(start, end, lane, self.max_lanes))
+
+    def build_graph(self):
+        # Utiliser un MultiDiGraph pour représenter les voies à sens unique
+        for pos in self.intersections:
+            self.G.add_node(pos)
+        for route in self.routes:
+            u = route.start.position
+            v = route.end.position
+            # Chaque voie est une arête avec un poids égal à la distance
+            self.G.add_edge(u, v, weight=route.length, route=route)
+
+    def create_vehicles(self, nb):
+        positions = list(self.intersections.keys())
+        for _ in range(nb):
+            dep = random.choice(positions)
+            arr = random.choice(positions)
+            while arr == dep:
+                arr = random.choice(positions)
+            try:
+                # Calcul du chemin le plus court en terme de distance
+                path_nodes = nx.shortest_path(self.G, source=dep, target=arr, weight='weight')
+            except nx.NetworkXNoPath:
+                continue
+
+            # Pour chaque segment du chemin, choisir aléatoirement l'une des voies disponibles
+            route_list = []
+            for i in range(len(path_nodes) - 1):
+                u = path_nodes[i]
+                v = path_nodes[i + 1]
+                # Récupérer toutes les voies de u vers v
+                edges = self.G.get_edge_data(u, v)
+                if edges is None:
+                    continue
+                # Chaque edge a un attribut 'route'
+                available_routes = [edges[key]['route'] for key in edges]
+                chosen_route = random.choice(available_routes)
+                route_list.append(chosen_route)
+            if route_list:
+                print("Chemin (nœuds):", path_nodes, "-> Voies choisies:",
+                      [f"{r.start.position}->{r.end.position} (voie {r.lane})" for r in route_list])
+                self.voitures.append(Voiture(route_list, self.car_image))
+
+    def update(self, dt):
+        # Mise à jour des intersections (et de leurs feux)
+        for inter in self.intersections.values():
+            inter.update(dt)
+        # Mise à jour des véhicules
+        for v in self.voitures:
+            v.update(dt)
+
+    def draw(self):
+        self.screen.fill((0, 0, 0))
+        # Dessiner toutes les routes
+        for r in self.routes:
+            r.draw(self.screen)
+        # Dessiner les intersections
+        for inter in self.intersections.values():
+            inter.draw(self.screen)
+        # Dessiner les véhicules
+        for v in self.voitures:
+            v.draw(self.screen)
+        pygame.display.flip()
+
+    def run(self):
+        simulation_running = True
+        simulation_finished = False
+        while simulation_running:
+            dt = self.clock.tick(60) / 1000.0  # dt en secondes
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    simulation_running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        simulation_running = False
+
+            if not simulation_finished:
+                self.update(dt)
+                if all(v.finished for v in self.voitures):
+                    simulation_finished = True
+                    pygame.display.set_caption("Simulation terminée - Appuyez sur Échap ou fermez la fenêtre")
+            self.draw()
+
+        pygame.quit()
+        sys.exit()
