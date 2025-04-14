@@ -5,3 +5,7 @@ from .tool_bar import ToolBar
 from .mode_selector import ModeSelector
 from .window_frame import WindowFrame
 from .road_orientation import RoadOrientationManager
+from .Intersection import Intersection
+from .Voiture import Voiture
+from .TrafficLight import TrafficLight
+from .Route import Route
