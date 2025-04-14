@@ -106,7 +106,13 @@ class RoadOrientationManager():
                     if self.tile.orientation == 0:
                         self.change_tile_image(self.tile, self.single_turn_down_right, rotation_manuelle=1)
                     elif self.tile.orientation == 2:
-                        self.change_tile_image(self.tile, self.single_turn_down_left, rotation_manuelle=1)
+                        self.change_tile_image(self.tile, self.single_turn_down_left, rotation_manuelle=1) 
+            
+            if not self.is_a_road(self.right_tile):
+                if self.is_a_road(self.bottom_tile) and self.left_tile.orientation == self.bottom_tile.orientation and self.left_tile.orientation == 3:
+                    self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=1)
+                elif self.is_a_road(self.top_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 3:
+                    self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=1)  
                     
         if self.is_a_road(self.tile) and self.is_a_road(self.right_tile): # Changement quand on place une tuile à gauche d'une autre
             if self.tile.orientation == self.right_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
@@ -168,6 +174,12 @@ class RoadOrientationManager():
                     elif self.tile.orientation == 3:
                         self.change_tile_image(self.tile, self.single_turn_down_right, rotation_manuelle=0)
             
+            if not self.is_a_road(self.bottom_tile):
+                if self.is_a_road(self.left_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 2:
+                    self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=0)
+                elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.top_tile.orientation and self.right_tile.orientation == 2:
+                    self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=0)
+            
         if self.is_a_road(self.tile) and self.is_a_road(self.bottom_tile): # Changement quand on place une tuile au dessus d'une autre
             if self.tile.orientation == self.bottom_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
                 if self.tile.orientation == 1:
@@ -197,3 +209,9 @@ class RoadOrientationManager():
                         self.change_tile_image(self.tile, self.single_turn_up_left, rotation_manuelle=0)
                     elif self.tile.orientation == 3:
                         self.change_tile_image(self.tile, self.single_turn_up_right, rotation_manuelle=0)
+            
+            if not self.is_a_road(self.top_tile):
+                if self.is_a_road(self.left_tile) and self.left_tile.orientation == self.bottom_tile.orientation and self.left_tile.orientation == 0:
+                    self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=2)
+                elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.bottom_tile.orientation and self.right_tile.orientation == 0:
+                    self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=2)
