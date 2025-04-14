@@ -10,7 +10,3 @@ class Intersection:
         if self.traffic_light:
             self.traffic_light.update(dt)
 
-    def draw(self, screen):
-        pygame.draw.circle(screen, (255, 255, 255), self.position, 5)
-        if self.traffic_light:
-            self.traffic_light.draw(screen, self.position)

@@ -62,11 +62,7 @@ class Graphe:
     def build_intersections(self):
         # Définition d'intersections (position et présence de feu)
         inter_points = {
-            (100, 100): False,
-            (700, 100): True,  # feu de circulation
-            (700, 500): False,
-            (100, 500): True,  # feu de circulation
-            (400, 300): True  # intersection centrale avec feu
+            # (100, 100): False
         }
         for pos, has_light in inter_points.items():
             self.intersections[pos] = Intersection(pos, has_traffic_light=has_light)
@@ -74,16 +70,16 @@ class Graphe:
     def build_routes(self):
         # Pour simplifier, on définit des segments à sens unique.
         # Exemple : Pour le rectangle, on choisit la direction suivante (sens horaire) :
-        points_rect = [(100, 100), (700, 100), (700, 500), (100, 500)]
+        points = [] # Liste de tuples des coordonnées
         # Routes du rectangle (sens unique : de chaque point vers le suivant)
-        for i in range(len(points_rect)):
+        for i in range(len(points)):
             start = self.intersections[
-                points_rect[i]]  # Cherche l'intersection de début d'une route ayant comme points points_rect
-            end = self.intersections[points_rect[(i + 1) % len(points_rect)]]  # Cherche l'intersection de fin
+                points[i]]  # Cherche l'intersection de début d'une route ayant comme points points_rect
+            end = self.intersections[points[(i + 1) % len(points)]]  # Cherche l'intersection de fin
             for lane in range(1, self.max_lanes + 1):  # Ajoute les différentes voies entre chaque intersection
                 self.routes.append(Route(start, end, lane, self.max_lanes))
         # Routes reliant les coins au centre (sens : du coin vers le centre)
-        for pos in points_rect:
+        for pos in points:
             start = self.intersections[pos]
             end = self.intersections[(400, 300)]
             for lane in range(1, self.max_lanes + 1):
@@ -143,37 +139,3 @@ class Graphe:
         for v in self.voitures:
             v.update(dt)
 
-    def draw(self):
-        self.screen.fill((0, 0, 0))
-        # Dessiner toutes les routes
-        for r in self.routes:
-            r.draw(self.screen)
-        # Dessiner les intersections
-        for inter in self.intersections.values():
-            inter.draw(self.screen)
-        # Dessiner les véhicules
-        for v in self.voitures:
-            v.draw(self.screen)
-        pygame.display.flip()
-
-    def run(self):
-        simulation_running = True
-        simulation_finished = False
-        while simulation_running:
-            dt = self.clock.tick(60) / 1000.0  # dt en secondes
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    simulation_running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        simulation_running = False
-
-            if not simulation_finished:
-                self.update(dt)
-                if all(v.finished for v in self.voitures):
-                    simulation_finished = True
-                    pygame.display.set_caption("Simulation terminée - Appuyez sur Échap ou fermez la fenêtre")
-            self.draw()
-
-        pygame.quit()
-        sys.exit()
