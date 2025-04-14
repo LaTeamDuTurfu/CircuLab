@@ -11,10 +11,9 @@ from modules import Tuile, NewSaveWindow
 
 class ToolBar:
 
-    # Load tiles images
+    # Load tiles images de la toolbar en mode building
     empty_tile = pygame.image.load("assets/tile_images/none.png")
-    
-    straight_road_tile = pygame.image.load("assets/tile_images/road_arrow.png")
+    straight_road_tile = pygame.image.load("assets/tile_images/road.png")
     grass_tile = pygame.image.load("assets/tile_images/grass.png")
     sidewalk_tile = pygame.image.load("assets/tile_images/sidewalk.png")
     skyscraper_tile = pygame.image.load("assets/tile_images/Skyscraper.png")
@@ -22,6 +21,10 @@ class ToolBar:
     house2_tile = pygame.image.load("assets/tile_images/house2.png")
     house3_tile = pygame.image.load("assets/tile_images/house3.png")
     house4_tile = pygame.image.load("assets/tile_images/house4.png")
+    
+    # Load tiles images de la toolbar en mode roads
+    
+    
     building_tile_images = [empty_tile, straight_road_tile, grass_tile, sidewalk_tile, skyscraper_tile, house1_tile, house2_tile, house3_tile, house4_tile]
     signalisation_tile_images = []
     
@@ -47,7 +50,7 @@ class ToolBar:
 
         self.mode_selector = mode_selector
         
-        self.change_image_btn(1, "assets/tile_images/road_arrow.png")
+        self.change_image_btn(1, "assets/tile_images/road.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/sidewalk.png")
         self.change_image_btn(4, "assets/tile_images/Skyscraper.png")
