@@ -53,6 +53,11 @@ class RoadOrientationManager():
         self.right_tile = self.game_data[self.y_pos][self.x_pos + 1]
         self.top_tile = self.game_data[self.y_pos - 1][self.x_pos]
         self.bottom_tile = self.game_data[self.y_pos + 1][self.x_pos]
+        
+        self.top_left_tile = self.game_data[self.y_pos - 1][self.x_pos - 1]
+        self.top_right_tile = self.game_data[self.y_pos - 1][self.x_pos + 1]
+        self.bottom_left_tile = self.game_data[self.y_pos + 1][self.x_pos - 1]
+        self.bottom_right_tile = self.game_data[self.y_pos + 1][self.x_pos + 1]
     
     def is_a_road(self, tile):
         if tile.tile_type == "Road":
@@ -116,7 +121,27 @@ class RoadOrientationManager():
                     elif self.is_a_road(self.top_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 3:
                         self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=1)  
                         self.check_tile_change(self.x_pos - 1, self.y_pos)  # Check la tuile gauche pour voir si elle doit changer
-                    
+                
+                # # Gère les inner doubles turns 
+                # if self.tile.orientation % 2 == (self.bottom_tile.orientation + 1) % 2:
+                #     if self.bottom_tile.orientation == 2:
+                #         if self.tile.orientation == 3:
+                #             self.change_tile_image(self.tile, self.straight_dotted_white_right)
+                #             self.change_tile_image(self.bottom_tile, self.inner_turn_up_left, rotation_manuelle=0)
+                # if self.tile.orientation % 2 == (self.top_tile.orientation + 1) % 2:
+                #     if self.top_tile.orientation == 0:
+                #         if self.tile.orientation == 3:
+                #             self.change_tile_image(self.tile, self.straight_dotted_white_right, rotation_manuelle=1)
+                #             self.change_tile_image(self.top_tile, self.inner_turn_down_left, rotation_manuelle=0)      
+                
+                # # Gère les outer doubles turns
+                # if self.tile.orientation % 2 == (self.left_tile.orientation + 1) % 2:
+                #     if self.left_tile.orientation == 3:
+                #         if self.tile.orientation == 0 and self.top_left_tile.orientation == self.tile.orientation:
+                #             self.change_tile_image(self.tile, self.outer_turn_down_left, rotation_manuelle=0)
+                #         elif self.tile.orientation == 2 and self.bottom_left_tile.orientation == self.tile.orientation:
+                #             self.change_tile_image(self.tile, self.outer_turn_up_left, rotation_manuelle=0)
+                            
             if self.is_a_road(self.right_tile): # Changement quand on place une tuile à gauche d'une autre
                 if self.tile.orientation == self.right_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
                     if self.tile.orientation == 0:
@@ -193,6 +218,26 @@ class RoadOrientationManager():
                     elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.top_tile.orientation and self.right_tile.orientation == 2:
                         self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=0)
                         self.check_tile_change(self.x_pos, self.y_pos - 1)  # Check la tuile du dessus pour voir si elle doit changer
+                
+                # Gère les inner doubles turns 
+                if self.tile.orientation % 2 == (self.right_tile.orientation + 1) % 2:
+                    if self.right_tile.orientation == 3:
+                        if self.tile.orientation == 2:
+                            self.change_tile_image(self.tile, self.straight_dotted_white_right, rotation_manuelle=0)
+                            self.change_tile_image(self.right_tile, self.inner_turn_down_right, rotation_manuelle=0)
+                if self.tile.orientation % 2 == (self.left_tile.orientation + 1) % 2:
+                    if self.left_tile.orientation == 1:
+                        if self.tile.orientation == 2:
+                            self.change_tile_image(self.tile, self.straight_dotted_white_left, rotation_manuelle=0)
+                            self.change_tile_image(self.left_tile, self.inner_turn_down_left, rotation_manuelle=0)      
+                
+                # Gère les outer doubles turns
+                if self.tile.orientation % 2 == (self.top_tile.orientation + 1) % 2:
+                    if self.top_tile.orientation == 2:
+                        if self.tile.orientation == 3 and self.top_right_tile.orientation == self.tile.orientation:
+                            self.change_tile_image(self.tile, self.outer_turn_down_right, rotation_manuelle=0)
+                        elif self.tile.orientation == 1 and self.top_left_tile.orientation == self.tile.orientation:
+                            self.change_tile_image(self.tile, self.outer_turn_down_left, rotation_manuelle=0)
             
             if self.is_a_road(self.bottom_tile): # Changement quand on place une tuile au dessus d'une autre
                 if self.tile.orientation == self.bottom_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
@@ -232,3 +277,23 @@ class RoadOrientationManager():
                     elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.bottom_tile.orientation and self.right_tile.orientation == 0:
                         self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=2)
                         self.check_tile_change(self.x_pos, self.y_pos + 1)  # Check la tuile du dessous pour voir si elle doit changer
+
+                # Gère les inner doubles turns 
+                if self.tile.orientation % 2 == (self.right_tile.orientation + 1) % 2:
+                    if self.right_tile.orientation == 3:
+                        if self.tile.orientation == 0:
+                            self.change_tile_image(self.tile, self.straight_dotted_white_right, rotation_manuelle=0)
+                            self.change_tile_image(self.right_tile, self.inner_turn_up_right, rotation_manuelle=0)
+                if self.tile.orientation % 2 == (self.left_tile.orientation + 1) % 2:
+                    if self.left_tile.orientation == 1:
+                        if self.tile.orientation == 0:
+                            self.change_tile_image(self.tile, self.straight_dotted_white_left, rotation_manuelle=0)
+                            self.change_tile_image(self.left_tile, self.inner_turn_up_left, rotation_manuelle=0)      
+                
+                # Gère les outer doubles turns
+                if self.tile.orientation % 2 == (self.bottom_tile.orientation + 1) % 2:
+                    if self.bottom_tile.orientation == 0:
+                        if self.tile.orientation == 3 and self.bottom_right_tile.orientation == self.tile.orientation:
+                            self.change_tile_image(self.tile, self.outer_turn_up_right, rotation_manuelle=0)
+                        elif self.tile.orientation == 1 and self.bottom_left_tile.orientation == self.tile.orientation:
+                            self.change_tile_image(self.tile, self.outer_turn_up_left, rotation_manuelle=0)
