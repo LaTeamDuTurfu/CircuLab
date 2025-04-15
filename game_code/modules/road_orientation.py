@@ -78,140 +78,157 @@ class RoadOrientationManager():
         self.get_tile()
         self.get_connecting_tiles()
         
-        if self.is_a_road(self.tile) and self.is_a_road(self.left_tile):  # Changement quand on place une tuile à droite d'une autre
-            if self.tile.orientation == self.left_tile.orientation:  # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
-                if self.tile.orientation == 0:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_left)
-                    self.change_tile_image(self.left_tile, self.straight_dotted_white_right)
-                elif self.tile.orientation == 2:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_right)
-                    self.change_tile_image(self.left_tile, self.straight_dotted_white_left)
-            elif self.tile.orientation == (self.left_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
-                if self.tile.orientation == 0:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
-                    self.change_tile_image(self.left_tile, self.straight_dotted_yellow_left)
-                elif self.tile.orientation == 2:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
-                    self.change_tile_image(self.left_tile, self.straight_dotted_yellow_right)
-            
-            # Gère les routes qui branch out
-            if not self.is_a_road(self.bottom_tile) and self.tile.orientation == 0 and self.left_tile.orientation == 0:
-                self.change_tile_image(self.tile, self.branch_out_right)
-            elif not self.is_a_road(self.top_tile) and self.tile.orientation == 2 and self.left_tile.orientation == 2:
-                self.change_tile_image(self.tile, self.branch_out_left)
-            
-            # Gère les singles turns 
-            if self.tile.orientation % 2 == (self.left_tile.orientation + 1) % 2:
-                if self.left_tile.orientation == 3:
+        if self.is_a_road(self.tile):
+            if self.is_a_road(self.left_tile):  # Changement quand on place une tuile à droite d'une autre
+                if self.tile.orientation == self.left_tile.orientation:  # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
                     if self.tile.orientation == 0:
-                        self.change_tile_image(self.tile, self.single_turn_down_right, rotation_manuelle=1)
+                        self.change_tile_image(self.tile, self.straight_dotted_white_left)
+                        self.change_tile_image(self.left_tile, self.straight_dotted_white_right)
                     elif self.tile.orientation == 2:
-                        self.change_tile_image(self.tile, self.single_turn_down_left, rotation_manuelle=1) 
-            
-            if not self.is_a_road(self.right_tile):
-                if self.is_a_road(self.bottom_tile) and self.left_tile.orientation == self.bottom_tile.orientation and self.left_tile.orientation == 3:
-                    self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=1)
-                elif self.is_a_road(self.top_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 3:
-                    self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=1)  
+                        self.change_tile_image(self.tile, self.straight_dotted_white_right)
+                        self.change_tile_image(self.left_tile, self.straight_dotted_white_left)
+                elif self.tile.orientation == (self.left_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
+                    if self.tile.orientation == 0:
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
+                        self.change_tile_image(self.left_tile, self.straight_dotted_yellow_left)
+                    elif self.tile.orientation == 2:
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
+                        self.change_tile_image(self.left_tile, self.straight_dotted_yellow_right)
+                
+                # Gère les routes qui branch out
+                if not self.is_a_road(self.bottom_tile) and self.tile.orientation == 0 and self.left_tile.orientation == 0:
+                    self.change_tile_image(self.tile, self.branch_out_right)
+                elif not self.is_a_road(self.top_tile) and self.tile.orientation == 2 and self.left_tile.orientation == 2:
+                    self.change_tile_image(self.tile, self.branch_out_left)
+                
+                # Gère les singles turns 
+                if self.tile.orientation % 2 == (self.left_tile.orientation + 1) % 2:
+                    if self.left_tile.orientation == 3:
+                        if self.tile.orientation == 0:
+                            self.change_tile_image(self.tile, self.single_turn_down_right, rotation_manuelle=1)
+                        elif self.tile.orientation == 2:
+                            self.change_tile_image(self.tile, self.single_turn_down_left, rotation_manuelle=1) 
+                
+                if not self.is_a_road(self.right_tile):
+                    if self.is_a_road(self.bottom_tile) and self.left_tile.orientation == self.bottom_tile.orientation and self.left_tile.orientation == 3:
+                        self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=1)
+                        self.check_tile_change(self.x_pos - 1, self.y_pos)  # Check la tuile gauche pour voir si elle doit changer
+                    elif self.is_a_road(self.top_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 3:
+                        self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=1)  
+                        self.check_tile_change(self.x_pos - 1, self.y_pos)  # Check la tuile gauche pour voir si elle doit changer
                     
-        if self.is_a_road(self.tile) and self.is_a_road(self.right_tile): # Changement quand on place une tuile à gauche d'une autre
-            if self.tile.orientation == self.right_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
-                if self.tile.orientation == 0:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_right)
-                    self.change_tile_image(self.right_tile, self.straight_dotted_white_left)
-                elif self.tile.orientation == 2:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_left)
-                    self.change_tile_image(self.right_tile, self.straight_dotted_white_right)
-            elif self.tile.orientation == (self.right_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
-                if self.tile.orientation == 0:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
-                    self.change_tile_image(self.right_tile, self.straight_dotted_yellow_right)
-                elif self.tile.orientation == 2:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
-                    self.change_tile_image(self.right_tile, self.straight_dotted_yellow_left)
-            
-            # Gère les routes qui branch out
-            if not self.is_a_road(self.bottom_tile) and self.tile.orientation == 0 and self.right_tile.orientation == 0:
-                self.change_tile_image(self.tile, self.branch_out_left)
-            elif not self.is_a_road(self.top_tile) and self.tile.orientation == 2 and self.right_tile.orientation == 2:
-                self.change_tile_image(self.tile, self.branch_out_right)
-            
-            # Gère les singles turns 
-            if self.tile.orientation % 2 == (self.right_tile.orientation + 1) % 2:
-                if self.right_tile.orientation == 1:
+            if self.is_a_road(self.right_tile): # Changement quand on place une tuile à gauche d'une autre
+                if self.tile.orientation == self.right_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
                     if self.tile.orientation == 0:
-                        self.change_tile_image(self.tile, self.single_turn_up_right, rotation_manuelle=1)
+                        self.change_tile_image(self.tile, self.straight_dotted_white_right)
+                        self.change_tile_image(self.right_tile, self.straight_dotted_white_left)
                     elif self.tile.orientation == 2:
-                        self.change_tile_image(self.tile, self.single_turn_up_left, rotation_manuelle=1)        
-
-        if self.is_a_road(self.tile) and self.is_a_road(self.top_tile): # Changement quand on place une tuile en dessous d'une autre
-            if self.tile.orientation == self.top_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
-                if self.tile.orientation == 1:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_right)
-                    self.change_tile_image(self.top_tile, self.straight_dotted_white_left)
-                elif self.tile.orientation == 3:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_left)
-                    self.change_tile_image(self.top_tile, self.straight_dotted_white_right)
-            elif self.tile.orientation == (self.top_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
-                if self.tile.orientation == 1:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
-                    self.change_tile_image(self.top_tile, self.straight_dotted_yellow_right)
-                elif self.tile.orientation == 3:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
-                    self.change_tile_image(self.top_tile, self.straight_dotted_yellow_left)
-
-            # Gère les routes qui branch out
-            if not self.is_a_road(self.right_tile) and self.tile.orientation == 1 and self.top_tile.orientation == 1:
-                self.change_tile_image(self.tile, self.branch_out_left)
-            elif not self.is_a_road(self.left_tile) and self.tile.orientation == 3 and self.top_tile.orientation == 3:
-                self.change_tile_image(self.tile, self.branch_out_right)
+                        self.change_tile_image(self.tile, self.straight_dotted_white_left)
+                        self.change_tile_image(self.right_tile, self.straight_dotted_white_right)
+                elif self.tile.orientation == (self.right_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
+                    if self.tile.orientation == 0:
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
+                        self.change_tile_image(self.right_tile, self.straight_dotted_yellow_right)
+                    elif self.tile.orientation == 2:
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
+                        self.change_tile_image(self.right_tile, self.straight_dotted_yellow_left)
             
-            # Gère les singles turns 
-            if self.tile.orientation % 2 == (self.top_tile.orientation + 1) % 2:
-                if self.top_tile.orientation == 2:
+                # Gère les routes qui branch out
+                if not self.is_a_road(self.bottom_tile) and self.tile.orientation == 0 and self.right_tile.orientation == 0:
+                    self.change_tile_image(self.tile, self.branch_out_left)
+                elif not self.is_a_road(self.top_tile) and self.tile.orientation == 2 and self.right_tile.orientation == 2:
+                    self.change_tile_image(self.tile, self.branch_out_right)
+                
+                # Gère les singles turns 
+                if self.tile.orientation % 2 == (self.right_tile.orientation + 1) % 2:
+                    if self.right_tile.orientation == 1:
+                        if self.tile.orientation == 0:
+                            self.change_tile_image(self.tile, self.single_turn_up_right, rotation_manuelle=1)
+                        elif self.tile.orientation == 2:
+                            self.change_tile_image(self.tile, self.single_turn_up_left, rotation_manuelle=1)
+                
+                if not self.is_a_road(self.left_tile):
+                    if self.is_a_road(self.bottom_tile) and self.right_tile.orientation == self.bottom_tile.orientation and self.right_tile.orientation == 1:
+                        self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=3)
+                        self.check_tile_change(self.x_pos + 1, self.y_pos)  # Check la tuile droite pour voir si elle doit changer
+                    elif self.is_a_road(self.top_tile) and self.right_tile.orientation == self.top_tile.orientation and self.right_tile.orientation == 1:
+                        self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=3)  
+                        self.check_tile_change(self.x_pos + 1, self.y_pos)  # Check la tuile droite pour voir si elle doit changer
+
+            if self.is_a_road(self.top_tile): # Changement quand on place une tuile en dessous d'une autre
+                if self.tile.orientation == self.top_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
                     if self.tile.orientation == 1:
-                        self.change_tile_image(self.tile, self.single_turn_down_left, rotation_manuelle=0)
+                        self.change_tile_image(self.tile, self.straight_dotted_white_right)
+                        self.change_tile_image(self.top_tile, self.straight_dotted_white_left)
                     elif self.tile.orientation == 3:
-                        self.change_tile_image(self.tile, self.single_turn_down_right, rotation_manuelle=0)
-            
-            if not self.is_a_road(self.bottom_tile):
-                if self.is_a_road(self.left_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 2:
-                    self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=0)
-                elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.top_tile.orientation and self.right_tile.orientation == 2:
-                    self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=0)
-            
-        if self.is_a_road(self.tile) and self.is_a_road(self.bottom_tile): # Changement quand on place une tuile au dessus d'une autre
-            if self.tile.orientation == self.bottom_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
-                if self.tile.orientation == 1:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_left)
-                    self.change_tile_image(self.bottom_tile, self.straight_dotted_white_right)
-                elif self.tile.orientation == 3:
-                    self.change_tile_image(self.tile, self.straight_dotted_white_right)
-                    self.change_tile_image(self.bottom_tile, self.straight_dotted_white_left)
-            elif self.tile.orientation == (self.bottom_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
-                if self.tile.orientation == 1:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
-                    self.change_tile_image(self.bottom_tile, self.straight_dotted_yellow_left)
-                elif self.tile.orientation == 3:
-                    self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
-                    self.change_tile_image(self.bottom_tile, self.straight_dotted_yellow_right)
-
-            # Gère les routes qui branch out
-            if not self.is_a_road(self.right_tile) and self.tile.orientation == 1 and self.bottom_tile.orientation == 1:
-                self.change_tile_image(self.tile, self.branch_out_right)
-            elif not self.is_a_road(self.left_tile) and self.tile.orientation == 3 and self.bottom_tile.orientation == 3:
-                self.change_tile_image(self.tile, self.branch_out_left)
-            
-            # Gère les singles turns 
-            if self.tile.orientation % 2 == (self.bottom_tile.orientation + 1) % 2:
-                if self.bottom_tile.orientation == 0:
+                        self.change_tile_image(self.tile, self.straight_dotted_white_left)
+                        self.change_tile_image(self.top_tile, self.straight_dotted_white_right)
+                elif self.tile.orientation == (self.top_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
                     if self.tile.orientation == 1:
-                        self.change_tile_image(self.tile, self.single_turn_up_left, rotation_manuelle=0)
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
+                        self.change_tile_image(self.top_tile, self.straight_dotted_yellow_right)
                     elif self.tile.orientation == 3:
-                        self.change_tile_image(self.tile, self.single_turn_up_right, rotation_manuelle=0)
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
+                        self.change_tile_image(self.top_tile, self.straight_dotted_yellow_left)
+
+                # Gère les routes qui branch out
+                if not self.is_a_road(self.right_tile) and self.tile.orientation == 1 and self.top_tile.orientation == 1:
+                    self.change_tile_image(self.tile, self.branch_out_left)
+                elif not self.is_a_road(self.left_tile) and self.tile.orientation == 3 and self.top_tile.orientation == 3:
+                    self.change_tile_image(self.tile, self.branch_out_right)
+                
+                # Gère les singles turns 
+                if self.tile.orientation % 2 == (self.top_tile.orientation + 1) % 2:
+                    if self.top_tile.orientation == 2:
+                        if self.tile.orientation == 1:
+                            self.change_tile_image(self.tile, self.single_turn_down_left, rotation_manuelle=0)
+                        elif self.tile.orientation == 3:
+                            self.change_tile_image(self.tile, self.single_turn_down_right, rotation_manuelle=0)
+                
+                # S'occupe du branch in des routes
+                if not self.is_a_road(self.bottom_tile):
+                    if self.is_a_road(self.left_tile) and self.left_tile.orientation == self.top_tile.orientation and self.left_tile.orientation == 2:
+                        self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=0)
+                        self.check_tile_change(self.x_pos, self.y_pos - 1)  # Check la tuile du dessus pour voir si elle doit changer
+                    elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.top_tile.orientation and self.right_tile.orientation == 2:
+                        self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=0)
+                        self.check_tile_change(self.x_pos, self.y_pos - 1)  # Check la tuile du dessus pour voir si elle doit changer
             
-            if not self.is_a_road(self.top_tile):
-                if self.is_a_road(self.left_tile) and self.left_tile.orientation == self.bottom_tile.orientation and self.left_tile.orientation == 0:
-                    self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=2)
-                elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.bottom_tile.orientation and self.right_tile.orientation == 0:
-                    self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=2)
+            if self.is_a_road(self.bottom_tile): # Changement quand on place une tuile au dessus d'une autre
+                if self.tile.orientation == self.bottom_tile.orientation: # Lignes blanches pointillées quand les deux tuiles vont dans le même sens
+                    if self.tile.orientation == 1:
+                        self.change_tile_image(self.tile, self.straight_dotted_white_left)
+                        self.change_tile_image(self.bottom_tile, self.straight_dotted_white_right)
+                    elif self.tile.orientation == 3:
+                        self.change_tile_image(self.tile, self.straight_dotted_white_right)
+                        self.change_tile_image(self.bottom_tile, self.straight_dotted_white_left)
+                elif self.tile.orientation == (self.bottom_tile.orientation + 2) % 4: # Lignes jaunes pointillées quand les deux tuiles vont à contre sens
+                    if self.tile.orientation == 1:
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_left)
+                        self.change_tile_image(self.bottom_tile, self.straight_dotted_yellow_left)
+                    elif self.tile.orientation == 3:
+                        self.change_tile_image(self.tile, self.straight_dotted_yellow_right)
+                        self.change_tile_image(self.bottom_tile, self.straight_dotted_yellow_right)
+
+                # Gère les routes qui branch out
+                if not self.is_a_road(self.right_tile) and self.tile.orientation == 1 and self.bottom_tile.orientation == 1:
+                    self.change_tile_image(self.tile, self.branch_out_right)
+                elif not self.is_a_road(self.left_tile) and self.tile.orientation == 3 and self.bottom_tile.orientation == 3:
+                    self.change_tile_image(self.tile, self.branch_out_left)
+                
+                # Gère les singles turns 
+                if self.tile.orientation % 2 == (self.bottom_tile.orientation + 1) % 2:
+                    if self.bottom_tile.orientation == 0:
+                        if self.tile.orientation == 1:
+                            self.change_tile_image(self.tile, self.single_turn_up_left, rotation_manuelle=0)
+                        elif self.tile.orientation == 3:
+                            self.change_tile_image(self.tile, self.single_turn_up_right, rotation_manuelle=0)
+                
+                # S'occupe du branch in des routes
+                if not self.is_a_road(self.top_tile):
+                    if self.is_a_road(self.left_tile) and self.left_tile.orientation == self.bottom_tile.orientation and self.left_tile.orientation == 0:
+                        self.change_tile_image(self.tile, self.branch_out_left, rotation_manuelle=2)
+                        self.check_tile_change(self.x_pos, self.y_pos + 1)  # Check la tuile du dessous pour voir si elle doit changer
+                    elif self.is_a_road(self.right_tile) and self.right_tile.orientation == self.bottom_tile.orientation and self.right_tile.orientation == 0:
+                        self.change_tile_image(self.tile, self.branch_out_right, rotation_manuelle=2)
+                        self.check_tile_change(self.x_pos, self.y_pos + 1)  # Check la tuile du dessous pour voir si elle doit changer
