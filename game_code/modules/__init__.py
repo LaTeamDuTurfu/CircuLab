@@ -9,3 +9,4 @@ from .Intersection import Intersection
 from .Voiture import Voiture
 from .TrafficLight import TrafficLight
 from .Route import Route
+from .home_screen import HomeScreen

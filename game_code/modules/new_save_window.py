@@ -36,7 +36,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.empty_tile = pygame.image.load("assets/tile_images/none.png")
         
         # UI Elements
-        super().__init__(rect, manager, window_display_title="New Save", object_id="#new_save_window", resizable=False, draggable=True)
+        super().__init__(rect, manager, window_display_title="Créer une nouvelle sauvegarde", object_id="#new_save_window", resizable=False, draggable=True)
         self.rect = rect
         self.manager = manager
         self.path = default_path

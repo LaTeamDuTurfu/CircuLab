@@ -43,7 +43,7 @@ class Circulab():
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
         
         # State Manager
-        self.state_manager = ÉtatJeu(ÉtatJeu.NEW_GAME)
+        self.state_manager = ÉtatJeu(ÉtatJeu.HOME_PAGE)
         
         # Road Orientation Manager
         self.road_orientation_manager = RoadOrientationManager()
@@ -60,6 +60,9 @@ class Circulab():
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
 
+        # Instancie l'écran d'acceuil
+        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager)
+        
         # Instancie la fenêtre de sauvegarde (cachée par défaut)
         self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
         self.new_save_window.hide()
@@ -78,7 +81,7 @@ class Circulab():
         self.current_save = None
 
         # Graph
-        self.graphe = Graphe()
+        # self.graphe = Graphe()
     
     def run(self):
         
@@ -108,7 +111,7 @@ class Circulab():
                 if self.new_save_window.check_save_created():
                     self.current_save = self.new_save_window.created_game
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
-                    self.graphe = Graphe(current_save=self.current_save)
+                    # self.graphe = Graphe(current_save=self.current_save)
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
