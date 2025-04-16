@@ -44,7 +44,8 @@ class Graphe:
             self.car_image.fill((255, 0, 0))
 
         # Créer les intersections avec ou sans feux de circulation
-        self.intersections = {}
+        self.intersections = {} #contient les Objets Intersection, utilisés pour créer le graph
+        self.inter_points = {} #contient les points où créer des intersections
         self.build_intersections()
 
         # Créer les routes (chaque segment sera décliné en plusieurs voies, sens unique)
@@ -59,36 +60,20 @@ class Graphe:
         self.voitures = []
         self.create_vehicles(nb_voitures)
 
+    def add_inter_points(self, point):
+        self.inter_points[point] = False #prend un point comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
+
     def build_intersections(self):
-        # Définition d'intersections (position et présence de feu)
-        inter_points = {
-            # (100, 100): False
-        }
-        for pos, has_light in inter_points.items():
+        for pos, has_light in self.inter_points.items():
             self.intersections[pos] = Intersection(pos, has_traffic_light=has_light)
 
     def build_routes(self):
-        # Pour simplifier, on définit des segments à sens unique.
-        # Exemple : Pour le rectangle, on choisit la direction suivante (sens horaire) :
-        points = [] # Liste de tuples des coordonnées
-        # Routes du rectangle (sens unique : de chaque point vers le suivant)
-        for i in range(len(points)):
-            start = self.intersections[
-                points[i]]  # Cherche l'intersection de début d'une route ayant comme points points_rect
-            end = self.intersections[points[(i + 1) % len(points)]]  # Cherche l'intersection de fin
+        # sens unique : de chaque point vers le suivant
+        for i in range(len(self.inter_points)):
+            start = self.intersections[self.inter_points[i]]
+            end = self.intersections[self.inter_points[(i + 1) % len(self.inter_points)]]
             for lane in range(1, self.max_lanes + 1):  # Ajoute les différentes voies entre chaque intersection
                 self.routes.append(Route(start, end, lane, self.max_lanes))
-        # Routes reliant les coins au centre (sens : du coin vers le centre)
-        for pos in points:
-            start = self.intersections[pos]
-            end = self.intersections[(400, 300)]
-            for lane in range(1, self.max_lanes + 1):
-                self.routes.append(Route(start, end, lane, self.max_lanes))
-        # Route supplémentaire (sens unique) reliant (700,100) vers (100,500)
-        start = self.intersections[(700, 100)]
-        end = self.intersections[(100, 500)]
-        for lane in range(1, self.max_lanes + 1):
-            self.routes.append(Route(start, end, lane, self.max_lanes))
 
     def build_graph(self):
         # Utiliser un MultiDiGraph pour représenter les voies à sens unique

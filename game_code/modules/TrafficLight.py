@@ -15,7 +15,3 @@ class TrafficLight:
         elif self.state == "red" and self.timer >= self.red_duration:
             self.state = "green"
             self.timer = 0.0
-
-    def draw(self, screen, position):
-        color = (0, 255, 0) if self.state == "green" else (255, 0, 0)
-        pygame.draw.circle(screen, color, position, 8)

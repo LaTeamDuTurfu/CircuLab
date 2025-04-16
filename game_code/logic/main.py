@@ -3,6 +3,7 @@ import os
 import pygame
 import pygame_gui
 
+
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "game_code"))
@@ -75,6 +76,9 @@ class Circulab():
 
         # Data 
         self.current_save = None
+
+        # Graph
+        self.graphe = Graphe()
     
     def run(self):
         
