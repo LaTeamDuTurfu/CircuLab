@@ -44,7 +44,7 @@ class ToolBar:
         self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
         self.TOOL_BAR_WIDTH = self.WIDTH * 3/4 - self.TOOL_BAR_BTN_SIZE/2
 
-        self.tool_bar_btns = pygame.sprite.Group()
+        self.tool_bar_btns = []
         self.close_btn = None
         self.show = True
 
@@ -60,7 +60,7 @@ class ToolBar:
         self.change_image_btn(8, "assets/tile_images/house4.png")
 
         self.tool_bar_window = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), 
+            rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH - self.window_frame.thickness, self.TOOL_BAR_HEIGHT)), 
             object_id="#tool_bar_window", 
             manager=self.manager)
         
@@ -85,7 +85,7 @@ class ToolBar:
                         container=self.tool_bar_container,
                         object_id=pygame_gui.core.ObjectID(class_id="@tool_tip_btn", object_id=f"#tool_tip_btn_{i + 1}"))
             
-            self.tool_bar_btns.add(new_btn)
+            self.tool_bar_btns.append(new_btn)
     
     def get_selected_btn(self):
         """

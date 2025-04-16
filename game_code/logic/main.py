@@ -135,14 +135,15 @@ class Circulab():
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
 
                     
-                # Dessine la bordure de l'écran
-                self.window_border.draw_border() 
-                 
-                # Update l'écran
-                self.window_border.draw_border(bottom=False)
+                
                 
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
+            if self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIMULATION:
+                # Dessine la bordure de l'écran
+                self.window_border.draw_border() 
+                # Update l'écran
+                self.window_border.draw_border(bottom=False)
             pygame.display.flip()
     
         pygame.quit()
@@ -159,6 +160,7 @@ class Circulab():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.current_save.update_save()
                 self.running = False
             
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.build_tool_bar.tool_bar_btns:
