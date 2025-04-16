@@ -66,7 +66,7 @@ class Partie():
 
         if self.check_correct_path():
             with open(self.path + f"/{self.name}.clab", "wb") as file:
-                pickle.dump(str(save_data), file)
+                pickle.dump(save_data, file)
                 print(f"{self.name}.clab a été sauvegardé ✅")
                 return True
         

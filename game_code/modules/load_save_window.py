@@ -1,7 +1,6 @@
-import pygame
-import pygame_gui
 import os
-import sys
+import pygame_gui
+import pickle
 
 class LoadSaveWindow:
     def __init__(self, rect, surface, manager, default_path, home_screen, state_manager):
@@ -22,11 +21,17 @@ class LoadSaveWindow:
             allow_picking_directories=False,
             allow_existing_files_only=True,
             always_on_top=True,
-            object_id="#load_save_window"
+            object_id="#load_save_window",
+            allowed_suffixes={".clab"}
         )
         
         self.file_explorer_window.draggable = False
         self.file_explorer_window.cancel_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.return_to_home_screen)
+        self.file_explorer_window.ok_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.read_save_file)
+        
+        self.file_explorer_window.current_file_path
+        
+        self.loaded_game = None
         
         self.file_explorer_window.hide()
     
@@ -34,3 +39,18 @@ class LoadSaveWindow:
         self.state_manager.changer_état(1)
         self.file_explorer_window.hide()
         self.home_screen.montrer_boutons()
+    
+    def read_save_file(self):
+        current_file_path = self.file_explorer_window.current_file_path
+        
+        if os.path.isfile(current_file_path):
+            with open(current_file_path, "rb") as save_file:
+                self.loaded_game = pickle.load(save_file)
+        else:
+            pass
+    
+    def check_save_created(self):
+        if self.loaded_game != None:
+            self.file_explorer_window.hide()
+            return True
+        return False
