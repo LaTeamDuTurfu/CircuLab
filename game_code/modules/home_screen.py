@@ -26,7 +26,8 @@ class HomeScreen:
             text="Charger une Sauvegarde",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
-            object_id="#load_save_btn"
+            object_id="#load_save_btn",
+            command=self.charger_sauvegarde
         )
         
         self.settings_btn = pygame_gui.elements.UIButton(
@@ -39,6 +40,18 @@ class HomeScreen:
         
     def créer_nouvelle_sauvegarde(self):
         self.state_manager.changer_état(5)  # État.NEW_GAME = 5
+        self.cacher_boutons()
+    
+    def charger_sauvegarde(self):
+        self.state_manager.changer_état(6)  # État.LOAD_GAME = 6
+        self.cacher_boutons()
+        
+    def cacher_boutons(self):
         self.new_save_btn.hide()
         self.load_save_btn.hide()
         self.settings_btn.hide()
+    
+    def montrer_boutons(self):
+        self.new_save_btn.show()
+        self.load_save_btn.show()
+        self.settings_btn.show()

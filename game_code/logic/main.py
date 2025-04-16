@@ -64,8 +64,10 @@ class Circulab():
         self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager)
         
         # Instancie la fenêtre de sauvegarde (cachée par défaut)
-        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/")
+        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/", state_manager=self.state_manager, home_screen=self.home_screen)
         self.new_save_window.hide()
+        
+        self.load_save_window = LoadSaveWindow(rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), surface=self.screen, manager=self.manager, default_path="../Circulab/data/saves/", state_manager=self.state_manager, home_screen=self.home_screen)
         
         # Variable de jeu
         self.build_orientation = 0
@@ -115,7 +117,7 @@ class Circulab():
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
-                pass
+                self.load_save_window.file_explorer_window.show()
             elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
