@@ -1,6 +1,12 @@
-import os
+import os, sys
 import pygame_gui
-import pickle
+import dill
+
+# Permet de charger les modules dans le dossier game_code
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(os.path.join(project_root, "game_code"))
+
+from modules.partie import Partie
 
 class LoadSaveWindow:
     def __init__(self, rect, surface, manager, default_path, home_screen, state_manager):
@@ -45,9 +51,29 @@ class LoadSaveWindow:
         
         if os.path.isfile(current_file_path):
             with open(current_file_path, "rb") as save_file:
-                self.loaded_game = pickle.load(save_file)
+                save = dill.load(save_file)
         else:
             pass
+
+        save_data = {
+            "name": save["name"],
+            "cols": save["cols"],
+            "rows": save["rows"],
+            "tile_size": save["tile_size"],
+            "scroll_x": save["scroll_x"],
+            "scroll_y": save["scroll_y"],
+            "path": save["path"],
+            "building_data": save["building_data"],
+            "car_data": save["car_data"],
+            "signalisation_data": save["signalisation_data"]
+        }
+
+        game = Partie(save_data)
+        game.building_data = game.bytes_to_tiles_data(game.building_data)
+ 
+        self.loaded_game = game
+        print("Sauvegarde chargée avec succès")
+
     
     def check_save_created(self):
         if self.loaded_game != None:

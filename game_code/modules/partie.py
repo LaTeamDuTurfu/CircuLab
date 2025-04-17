@@ -1,4 +1,4 @@
-import pickle
+import dill
 import os, sys
 import pygame
 
@@ -51,6 +51,10 @@ class Partie():
         :rtype: bool
         """
         
+        building_data = self.tiles_data_to_bytes(self.building_data)
+        # car_data = self.tiles_data_to_bytes(self.car_data)
+        # signalisation_data = self.tiles_data_to_bytes(self.signalisation_data)
+
         save_data = {
             "name": self.name,
             "cols": self.columns,
@@ -59,14 +63,14 @@ class Partie():
             "scroll_x": self.scrollx,
             "scroll_y": self.scrolly,
             "path": self.path,
-            "building_data": self.building_data,
+            "building_data": building_data,
             "car_data": self.car_data,
             "signalisation_data": self.signalisation_data
         }
 
         if self.check_correct_path():
             with open(self.path + f"/{self.name}.clab", "wb") as file:
-                pickle.dump(save_data, file)
+                dill.dump(save_data, file)
                 print(f"{self.name}.clab a été sauvegardé ✅")
                 return True
         
@@ -139,3 +143,26 @@ class Partie():
                     if tile.tile_type != "@empty":
                         tile.change_size(self.TILE_SIZE)
     
+    def tiles_data_to_bytes(self, tiles_data):
+        serialized_data = tiles_data.copy()
+        for ligne in serialized_data:
+            for tuile in ligne:
+                if isinstance(tuile.image, bytes):
+                    pass
+                else:
+                    # Sinon, on convertit les données de pixels en bytes
+                    pixels = pygame.image.tobytes(tuile.image, "RGBA")
+                    tuile.image = pixels
+        
+        return serialized_data
+
+    def bytes_to_tiles_data(self, serialized_data):
+        tiles_data = []
+        for ligne in serialized_data:
+            tuiles_ligne = []
+            for tuile in ligne:
+                # On convertit les bytes en image
+                image = pygame.image.frombytes(tuile.image, (self.TILE_SIZE, self.TILE_SIZE), "RGBA")
+                tuiles_ligne.append(Tuile(self.TILE_SIZE, image, tuile.orientation, tuile.tile_type))
+            tiles_data.append(tuiles_ligne)
+        return tiles_data
