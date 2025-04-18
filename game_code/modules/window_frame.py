@@ -9,7 +9,7 @@ class WindowFrame:
         # Border parameters
         self.screen = screen
         self.thickness = thickness
-        self.bottom_thickness = 2 * thickness
+        self.bottom_thickness = thickness
         self.color = color
         self.manager = manager
         
@@ -18,9 +18,6 @@ class WindowFrame:
         self.bottom = pygame.Rect(0, self.screen.get_height() - self.bottom_thickness, self.screen.get_width(), self.bottom_thickness)
         self.left = pygame.Rect(0, 0, self.thickness, self.screen.get_height())
         self.right = pygame.Rect(self.screen.get_width() - self.thickness, 0, self.thickness, self.screen.get_height())
-        
-        # Draw Border
-        # self.build_zoom_scroll()
         
     def draw_border(self, top: bool = 1, bottom: bool = 1, left: bool = 1, right: bool = 1):
         if top:

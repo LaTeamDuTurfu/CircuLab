@@ -143,8 +143,62 @@ class Partie():
                     if tile.tile_type != "@empty":
                         tile.change_size(self.TILE_SIZE)
     
+    def change_tuiles(self, screen, toolbar, pos, window_border, mode_selector, road_orientation_manager, build_orientation):
+        """
+        Updates the tile at the current mouse position to the selected tile
+        image from the toolbar, but only if the left mouse button is pressed
+        and the current tile at the mouse position is not the same as the
+        selected tile. If the right mouse button is pressed, the tile is reset
+        to an empty tile.
+
+        This function is used in the game loop to update the tiles on the grid
+        based on the user's input. It is called every frame when the game is in
+        the game editor state.
+        """
+        if window_border.thickness < pos[0] < (screen.get_width() - window_border.thickness) and toolbar.TOOL_BAR_HEIGHT < pos[1] < (screen.get_height() - window_border.bottom_thickness):
+            x_pos = int((pos[0] + self.scrollx) // self.TILE_SIZE)
+            y_pos = int((pos[1] + self.scrolly) // self.TILE_SIZE)
+            try:
+                bouton_actif = toolbar.get_selected_btn()
+                id_bouton_actif = bouton_actif.object_ids[-1][-1]
+            except AttributeError:
+                pass
+            if pygame.mouse.get_pressed()[0] == 1:
+                print("Click gauche")
+                print("ID bouton actif:", id_bouton_actif)
+                print("Position de la souris:", pos)
+                print("Position de la tuile:", x_pos, y_pos)
+                print("Current mode:", mode_selector.current_mode)
+                try:
+                    if self.game_data[mode_selector.current_mode][y_pos][x_pos].image != toolbar.tile_images[mode_selector.current_mode][int(id_bouton_actif)]:
+                        if mode_selector.current_mode == 0:
+                            new_tile = Tuile(self.TILE_SIZE, toolbar.tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                            self.building_data[y_pos][x_pos] = new_tile
+                            road_orientation_manager.set_game_data(self.building_data)
+                            road_orientation_manager.check_tile_change(x_pos, y_pos)
+                        elif mode_selector.current_mode == 1:
+                            pass
+                        elif mode_selector.current_mode == 2:
+                            pass
+                        
+                except UnboundLocalError:
+                    print("erreur")
+            if pygame.mouse.get_pressed()[2] == 1:
+                print("Click droit")
+                if mode_selector.current_mode == 0:
+                    self.building_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
+                    road_orientation_manager.set_game_data(self.building_data)
+                    road_orientation_manager.check_tile_change(x_pos - 1, y_pos)
+                    road_orientation_manager.check_tile_change(x_pos + 1, y_pos)
+                    road_orientation_manager.check_tile_change(x_pos, y_pos - 1)
+                    road_orientation_manager.check_tile_change(x_pos, y_pos + 1)
+                elif mode_selector.current_mode == 1:
+                    pass
+
+
     def tiles_data_to_bytes(self, tiles_data):
         serialized_data = tiles_data.copy()
+        print(serialized_data)
         for ligne in serialized_data:
             for tuile in ligne:
                 if isinstance(tuile.image, bytes):

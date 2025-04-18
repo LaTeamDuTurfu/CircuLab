@@ -46,18 +46,24 @@ class RoadOrientationManager():
         self.game_data = game_data
         
     def get_tile(self):
-        self.tile = self.game_data[self.y_pos][self.x_pos]
+        try:
+            self.tile = self.game_data[self.y_pos][self.x_pos]
+        except IndexError:
+            pass
     
     def get_connecting_tiles(self):
-        self.left_tile = self.game_data[self.y_pos][self.x_pos - 1]
-        self.right_tile = self.game_data[self.y_pos][self.x_pos + 1]
-        self.top_tile = self.game_data[self.y_pos - 1][self.x_pos]
-        self.bottom_tile = self.game_data[self.y_pos + 1][self.x_pos]
-        
-        self.top_left_tile = self.game_data[self.y_pos - 1][self.x_pos - 1]
-        self.top_right_tile = self.game_data[self.y_pos - 1][self.x_pos + 1]
-        self.bottom_left_tile = self.game_data[self.y_pos + 1][self.x_pos - 1]
-        self.bottom_right_tile = self.game_data[self.y_pos + 1][self.x_pos + 1]
+        try:
+            self.left_tile = self.game_data[self.y_pos][self.x_pos - 1]
+            self.right_tile = self.game_data[self.y_pos][self.x_pos + 1]
+            self.top_tile = self.game_data[self.y_pos - 1][self.x_pos]
+            self.bottom_tile = self.game_data[self.y_pos + 1][self.x_pos]
+            
+            self.top_left_tile = self.game_data[self.y_pos - 1][self.x_pos - 1]
+            self.top_right_tile = self.game_data[self.y_pos - 1][self.x_pos + 1]
+            self.bottom_left_tile = self.game_data[self.y_pos + 1][self.x_pos - 1]
+            self.bottom_right_tile = self.game_data[self.y_pos + 1][self.x_pos + 1]
+        except IndexError:
+            pass
     
     def is_a_road(self, tile):
         if tile.tile_type == "Road":

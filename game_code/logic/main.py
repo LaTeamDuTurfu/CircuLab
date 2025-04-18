@@ -49,7 +49,7 @@ class Circulab():
         self.road_orientation_manager = RoadOrientationManager()
         
         # Dessiner les éléments du GUI (En Game)
-        self.window_border = WindowFrame(self.screen, 10, self.BLUE_GREY, self.manager)
+        self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager)
         
         self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border)
         self.mode_selector.mode_selector_window.hide()
@@ -81,9 +81,6 @@ class Circulab():
 
         # Data 
         self.current_save = None
-
-        # Graph
-        # self.graphe = Graphe()
     
     def run(self):
         
@@ -120,6 +117,7 @@ class Circulab():
                 self.load_save_window.file_explorer_window.show()
                 if self.load_save_window.check_save_created():
                     self.current_save = self.load_save_window.loaded_game
+                    # print(self.current_save.building_data)
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
@@ -127,30 +125,36 @@ class Circulab():
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
                 
-                # Dessine les tuiles
+                # Bouge la grille
                 self.current_save.change_scroll(self.screen)
-                self.change_tuiles()
+
+                # Change l'apparence des tuiles si la souris est sur la grille
+                self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.mode_selector, self.road_orientation_manager, self.build_orientation)
+                
+                # Dessine les tuiles
                 self.current_save.draw_tuiles(self.screen)            
 
                 # Dessine la grille
                 self.current_save.draw_grid(self.screen)    
                 
-                # Dessine les éléments du GUI
+                # Dessine les éléments du GUI (si le user veut voir le preview [P])
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
                     self.draw_text(f"Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
-
-                    
                 
-                
+            # Gère les éléments de pygame_GUI
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
+
+            # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             if self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIMULATION:
                 # Dessine la bordure de l'écran
                 self.window_border.draw_border() 
                 # Update l'écran
                 self.window_border.draw_border(bottom=False)
+
+            # Update l'écran
             pygame.display.flip()
     
         pygame.quit()
@@ -169,6 +173,7 @@ class Circulab():
             if event.type == pygame.QUIT:
                 self.current_save.update_save()
                 self.running = False
+                exit()
             
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.build_tool_bar.tool_bar_btns:
                 btn = event.ui_element
@@ -272,7 +277,7 @@ class Circulab():
         if self.build_orientation > 3:
             self.build_orientation = 0
 
-    def change_tuiles(self):
+   
         """
         Updates the tile at the current mouse position to the selected tile
         image from the toolbar, but only if the left mouse button is pressed
