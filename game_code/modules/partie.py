@@ -1,6 +1,7 @@
 import dill
 import os, sys
 import pygame
+import copy
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -50,8 +51,8 @@ class Partie():
         :return: True si la sauvegarde a réussi, False sinon.
         :rtype: bool
         """
-        
-        building_data = self.tiles_data_to_bytes(self.building_data)
+        copy_building_data = copy.deepcopy(self.building_data)
+        serialized_data = self.tiles_data_to_bytes(copy_building_data)
         # car_data = self.tiles_data_to_bytes(self.car_data)
         # signalisation_data = self.tiles_data_to_bytes(self.signalisation_data)
 
@@ -63,7 +64,7 @@ class Partie():
             "scroll_x": self.scrollx,
             "scroll_y": self.scrolly,
             "path": self.path,
-            "building_data": building_data,
+            "building_data": serialized_data,
             "car_data": self.car_data,
             "signalisation_data": self.signalisation_data
         }
@@ -164,11 +165,6 @@ class Partie():
             except AttributeError:
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
-                print("Click gauche")
-                print("ID bouton actif:", id_bouton_actif)
-                print("Position de la souris:", pos)
-                print("Position de la tuile:", x_pos, y_pos)
-                print("Current mode:", mode_selector.current_mode)
                 try:
                     if self.game_data[mode_selector.current_mode][y_pos][x_pos].image != toolbar.tile_images[mode_selector.current_mode][int(id_bouton_actif)]:
                         if mode_selector.current_mode == 0:
@@ -184,7 +180,6 @@ class Partie():
                 except UnboundLocalError:
                     print("erreur")
             if pygame.mouse.get_pressed()[2] == 1:
-                print("Click droit")
                 if mode_selector.current_mode == 0:
                     self.building_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
                     road_orientation_manager.set_game_data(self.building_data)
@@ -197,18 +192,16 @@ class Partie():
 
 
     def tiles_data_to_bytes(self, tiles_data):
-        serialized_data = tiles_data.copy()
-        print(serialized_data)
-        for ligne in serialized_data:
-            for tuile in ligne:
-                if isinstance(tuile.image, bytes):
+        for ligne in tiles_data:
+            for t in ligne:
+                if isinstance(t.image, bytes):
                     pass
                 else:
                     # Sinon, on convertit les données de pixels en bytes
-                    pixels = pygame.image.tobytes(tuile.image, "RGBA")
-                    tuile.image = pixels
+                    pixels = pygame.image.tobytes(t.image, "RGBA")
+                    t.image = pixels
         
-        return serialized_data
+        return tiles_data
 
     def bytes_to_tiles_data(self, serialized_data):
         tiles_data = []
