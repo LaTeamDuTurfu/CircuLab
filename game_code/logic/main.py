@@ -111,7 +111,6 @@ class Circulab():
                 if self.new_save_window.check_save_created():
                     self.current_save = self.new_save_window.created_game
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
-                    self.graphe = Graphe(current_save=self.current_save)
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
