@@ -3,6 +3,7 @@ import os
 import pygame
 import pygame_gui
 
+from game_code.logic.états import ÉtatJeu
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -79,6 +80,9 @@ class Circulab():
 
         # Graph
         self.graphe = Graphe()
+
+        # Flag pour le graph
+        self.graph_created = False
     
     def run(self):
         
@@ -108,15 +112,14 @@ class Circulab():
                 if self.new_save_window.check_save_created():
                     self.current_save = self.new_save_window.created_game
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
-                    self.graphe = Graphe(current_save=self.current_save)
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
                 pass
-            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR:
+            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIMULATION:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
-                
+
                 # Dessine les tuiles
                 self.current_save.change_scroll(self.screen)
                 self.change_tuiles()
@@ -129,15 +132,29 @@ class Circulab():
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
                     self.draw_text(f"Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
-                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
+                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1])
 
-                    
-                # Dessine la bordure de l'écran
-                self.window_border.draw_border() 
-                 
-                # Update l'écran
-                self.window_border.draw_border(bottom=False)
-                
+                    # Dessine la bordure de l'écran
+                    self.window_border.draw_border()
+
+                    # Update l'écran
+                    self.window_border.draw_border(bottom=False)
+
+                if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2 :
+                    if not self.graph_created:
+                        self.graphe.build_intersections()
+                        self.graphe.build_routes()
+                        self.graphe.build_graph()
+                        self.graphe.create_vehicles(4)
+                        self.graph_created = True
+                        self.graphe.show_graph()
+                    if not self.graphe.simulation_finished:
+                        self.graphe.update(time_delta, self.screen, self.current_save.scrollx,self.current_save.scrolly)
+                    else:
+                        self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
+
+
+
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
             pygame.display.flip()
@@ -172,10 +189,13 @@ class Circulab():
                 if not btn.is_selected:
                     self.mode_selector.unselect_all_btns()
                     btn.select()
+                    # Check si le mode de jeu est changé pour partir la simulation
+                    self.check_debut_simulation()
                     continue
                 elif btn.is_selected:
                     btn.unselect()
                     continue
+
 
             if event.type == pygame.KEYDOWN:
                 if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
@@ -199,6 +219,9 @@ class Circulab():
                     if event.key == pygame.K_MINUS:
                         self.current_save.zoom(-1)
                         self.current_save.draw_tuiles(self.screen)
+                if event.key == pygame.K_h:
+                    if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.simulation_finished:
+                        self.state_manager.état_courant = ÉtatJeu.GAME_EDITOR
 
             if event.type == pygame.KEYUP:
                 if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
@@ -208,6 +231,7 @@ class Circulab():
                         self.current_save.vertical_scroll = 0
                     if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                         self.current_save.scroll_speed = 1
+
 
             self.manager.process_events(event)  
     
@@ -284,8 +308,13 @@ class Circulab():
                 try:
                     if self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos].image != ToolBar.tile_images[self.mode_selector.current_mode][int(id_bouton_actif)]:
                         if self.mode_selector.current_mode == 0:
-                            self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
-                            
+                            new_tile = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                            self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = new_tile
+                            if self.road_orientation_manager.is_a_road(new_tile):
+                                self.graphe.add_inter_points((self.x_pos, self.y_pos),self.current_save.TILE_SIZE)
+                            else:
+                                self.graphe.remove_inter_point((self.x_pos, self.y_pos),self.current_save.TILE_SIZE)
+
                             self.road_orientation_manager.check_tile_change(self.x_pos, self.y_pos)
                             
                         elif self.mode_selector.current_mode == 1:
@@ -297,3 +326,10 @@ class Circulab():
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
                 self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, Tuile.empty_tile, orientation=self.build_orientation)
+
+    def check_debut_simulation(self):
+       current_mode = self.mode_selector.get_selected_btn()
+       id_mode_actif = int(current_mode.object_ids[-1][-1])
+       print(id_mode_actif)
+       if id_mode_actif == 3:
+           self.state_manager.changer_état(ÉtatJeu.SIMULATION)
