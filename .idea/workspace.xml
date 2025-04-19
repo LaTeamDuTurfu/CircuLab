@@ -5,13 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17b27f95-70f2-4b85-96a7-c9cf2ee37fdf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/cars/car1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/saves/test21.clab" beforeDir="false" afterPath="$PROJECT_DIR$/data/saves/test21.clab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_code/logic/graphe.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/logic/graphe.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/game_code/modules/home_screen.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/game_code/modules/load_save_window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/cneowc.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/cnoewic.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/cnowe.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/fpweinf.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/test21.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/test2302.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/test234.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/test324.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/test908432.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/trsdt.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/saves/vnoirevu.clab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/theme_manager/styles_real.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/theme_manager/styles_real.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_code/logic/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/logic/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_code/modules/Route.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/Route.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_code/modules/Voiture.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/Voiture.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/logic/états.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/logic/états.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/mode_selector.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/mode_selector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/new_save_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/new_save_window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_code/modules/partie.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/partie.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/road_orientation.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/road_orientation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/tool_bar.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/tool_bar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/tuile.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/tuile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_code/modules/window_frame.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_code/modules/window_frame.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +80,7 @@
     "Python.Circulab.executor": "Run",
     "Python.tuile.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "Merging develop",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
@@ -110,6 +128,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/game_code/logic/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -132,6 +151,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/game_code/modules/tuile.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -166,6 +186,7 @@
       <option name="presentableId" value="Default" />
       <updated>1742994097724</updated>
       <workItem from="1744657049221" duration="3000" />
+      <workItem from="1745103605200" duration="5000" />
     </task>
     <servers />
   </component>

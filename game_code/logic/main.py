@@ -2,7 +2,7 @@ import sys
 import os
 import pygame
 import pygame_gui
-
+from game_code.logic.états import ÉtatJeu
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -79,6 +79,9 @@ class Circulab():
 
         # Graph
         self.graphe = Graphe()
+
+        # Flag pour le graph
+        self.graph_created = False
     
     def run(self):
         
@@ -113,7 +116,7 @@ class Circulab():
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
                 pass
-            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR:
+            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIMULATION:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
                 
@@ -137,7 +140,21 @@ class Circulab():
                  
                 # Update l'écran
                 self.window_border.draw_border(bottom=False)
-                
+
+                if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2:
+                    if not self.graph_created:
+                        self.graphe.build_intersections()
+                        self.graphe.build_routes()
+                        self.graphe.build_graph()
+                        self.graphe.create_vehicles(4)
+                        self.graph_created = True
+                        self.graphe.show_graph()
+                    if not self.graphe.simulation_finished:
+                        self.graphe.update(time_delta, self.screen, self.current_save.scrollx,
+                                           self.current_save.scrolly)
+                    else:
+                        self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
+
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
             pygame.display.flip()
@@ -199,6 +216,9 @@ class Circulab():
                     if event.key == pygame.K_MINUS:
                         self.current_save.zoom(-1)
                         self.current_save.draw_tuiles(self.screen)
+                if event.key == pygame.K_h:
+                    if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.simulation_finished:
+                        self.state_manager.état_courant = ÉtatJeu.GAME_EDITOR
 
             if event.type == pygame.KEYUP:
                 if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
@@ -284,8 +304,17 @@ class Circulab():
                 try:
                     if self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos].image != ToolBar.tile_images[self.mode_selector.current_mode][int(id_bouton_actif)]:
                         if self.mode_selector.current_mode == 0:
-                            self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
-                            
+                            new_tile = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])],
+                                             orientation=self.build_orientation,
+                                             tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                            self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][
+                                self.x_pos] = new_tile
+                            #self.current_save.game_data[self.mode_selector.current_mode][self.y_pos][self.x_pos] = Tuile(self.current_save.TILE_SIZE, ToolBar.tile_images[int(id_bouton_actif[-1])], orientation=self.build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                            if self.road_orientation_manager.is_a_road(new_tile):
+                                self.graphe.add_inter_points((self.x_pos, self.y_pos), self.current_save.TILE_SIZE)
+                            else:
+                                self.graphe.remove_inter_point((self.x_pos, self.y_pos), self.current_save.TILE_SIZE)
+
                             self.road_orientation_manager.check_tile_change(self.x_pos, self.y_pos)
                             
                         elif self.mode_selector.current_mode == 1:
