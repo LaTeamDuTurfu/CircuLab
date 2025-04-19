@@ -16,8 +16,6 @@ class ÉtatJeu:
         """
         if nouvel_état == self.GAME_EDITOR and (self.état_courant not in [self.NEW_GAME, self.LOAD_GAME]):
             raise ValueError("Impossible de partir la game sans save file.")
-        elif nouvel_état == self.NEW_GAME or nouvel_état == self.LOAD_GAME and (self.état_courant not in [self.HOME_PAGE]):
-            raise ValueError("Impossible de choisir une save file autre que par la page principale.")
         elif nouvel_état == self.SIMULATION and (self.état_courant not in [self.GAME_EDITOR]):
             raise ValueError("Impossible de partir la simulation autre que dans le game editor")
         elif nouvel_état == self.SETTINGS and (self.état_courant not in [self.HOME_PAGE]):

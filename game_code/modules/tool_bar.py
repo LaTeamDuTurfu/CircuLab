@@ -22,17 +22,6 @@ class ToolBar:
     house3_tile = pygame.image.load("assets/tile_images/house3.png")
     house4_tile = pygame.image.load("assets/tile_images/house4.png")
     
-    # Load tiles images de la toolbar en mode roads
-    
-    
-    building_tile_images = [empty_tile, straight_road_tile, grass_tile, sidewalk_tile, skyscraper_tile, house1_tile, house2_tile, house3_tile, house4_tile]
-    signalisation_tile_images = []
-    
-    tile_images = {
-        0: building_tile_images,
-        1: signalisation_tile_images
-    }
-    
     def __init__(self, surface, manager, mode_selector, window_frame, nbr_btns):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
@@ -44,12 +33,22 @@ class ToolBar:
         self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
         self.TOOL_BAR_WIDTH = self.WIDTH * 3/4 - self.TOOL_BAR_BTN_SIZE/2
 
-        self.tool_bar_btns = pygame.sprite.Group()
+        self.tool_bar_btns = []
         self.close_btn = None
         self.show = True
 
         self.mode_selector = mode_selector
         
+        # Load tiles images de la toolbar en mode roads
+        self.building_tile_images = [self.empty_tile, self.straight_road_tile, self.grass_tile, self.sidewalk_tile, self.skyscraper_tile, self.house1_tile, self.house2_tile, self.house3_tile, self.house4_tile]
+        self.signalisation_tile_images = []
+        
+        self.tile_images = {
+            0: self.building_tile_images,
+            1: self.signalisation_tile_images
+        }
+
+        # Reset les images des boutons de la toolbar
         self.change_image_btn(1, "assets/tile_images/road.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/sidewalk.png")
@@ -60,7 +59,7 @@ class ToolBar:
         self.change_image_btn(8, "assets/tile_images/house4.png")
 
         self.tool_bar_window = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), 
+            rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH - self.window_frame.thickness, self.TOOL_BAR_HEIGHT)), 
             object_id="#tool_bar_window", 
             manager=self.manager)
         
@@ -85,7 +84,7 @@ class ToolBar:
                         container=self.tool_bar_container,
                         object_id=pygame_gui.core.ObjectID(class_id="@tool_tip_btn", object_id=f"#tool_tip_btn_{i + 1}"))
             
-            self.tool_bar_btns.add(new_btn)
+            self.tool_bar_btns.append(new_btn)
     
     def get_selected_btn(self):
         """

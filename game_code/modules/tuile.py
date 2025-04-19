@@ -77,3 +77,6 @@ class Tuile(pygame.sprite.Sprite):
 
     def get_y_tile(self, tile_size):
         return self.rect.y // tile_size
+
+    def __repr__(self):
+        return f"{self.tile_type} ({self.BUILD_ORIENTATIONS[self.orientation]})"

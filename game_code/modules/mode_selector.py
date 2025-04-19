@@ -19,13 +19,13 @@ class ModeSelector:
         self.MODE_SELECTOR_WIDTH = self.WIDTH * 1/4
         self.MODE_SELECTOR_BTN_SIZE = 78
         
-        self.mode_selector_btns = pygame.sprite.Group()
+        self.mode_selector_btns = []
         
         self.default_mode = self.modes["Building"]
         self.current_mode = self.default_mode
                 
         self.mode_selector_window = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((0, self.window_frame.thickness), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
+            rect=pygame.Rect((self.window_frame.thickness, self.window_frame.thickness), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
             object_id="#mode_selector_window", 
             manager=self.manager)
         
@@ -40,8 +40,10 @@ class ModeSelector:
                         container=self.mode_selector_container,
                         object_id=pygame_gui.core.ObjectID(class_id="@mode_selector_btn", object_id=f"#mode_selector_btn_{str(i + 1)}"))
             
-            self.mode_selector_btns.add(new_btn)
-    
+            self.mode_selector_btns.append(new_btn)
+        
+        self.mode_selector_btns[0].select()
+        
     def get_selected_btn(self):
         """
         Returns the currently selected button in the mode selector.

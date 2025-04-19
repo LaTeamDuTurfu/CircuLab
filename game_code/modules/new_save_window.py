@@ -18,7 +18,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
     MAX_ROWS = 500
     TILE_SIZE = 64
 
-    def __init__(self, rect, manager, default_path):
+    def __init__(self, rect, manager, default_path, state_manager, home_screen):
         # Load tiles images
         """
         Crée une nouvelle fenêtre de sauvegarde.
@@ -36,9 +36,11 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.empty_tile = pygame.image.load("assets/tile_images/none.png")
         
         # UI Elements
-        super().__init__(rect, manager, window_display_title="New Save", object_id="#new_save_window", resizable=False, draggable=True)
+        super().__init__(rect, manager, window_display_title="Créer une nouvelle sauvegarde", object_id="#new_save_window", resizable=False, draggable=False)
         self.rect = rect
         self.manager = manager
+        self.state_manager = state_manager
+        self.home_screen = home_screen
         self.path = default_path
         self.is_blocking = True
         self.window_container = pygame_gui.elements.UIAutoResizingContainer(relative_rect=pygame.Rect((0, 0), (rect.width, rect.height)), manager=manager, container=self, object_id="#new_save_window_container")
@@ -145,7 +147,8 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             manager=manager,
             container=self.window_container,
             object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#cancel_btn"),
-            anchors={"centerx": "centerx"}
+            anchors={"centerx": "centerx"},
+            command=self.return_to_home_screen
         )
 
         self.file_explorer_btn.bind(pygame_gui.UI_BUTTON_PRESSED, self.open_file_explorer)
@@ -289,7 +292,12 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             True if the game was created and saved successfully, False otherwise.
         """
         if self.created_game != None:
-            self.kill()
+            self.hide()
             return True
         return False
+    
+    def return_to_home_screen(self):
+        self.state_manager.changer_état(1)
+        self.hide()
+        self.home_screen.montrer_boutons()
 
