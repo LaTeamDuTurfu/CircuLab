@@ -1,6 +1,7 @@
 import pygame_gui
 import pygame
-
+import threading
+import time
 import pygame_gui.elements.ui_2d_slider
 
 class WindowFrame:
@@ -68,7 +69,11 @@ class WindowFrame:
 
     def update_game(self):
         self.game.update_save()
-    
+
+    def change_save_btn_text(self, text:str, sleep_time:int=0):
+        time.sleep(sleep_time)
+        self.save_btn.set_text(text)
+
     def show_all_btns(self):
         self.menu_btn.show()
         self.save_btn.show()

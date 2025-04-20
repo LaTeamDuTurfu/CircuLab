@@ -144,7 +144,7 @@ class Partie():
                     if tile.tile_type != "@empty":
                         tile.change_size(self.TILE_SIZE)
     
-    def change_tuiles(self, screen, toolbar, pos, window_border, mode_selector, road_orientation_manager, build_orientation):
+    def change_tuiles(self, screen, toolbar, pos, window_border, mode_selector, road_orientation_manager, build_orientation, graphe):
         """
         Updates the tile at the current mouse position to the selected tile
         image from the toolbar, but only if the left mouse button is pressed
@@ -170,10 +170,18 @@ class Partie():
                         if mode_selector.current_mode == 0:
                             new_tile = Tuile(self.TILE_SIZE, toolbar.tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                             self.building_data[y_pos][x_pos] = new_tile
+                        
+                            if road_orientation_manager.is_a_road(new_tile):
+                                graphe.add_inter_points((x_pos, y_pos), self.TILE_SIZE)
+                            else:
+                                graphe.remove_inter_points((x_pos, y_pos), self.TILE_SIZE)
+                            
                             road_orientation_manager.set_game_data(self.building_data)
                             road_orientation_manager.check_tile_change(x_pos, y_pos)
+
                         elif mode_selector.current_mode == 1:
                             pass
+                        
                         elif mode_selector.current_mode == 2:
                             pass
                         
