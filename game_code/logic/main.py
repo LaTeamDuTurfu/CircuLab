@@ -117,7 +117,7 @@ class Circulab():
 
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
                 self.current_save = None
-                self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/3)
+                self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/4)
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pass
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:

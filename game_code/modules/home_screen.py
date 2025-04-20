@@ -13,7 +13,7 @@ class HomeScreen:
         self.BTN_HEIGHT = self.HEIGHT * 1/8
 
         self.new_save_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, 0), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
+            relative_rect=pygame.Rect((0, -self.BTN_HEIGHT/2), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
             text="Nouvelle Sauvegarde",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
@@ -22,7 +22,7 @@ class HomeScreen:
         )
         
         self.load_save_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, self.new_save_btn.relative_rect.height), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
+            relative_rect=pygame.Rect((0, self.new_save_btn.relative_rect.height + self.new_save_btn.relative_rect.y), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
             text="Charger une Sauvegarde",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
@@ -31,7 +31,7 @@ class HomeScreen:
         )
         
         self.settings_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, self.new_save_btn.relative_rect.height * 2), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
+            relative_rect=pygame.Rect((0, self.load_save_btn.relative_rect.height + self.load_save_btn.relative_rect.y), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
             text="Paramètres",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
@@ -39,7 +39,7 @@ class HomeScreen:
         )
         
         self.quit_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, self.new_save_btn.relative_rect.height * 3), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
+            relative_rect=pygame.Rect((0, self.settings_btn.relative_rect.height + self.settings_btn.relative_rect.y), (self.WIDTH * 1/2, self.BTN_HEIGHT)),
             text="Quitter",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
@@ -66,3 +66,4 @@ class HomeScreen:
         self.load_save_btn.show()
         self.settings_btn.show()
         self.quit_btn.show()
+    

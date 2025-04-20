@@ -12,10 +12,10 @@ from modules.tuile import Tuile
 
 class NewSaveWindow(pygame_gui.elements.UIWindow):
 
-    MIN_COLS = 1
-    MAX_COLS = 500
-    MIN_ROWS = 1
-    MAX_ROWS = 500
+    MIN_COLS = 50
+    MAX_COLS = 300
+    MIN_ROWS = 50
+    MAX_ROWS = 300
     TILE_SIZE = 64
 
     def __init__(self, rect, manager, default_path, state_manager, home_screen):
