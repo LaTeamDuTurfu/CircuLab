@@ -14,6 +14,16 @@ from logic.graphe import *
 from logic.états import *
 
 class Circulab():
+    
+    # Color palette
+    BLACK = "#040f0f"
+    DARK_GREEN = "#248232"
+    GREEN = "#2ba84a"
+    GREY = "#1E1E1E"
+    WHITE = "#fcfffc"
+    BLUE_GREY = "#7E99CF"
+    YELLOW = "#D6E026"
+
     def __init__(self, height: int = 720, width: int = 1280):
         # Setup Window
         pygame.init()
@@ -24,14 +34,6 @@ class Circulab():
         self.font_title = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
         self.font_text = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 24)
         
-        # Color palette
-        self.BLACK = "#040f0f"
-        self.DARK_GREEN = "#248232"
-        self.GREEN = "#2ba84a"
-        self.GREY = "#2d3a3a"
-        self.WHITE = "#fcfffc"
-        self.BLUE_GREY = "#7E99CF"
-
         # Taille de la fenêtre
         self.HEIGHT = height
         self.WIDTH = width
@@ -58,7 +60,7 @@ class Circulab():
         self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager, self.home_screen, self.state_manager)
 
         # Instancie la fenêtre de sélection de mode (cachée par défaut)
-        self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border)
+        self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border, self.state_manager)
         self.mode_selector.mode_selector_window.hide()
         
         self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, nbr_btns=8)
@@ -68,11 +70,12 @@ class Circulab():
         self.window_border.mode_selector = self.mode_selector
         self.window_border.tool_bar = self.build_tool_bar
 
-        # Instancie la fenêtre de sauvegarde (cachée par défaut)
-        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path="../Circulab/data/saves/", state_manager=self.state_manager, home_screen=self.home_screen)
+        # Instancie les fenêtres de sauvegarde (cachée par défaut)
+        self.default_path = "../Circulab/data/saves/"
+        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)
         self.new_save_window.hide()
         
-        self.load_save_window = LoadSaveWindow(rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), surface=self.screen, manager=self.manager, default_path="../Circulab/data/saves/", state_manager=self.state_manager, home_screen=self.home_screen)
+        self.load_save_window = LoadSaveWindow(rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), surface=self.screen, manager=self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)
         
         # Variable de jeu
         self.build_orientation = 0
@@ -151,21 +154,10 @@ class Circulab():
 
                 # Change l'apparence des tuiles si la souris est sur la grille
                 self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.mode_selector, self.road_orientation_manager, self.build_orientation, self.graphe)
-                
-                # Dessine les tuiles
-                self.current_save.draw_tuiles(self.screen)            
-
-                # Dessine la grille
-                self.current_save.draw_grid(self.screen)    
-                
-                # Dessine les éléments du GUI (si le user veut voir le preview [P])
-                if self.see_build_preview:
-                    pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
-                    self.draw_text(f"Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
-                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1]) 
+                 
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
-            if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2:
+            elif self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2:
                     if not self.graph_created:
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
@@ -180,7 +172,22 @@ class Circulab():
                         self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
-            if self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIMULATION:
+            if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION]:
+                # Check si le mode est changé
+                self.mode_selector.check_change_mode()
+                
+                # Dessine les tuiles
+                self.current_save.draw_tuiles(self.screen)            
+
+                # Dessine la grille
+                self.current_save.draw_grid(self.screen)    
+                
+                # Dessine les éléments du GUI (si le user veut voir le preview [P])
+                if self.see_build_preview:
+                    pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
+                    self.draw_text(f"Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
+                    self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1])
+            
                 # Dessine la bordure de l'écran
                 self.window_border.draw_border() 
                 # Update l'écran
@@ -217,8 +224,6 @@ class Circulab():
                 if not btn.is_selected:
                     self.build_tool_bar.unselect_all_btns()
                     btn.select()
-
-                    self.check_debut_simulation()
                     continue
                 elif btn.is_selected:
                     btn.unselect()
@@ -228,6 +233,8 @@ class Circulab():
                 if not btn.is_selected:
                     self.mode_selector.unselect_all_btns()
                     btn.select()
+
+                    self.check_debut_simulation()
                     continue
                 elif btn.is_selected:
                     btn.unselect()
@@ -320,8 +327,9 @@ class Circulab():
             self.build_orientation = 0
     
     def check_debut_simulation(self):
-       current_mode = self.mode_selector.get_selected_btn()
-       id_mode_actif = int(current_mode.object_ids[-1][-1])
-       print(id_mode_actif)
-       if id_mode_actif == 3:
-           self.state_manager.changer_état(ÉtatJeu.SIMULATION)
+        current_mode = self.mode_selector.get_selected_btn()
+        id_mode_actif = int(current_mode.object_ids[-1][-1])
+        print(id_mode_actif)
+        if id_mode_actif == 3:
+            self.window_border.color = self.GREEN
+            self.state_manager.changer_état(ÉtatJeu.SIMULATION)

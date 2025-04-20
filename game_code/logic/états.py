@@ -14,7 +14,7 @@ class ÉtatJeu:
         """
         Permet de gérer et protéger les transitions d'état
         """
-        if nouvel_état == self.GAME_EDITOR and (self.état_courant not in [self.NEW_GAME, self.LOAD_GAME]):
+        if nouvel_état == self.GAME_EDITOR and (self.état_courant not in [self.NEW_GAME, self.LOAD_GAME, self.SIMULATION]):
             raise ValueError("Impossible de partir la game sans save file.")
         elif nouvel_état == self.SIMULATION and (self.état_courant not in [self.GAME_EDITOR]):
             raise ValueError("Impossible de partir la simulation autre que dans le game editor")

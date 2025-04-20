@@ -66,7 +66,7 @@ class ToolBar:
         self.tool_bar_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.TOOL_BAR_WIDTH, self.TOOL_BAR_HEIGHT)), manager=self.manager, container=self.tool_bar_window, object_id="#tool_bar_container", allow_scroll_y=True)
     
         self.close_btn = pygame_gui.elements.UIButton(
-                        relative_rect=pygame.Rect((self.TOOL_BAR_BTN_SIZE/4, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE/2, self.TOOL_BAR_BTN_SIZE)),
+                        relative_rect=pygame.Rect((self.TOOL_BAR_BTN_SIZE/4, self.window_frame.thickness/4), (self.TOOL_BAR_BTN_SIZE/2, self.TOOL_BAR_BTN_SIZE)),
                         text="",
                         manager=self.manager,
                         anchors={"centery": "centery"},
@@ -77,7 +77,7 @@ class ToolBar:
         
         for i in range(len(Tuile.TILE_TYPES[self.mode_selector.current_mode])):
             new_btn = pygame_gui.elements.UIButton(
-                        relative_rect=pygame.Rect(((11/8 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/2), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
+                        relative_rect=pygame.Rect(((43/32 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/4), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
                         text="",
                         manager=self.manager,
                         anchors={"centery": "centery"},
@@ -153,6 +153,7 @@ class ToolBar:
         if self.show:
             self.tool_bar_window.rect.x = self.WIDTH - self.window_frame.thickness - self.TOOL_BAR_BTN_SIZE * 3/4
             self.close_btn.relative_rect.x = self.TOOL_BAR_WIDTH - self.TOOL_BAR_BTN_SIZE * 3/4
+            self.close_btn.select()
             self.show = False
             for btn in self.tool_bar_btns:
                 btn.hide()
@@ -161,6 +162,7 @@ class ToolBar:
             self.tool_bar_window.rect.x = self.WIDTH - self.TOOL_BAR_WIDTH
             self.close_btn.relative_rect.x = self.TOOL_BAR_BTN_SIZE/4
             self.show = True
+            self.close_btn.unselect()
             for btn in self.tool_bar_btns:
                 btn.show()
             print(f"{self.tool_bar_window.rect.x}, {self.close_btn.relative_rect.x}")

@@ -9,11 +9,21 @@ class ModeSelector:
         "Simulation": 2
     }
     
-    def __init__(self, surface, manager, window_frame):
+    # Color palette
+    BLACK = "#040f0f"
+    DARK_GREEN = "#248232"
+    GREEN = "#2ba84a"
+    GREY = "#2d3a3a"
+    WHITE = "#fcfffc"
+    BLUE_GREY = "#7E99CF"
+    YELLOW = "#D6E026"
+
+    def __init__(self, surface, manager, window_frame, state_manager):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
         self.manager = manager
         self.window_frame = window_frame
+        self.state_manager = state_manager
 
         self.MODE_SELECTOR_HEIGHT = self.HEIGHT * 1/8
         self.MODE_SELECTOR_WIDTH = self.WIDTH * 1/4
@@ -33,7 +43,7 @@ class ModeSelector:
     
         for i in range(3):
             new_btn = pygame_gui.elements.UIButton(
-                        relative_rect=pygame.Rect(((5/4 * i * self.MODE_SELECTOR_BTN_SIZE) + self.MODE_SELECTOR_BTN_SIZE/4, self.window_frame.thickness/2), (self.MODE_SELECTOR_BTN_SIZE, self.MODE_SELECTOR_BTN_SIZE)),
+                        relative_rect=pygame.Rect(((5/4 * i * self.MODE_SELECTOR_BTN_SIZE) + self.MODE_SELECTOR_BTN_SIZE/4, self.window_frame.thickness/4), (self.MODE_SELECTOR_BTN_SIZE, self.MODE_SELECTOR_BTN_SIZE)),
                         text="",
                         manager=self.manager,
                         anchors={"centery": "centery"},
@@ -69,18 +79,17 @@ class ModeSelector:
         for btn in self.mode_selector_btns:
             btn.unselect()
     
-    def change_mode(self, new_mode: str):
-        """
-        Changes the current mode to a new mode.
+    def check_change_mode(self):
+        current_mode = self.get_selected_btn()
+        id_mode_actif = int(current_mode.object_ids[-1][-1])
 
-        Args:
-        new_mode (str): The name of the new mode to switch to.
+        print(id_mode_actif)
 
-        Returns:
-        bool: True if the mode change was successful, False if the mode does not exist.
-        """
-        try:
-            self.current_mode = self.modes[new_mode]
-            return True
-        except:
-            return False
+        if id_mode_actif == 1 and self.state_manager.état_courant != 2:
+            self.window_frame.color = self.BLUE_GREY
+            self.state_manager.changer_état(2)  # Building
+        elif id_mode_actif == 2:
+            pass # Simulation
+        if id_mode_actif == 3 and self.state_manager.état_courant != id_mode_actif:
+            self.window_frame.color = self.GREEN
+            self.state_manager.changer_état(3)  # Simulation
