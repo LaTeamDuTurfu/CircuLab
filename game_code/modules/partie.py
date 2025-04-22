@@ -174,7 +174,7 @@ class Partie():
                             if road_orientation_manager.is_a_road(new_tile):
                                 graphe.add_inter_points((x_pos, y_pos), self.TILE_SIZE)
                             else:
-                                graphe.remove_inter_points((x_pos, y_pos), self.TILE_SIZE)
+                                graphe.remove_inter_point((x_pos, y_pos), self.TILE_SIZE)
                             
                             road_orientation_manager.set_game_data(self.building_data)
                             road_orientation_manager.check_tile_change(x_pos, y_pos)
