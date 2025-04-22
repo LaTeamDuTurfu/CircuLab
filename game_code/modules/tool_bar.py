@@ -21,6 +21,12 @@ class ToolBar:
     house2_tile = pygame.image.load("assets/tile_images/house2.png")
     house3_tile = pygame.image.load("assets/tile_images/house3.png")
     house4_tile = pygame.image.load("assets/tile_images/house4.png")
+
+    # Load tiles images de la toolbar en mode signalisation
+    stop_sign_tile = None
+    traffic_light_tile = None
+    travail_tile = None
+    accident_tile = None
     
     def __init__(self, surface, manager, mode_selector, window_frame, nbr_btns):
         self.WIDTH = surface.get_width()
@@ -48,15 +54,7 @@ class ToolBar:
             1: self.signalisation_tile_images
         }
 
-        # Reset les images des boutons de la toolbar
-        self.change_image_btn(1, "assets/tile_images/road.png")
-        self.change_image_btn(2, "assets/tile_images/grass.png")
-        self.change_image_btn(3, "assets/tile_images/sidewalk.png")
-        self.change_image_btn(4, "assets/tile_images/Skyscraper.png")
-        self.change_image_btn(5, "assets/tile_images/house1.png")
-        self.change_image_btn(6, "assets/tile_images/house2.png")
-        self.change_image_btn(7, "assets/tile_images/house3.png")
-        self.change_image_btn(8, "assets/tile_images/house4.png")
+        self.set_building_tool_bar()
 
         self.tool_bar_window = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((self.WIDTH - self.TOOL_BAR_WIDTH, self.window_frame.thickness), (self.TOOL_BAR_WIDTH - self.window_frame.thickness, self.TOOL_BAR_HEIGHT)), 
@@ -86,6 +84,29 @@ class ToolBar:
             
             self.tool_bar_btns.append(new_btn)
     
+
+    def set_building_tool_bar(self):
+        # Reset les images des boutons de la toolbar
+        self.change_image_btn(1, "assets/tile_images/road.png")
+        self.change_image_btn(2, "assets/tile_images/grass.png")
+        self.change_image_btn(3, "assets/tile_images/sidewalk.png")
+        self.change_image_btn(4, "assets/tile_images/Skyscraper.png")
+        self.change_image_btn(5, "assets/tile_images/house1.png")
+        self.change_image_btn(6, "assets/tile_images/house2.png")
+        self.change_image_btn(7, "assets/tile_images/house3.png")
+        self.change_image_btn(8, "assets/tile_images/house4.png")
+
+    def set_signalisation_tool_bar(self):
+        # Reset les images des boutons de la toolbar
+        self.change_image_btn(1, "assets/tile_images/none.png")
+        self.change_image_btn(2, "assets/tile_images/none.png")
+        self.change_image_btn(3, "assets/tile_images/none.png")
+        self.change_image_btn(4, "assets/tile_images/none.png")
+        self.change_image_btn(5, "assets/tile_images/none.png")
+        self.change_image_btn(6, "assets/tile_images/none.png")
+        self.change_image_btn(7, "assets/tile_images/none.png") 
+        self.change_image_btn(8, "assets/tile_images/none.png")
+
     def get_selected_btn(self):
         """
         Returns the currently selected button in the toolbar.

@@ -24,6 +24,7 @@ class ModeSelector:
         self.manager = manager
         self.window_frame = window_frame
         self.state_manager = state_manager
+        self.tool_bar = None
 
         self.MODE_SELECTOR_HEIGHT = self.HEIGHT * 1/8
         self.MODE_SELECTOR_WIDTH = self.WIDTH * 1/4
@@ -53,7 +54,10 @@ class ModeSelector:
             self.mode_selector_btns.append(new_btn)
         
         self.mode_selector_btns[0].select()
-        
+
+    def set_tool_bar(self, tool_bar):
+        self.tool_bar = tool_bar
+
     def get_selected_btn(self):
         """
         Returns the currently selected button in the mode selector.
@@ -85,9 +89,12 @@ class ModeSelector:
 
         if id_mode_actif == 1 and self.state_manager.état_courant != 2:
             self.window_frame.color = self.BLUE_GREY
+            self.tool_bar.set_building_tool_bar()
             self.state_manager.changer_état(2)  # Building
-        elif id_mode_actif == 2:
-            pass # Simulation
-        if id_mode_actif == 3 and self.state_manager.état_courant != id_mode_actif:
+        elif id_mode_actif == 2 and self.state_manager.état_courant != 7:
+            self.window_frame.color = self.YELLOW
+            self.tool_bar.set_signalisation_tool_bar()
+            self.state_manager.changer_état(7)
+        if id_mode_actif == 3 and self.state_manager.état_courant != 3:
             self.window_frame.color = self.GREEN
             self.state_manager.changer_état(3)  # Simulation

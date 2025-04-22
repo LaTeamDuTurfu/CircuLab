@@ -26,7 +26,7 @@ class Partie():
         self.TILE_SIZE = save_data["tile_size"]
         self.building_data = save_data["building_data"]
         self.car_data = None
-        self.signalisation_data = None
+        self.signalisation_data = save_data["signalisation_data"]
         self.font = pygame.font.Font("freesansbold.ttf", 32)
         
         self.game_data = {
@@ -52,9 +52,10 @@ class Partie():
         :rtype: bool
         """
         copy_building_data = copy.deepcopy(self.building_data)
-        serialized_data = self.tiles_data_to_bytes(copy_building_data)
-        # car_data = self.tiles_data_to_bytes(self.car_data)
-        # signalisation_data = self.tiles_data_to_bytes(self.signalisation_data)
+        serialized_building_data = self.tiles_data_to_bytes(copy_building_data)
+        
+        copy_signalisation_data = copy.deepcopy(self.signalisation_data)
+        serialized_signalisation_data = self.tiles_data_to_bytes(copy_signalisation_data)
 
         save_data = {
             "name": self.name,
@@ -64,9 +65,9 @@ class Partie():
             "scroll_x": self.scrollx,
             "scroll_y": self.scrolly,
             "path": self.path,
-            "building_data": serialized_data,
+            "building_data": serialized_building_data,
             "car_data": self.car_data,
-            "signalisation_data": self.signalisation_data
+            "signalisation_data": serialized_signalisation_data
         }
 
         if self.check_correct_path():
@@ -85,6 +86,13 @@ class Partie():
         """
 
         for y, row in enumerate(self.building_data):
+                for x, tile in enumerate(row):
+                    if tile.tile_type != "@empty":
+                        tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
+                        tile.draw(surface)
+                        # print(f"{tile.tile_type}({tile.orientation}) X:{tile.rect.x // self.TILE_SIZE} Y:{tile.rect.y // self.TILE_SIZE}")
+        
+        for y, row in enumerate(self.signalisation_data):
                 for x, tile in enumerate(row):
                     if tile.tile_type != "@empty":
                         tile.rect = pygame.Rect(x * self.TILE_SIZE - self.scrollx, y * self.TILE_SIZE - self.scrolly, self.TILE_SIZE, self.TILE_SIZE)
@@ -168,9 +176,9 @@ class Partie():
                 try:
                     if self.game_data[mode_selector.current_mode][y_pos][x_pos].image != toolbar.tile_images[mode_selector.current_mode][int(id_bouton_actif)]:
                         if mode_selector.current_mode == 0:
-                            new_tile = Tuile(self.TILE_SIZE, toolbar.tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                            new_tile = Tuile(self.TILE_SIZE, toolbar.building_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                             self.building_data[y_pos][x_pos] = new_tile
-                        
+
                             if road_orientation_manager.is_a_road(new_tile):
                                 graphe.add_inter_points((x_pos, y_pos), self.TILE_SIZE)
                             else:
@@ -180,13 +188,11 @@ class Partie():
                             road_orientation_manager.check_tile_change(x_pos, y_pos)
 
                         elif mode_selector.current_mode == 1:
-                            pass
-                        
-                        elif mode_selector.current_mode == 2:
-                            pass
+                            new_tile = Tuile(self.TILE_SIZE, toolbar.signalisation_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.SIGNALISATION_TILE_TYPES[int(id_bouton_actif)])
+                            self.signalisation_data[y_pos][x_pos] = new_tile
                         
                 except UnboundLocalError:
-                    print("erreur")
+                    pass
             if pygame.mouse.get_pressed()[2] == 1:
                 if mode_selector.current_mode == 0:
                     self.building_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
@@ -196,7 +202,7 @@ class Partie():
                     road_orientation_manager.check_tile_change(x_pos, y_pos - 1)
                     road_orientation_manager.check_tile_change(x_pos, y_pos + 1)
                 elif mode_selector.current_mode == 1:
-                    pass
+                    self.signalisation_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
 
 
     def tiles_data_to_bytes(self, tiles_data):

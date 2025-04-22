@@ -8,7 +8,7 @@ class Tuile(pygame.sprite.Sprite):
         1: "Road",
         2: "Grass",
         3: "Sidewalk",
-        4: "Skyscraper",
+        4: "Intersection",
         5: "House1",
         6: "House2",
         7: "House3",

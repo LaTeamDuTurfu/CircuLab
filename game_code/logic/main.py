@@ -63,8 +63,12 @@ class Circulab():
         self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border, self.state_manager)
         self.mode_selector.mode_selector_window.hide()
         
+        # Instancie la tool_bar (cachée par défaut)
         self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, nbr_btns=8)
         self.build_tool_bar.tool_bar_window.hide()
+
+        # Associe la tool_bar au mode_selector
+        self.mode_selector.set_tool_bar(self.build_tool_bar)
 
         # Relie la tool_bar à la bordure de fenêtre
         self.window_border.mode_selector = self.mode_selector
@@ -172,7 +176,7 @@ class Circulab():
                         self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
-            if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION]:
+            if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
                 # Check si le mode est changé
                 self.mode_selector.check_change_mode()
                 
