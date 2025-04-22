@@ -83,8 +83,6 @@ class ModeSelector:
         current_mode = self.get_selected_btn()
         id_mode_actif = int(current_mode.object_ids[-1][-1])
 
-        print(id_mode_actif)
-
         if id_mode_actif == 1 and self.state_manager.état_courant != 2:
             self.window_frame.color = self.BLUE_GREY
             self.state_manager.changer_état(2)  # Building
