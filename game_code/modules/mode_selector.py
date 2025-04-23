@@ -32,8 +32,7 @@ class ModeSelector:
         
         self.mode_selector_btns = []
         
-        self.default_mode = self.modes["Building"]
-        self.current_mode = self.default_mode
+        self.current_mode = self.state_manager.état_courant
                 
         self.mode_selector_window = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((self.window_frame.thickness, self.window_frame.thickness), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
@@ -85,16 +84,16 @@ class ModeSelector:
     
     def check_change_mode(self):
         current_mode = self.get_selected_btn()
-        id_mode_actif = int(current_mode.object_ids[-1][-1])
+        id_bouton_actif = int(current_mode.object_ids[-1][-1])
 
-        if id_mode_actif == 1 and self.state_manager.état_courant != 2:
+        if id_bouton_actif == 1 and self.state_manager.état_courant != 2:
             self.window_frame.color = self.BLUE_GREY
             self.tool_bar.set_building_tool_bar()
             self.state_manager.changer_état(2)  # Building
-        elif id_mode_actif == 2 and self.state_manager.état_courant != 7:
+        elif id_bouton_actif == 2 and self.state_manager.état_courant != 7:
             self.window_frame.color = self.YELLOW
             self.tool_bar.set_signalisation_tool_bar()
             self.state_manager.changer_état(7)
-        if id_mode_actif == 3 and self.state_manager.état_courant != 3:
+        if id_bouton_actif == 3 and self.state_manager.état_courant != 3:
             self.window_frame.color = self.GREEN
             self.state_manager.changer_état(3)  # Simulation

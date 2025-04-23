@@ -70,6 +70,7 @@ class LoadSaveWindow:
 
         game = Partie(save_data)
         game.building_data = game.bytes_to_tiles_data(game.building_data)
+        game.signalisation_data = game.bytes_to_tiles_data(game.signalisation_data)
 
         self.loaded_game = game
         print("Sauvegarde chargée avec succès")

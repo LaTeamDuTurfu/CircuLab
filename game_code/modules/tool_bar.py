@@ -16,7 +16,7 @@ class ToolBar:
     straight_road_tile = pygame.image.load("assets/tile_images/road.png")
     grass_tile = pygame.image.load("assets/tile_images/grass.png")
     sidewalk_tile = pygame.image.load("assets/tile_images/sidewalk.png")
-    skyscraper_tile = pygame.image.load("assets/tile_images/Skyscraper.png")
+    intersection_tile = pygame.image.load("assets/tile_images/Intersection.png")
     house1_tile = pygame.image.load("assets/tile_images/house1.png")
     house2_tile = pygame.image.load("assets/tile_images/house2.png")
     house3_tile = pygame.image.load("assets/tile_images/house3.png")
@@ -24,11 +24,11 @@ class ToolBar:
 
     # Load tiles images de la toolbar en mode signalisation
     stop_sign_tile = None
-    traffic_light_tile = None
+    traffic_light_tile = pygame.image.load("assets/tile_images/traffic_light.png")
     travail_tile = None
     accident_tile = None
     
-    def __init__(self, surface, manager, mode_selector, window_frame, nbr_btns):
+    def __init__(self, surface, manager, mode_selector, window_frame):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
         self.manager = manager
@@ -46,12 +46,12 @@ class ToolBar:
         self.mode_selector = mode_selector
         
         # Load tiles images de la toolbar en mode roads
-        self.building_tile_images = [self.empty_tile, self.straight_road_tile, self.grass_tile, self.sidewalk_tile, self.skyscraper_tile, self.house1_tile, self.house2_tile, self.house3_tile, self.house4_tile]
-        self.signalisation_tile_images = []
+        self.building_tile_images = [self.empty_tile, self.straight_road_tile, self.grass_tile, self.sidewalk_tile, self.intersection_tile, self.house1_tile, self.house2_tile, self.house3_tile, self.house4_tile]
+        self.signalisation_tile_images = [self.empty_tile, self.traffic_light_tile]
         
         self.tile_images = {
-            0: self.building_tile_images,
-            1: self.signalisation_tile_images
+            2: self.building_tile_images,
+            7: self.signalisation_tile_images
         }
 
         self.set_building_tool_bar()
@@ -90,7 +90,7 @@ class ToolBar:
         self.change_image_btn(1, "assets/tile_images/road.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/sidewalk.png")
-        self.change_image_btn(4, "assets/tile_images/Skyscraper.png")
+        self.change_image_btn(4, "assets/tile_images/Intersection.png")
         self.change_image_btn(5, "assets/tile_images/house1.png")
         self.change_image_btn(6, "assets/tile_images/house2.png")
         self.change_image_btn(7, "assets/tile_images/house3.png")
@@ -98,7 +98,7 @@ class ToolBar:
 
     def set_signalisation_tool_bar(self):
         # Reset les images des boutons de la toolbar
-        self.change_image_btn(1, "assets/tile_images/none.png")
+        self.change_image_btn(1, "assets/tile_images/traffic_light.png")
         self.change_image_btn(2, "assets/tile_images/none.png")
         self.change_image_btn(3, "assets/tile_images/none.png")
         self.change_image_btn(4, "assets/tile_images/none.png")

@@ -30,8 +30,8 @@ class Partie():
         self.font = pygame.font.Font("freesansbold.ttf", 32)
         
         self.game_data = {
-            0: self.building_data,
-            1: self.signalisation_data
+            2: self.building_data,
+            7: self.signalisation_data
         }
         
     
@@ -152,7 +152,7 @@ class Partie():
                     if tile.tile_type != "@empty":
                         tile.change_size(self.TILE_SIZE)
     
-    def change_tuiles(self, screen, toolbar, pos, window_border, mode_selector, road_orientation_manager, build_orientation, graphe):
+    def change_tuiles(self, screen, toolbar, pos, window_border, state_manager, road_orientation_manager, build_orientation, graphe):
         """
         Updates the tile at the current mouse position to the selected tile
         image from the toolbar, but only if the left mouse button is pressed
@@ -174,8 +174,8 @@ class Partie():
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
-                    if self.game_data[mode_selector.current_mode][y_pos][x_pos].image != toolbar.tile_images[mode_selector.current_mode][int(id_bouton_actif)]:
-                        if mode_selector.current_mode == 0:
+                    if (state_manager.état_courant == 2 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.building_tile_images[int(id_bouton_actif)]) or (state_manager.état_courant == 7 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.signalisation_tile_images[int(id_bouton_actif)]):
+                        if state_manager.état_courant == 2:
                             new_tile = Tuile(self.TILE_SIZE, toolbar.building_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                             self.building_data[y_pos][x_pos] = new_tile
 
@@ -187,21 +187,21 @@ class Partie():
                             road_orientation_manager.set_game_data(self.building_data)
                             road_orientation_manager.check_tile_change(x_pos, y_pos)
 
-                        elif mode_selector.current_mode == 1:
+                        elif state_manager.état_courant == 7:
                             new_tile = Tuile(self.TILE_SIZE, toolbar.signalisation_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.SIGNALISATION_TILE_TYPES[int(id_bouton_actif)])
                             self.signalisation_data[y_pos][x_pos] = new_tile
                         
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
-                if mode_selector.current_mode == 0:
+                if state_manager.état_courant == 2:
                     self.building_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
                     road_orientation_manager.set_game_data(self.building_data)
                     road_orientation_manager.check_tile_change(x_pos - 1, y_pos)
                     road_orientation_manager.check_tile_change(x_pos + 1, y_pos)
                     road_orientation_manager.check_tile_change(x_pos, y_pos - 1)
                     road_orientation_manager.check_tile_change(x_pos, y_pos + 1)
-                elif mode_selector.current_mode == 1:
+                elif state_manager.état_courant == 7:
                     self.signalisation_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
 
 

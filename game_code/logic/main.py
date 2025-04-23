@@ -64,7 +64,7 @@ class Circulab():
         self.mode_selector.mode_selector_window.hide()
         
         # Instancie la tool_bar (cachée par défaut)
-        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, nbr_btns=8)
+        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border)
         self.build_tool_bar.tool_bar_window.hide()
 
         # Associe la tool_bar au mode_selector
@@ -149,7 +149,7 @@ class Circulab():
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
 
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
-            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR:
+            elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIGNALISATION:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
                 
@@ -157,7 +157,7 @@ class Circulab():
                 self.current_save.change_scroll(self.screen)
 
                 # Change l'apparence des tuiles si la souris est sur la grille
-                self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.mode_selector, self.road_orientation_manager, self.build_orientation, self.graphe)
+                self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
                  
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
