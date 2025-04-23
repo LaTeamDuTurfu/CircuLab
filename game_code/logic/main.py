@@ -122,9 +122,11 @@ class Circulab():
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
                 self.current_save = None
                 self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/4)
+                pygame.display.set_caption(f'CircuLab - Home Page')
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
-                pass
+                pygame.display.set_caption(f'CircuLab - Settings')
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
+                pygame.display.set_caption(f'CircuLab - New Game')
                 self.new_save_window.show()
                 if self.new_save_window.check_save_created():
                     self.current_save = self.new_save_window.created_game
@@ -138,6 +140,7 @@ class Circulab():
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
                 self.load_save_window.file_explorer_window.show()
+                pygame.display.set_caption(f'CircuLab - Load Game')
                 if self.load_save_window.check_save_created():
                     self.current_save = self.load_save_window.loaded_game
                     self.load_save_window.loaded_game = None

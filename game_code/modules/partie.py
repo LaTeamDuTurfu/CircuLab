@@ -75,10 +75,10 @@ class Partie():
         if self.check_correct_path():
             with open(self.path + f"/{self.name}.clab", "wb") as file:
                 dill.dump(save_data, file)
-                print(f"Succès: {self.name}.clab a été sauvegardé ✅")
+                print(f"[Succès]: {self.name}.clab a été sauvegardé ✅")
                 return True
         
-        print("Erreur: Le chemin de sauvegarde est incorrect ❌")
+        print("[Erreur]: Le chemin de sauvegarde est incorrect ❌")
         return False
     
     def draw_tuiles(self, surface):
