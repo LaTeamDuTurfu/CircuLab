@@ -36,7 +36,6 @@ class Partie():
         
     
     def check_correct_path(self):
-        print("Chemin Valide")
         return os.path.exists(self.path)
 
     def update_save(self):
@@ -53,9 +52,11 @@ class Partie():
         """
         copy_building_data = copy.deepcopy(self.building_data)
         serialized_building_data = self.tiles_data_to_bytes(copy_building_data)
+        print(f"[1/3] {self.name}.clab : Données de construction sérialisées")
         
         copy_signalisation_data = copy.deepcopy(self.signalisation_data)
         serialized_signalisation_data = self.tiles_data_to_bytes(copy_signalisation_data)
+        print(f"[2/3] {self.name}.clab : Données de signalisation sérialisées")
 
         save_data = {
             "name": self.name,
@@ -70,13 +71,14 @@ class Partie():
             "signalisation_data": serialized_signalisation_data
         }
 
+        print(f"[3/3] {self.name}.clab : Enregistrement des données...")
         if self.check_correct_path():
             with open(self.path + f"/{self.name}.clab", "wb") as file:
                 dill.dump(save_data, file)
-                print(f"{self.name}.clab a été sauvegardé ✅")
+                print(f"Succès: {self.name}.clab a été sauvegardé ✅")
                 return True
         
-        print("Le chemin de sauvegarde est incorrect ❌")
+        print("Erreur: Le chemin de sauvegarde est incorrect ❌")
         return False
     
     def draw_tuiles(self, surface):
@@ -176,6 +178,8 @@ class Partie():
                 try:
                     if (state_manager.état_courant == 2 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.building_tile_images[int(id_bouton_actif)]) or (state_manager.état_courant == 7 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.signalisation_tile_images[int(id_bouton_actif)]):
                         if state_manager.état_courant == 2:
+                            print("Tuile de construction")
+                            
                             new_tile = Tuile(self.TILE_SIZE, toolbar.building_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                             self.building_data[y_pos][x_pos] = new_tile
 
