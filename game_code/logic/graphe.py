@@ -150,7 +150,7 @@ class Graphe:
         for v in self.voitures:
             v.update(dt)
             v.draw(screen, scrollx, scrolly)
-        pygame.display.update()
+        pygame.display.flip()
         if all(v.finished for v in self.voitures):
             self.simulation_finished = True
 

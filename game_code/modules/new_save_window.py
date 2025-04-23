@@ -219,6 +219,12 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             return
         path = self.path_text_box.get_text()
         name = self.name_text_box.get_text()
+        
+        # Clear all fields
+        self.cols_text_box.set_text("")
+        self.rows_text_box.set_text("")
+        self.path_text_box.set_text("")
+        self.name_text_box.set_text("")
 
         # Create empty data files
         building_data = self.fill_empty_tile(n_rows, n_cols)

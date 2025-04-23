@@ -169,14 +169,14 @@ class Circulab():
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
-                        self.graphe.create_vehicles(4)
+                        self.graphe.create_vehicles(100)
                         self.graph_created = True
                         self.graphe.show_graph()
-                    if not self.graphe.simulation_finished:
-                        self.graphe.update(time_delta, self.screen, self.current_save.scrollx,
-                                           self.current_save.scrolly)
-                    else:
-                        self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
+                    # if not self.graphe.simulation_finished:
+                    #     self.graphe.update(time_delta, self.screen, self.current_save.scrollx,
+                    #                        self.current_save.scrolly)
+                    # else:
+                    #     self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
@@ -199,11 +199,17 @@ class Circulab():
                 self.window_border.draw_border() 
                 # Update l'écran
                 self.window_border.draw_border(bottom=False)
-
+                    
+        
             # Gère les éléments de pygame_GUI
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
 
+            if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2 and not self.graphe.simulation_finished:
+                self.graphe.update(time_delta, self.screen, self.current_save.scrollx, self.current_save.scrolly)
+            elif self.current_save is not None:
+                self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
+            
             # Update l'écran
             pygame.display.flip()
     
@@ -271,7 +277,7 @@ class Circulab():
                         self.current_save.draw_tuiles(self.screen)
                 if event.key == pygame.K_h:
                     if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.simulation_finished:
-                        self.state_manager.état_courant = ÉtatJeu.GAME_EDITOR
+                        self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
 
             if event.type == pygame.KEYUP:
                 if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:

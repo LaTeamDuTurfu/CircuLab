@@ -1,7 +1,7 @@
 import math
 
 class Voiture:
-    def __init__(self, route_list, car_image, speed=100):
+    def __init__(self, route_list, car_image, speed=1000):
         """
         route_list : liste d'objets Route formant le trajet à suivre (dans l'ordre)
         car_image  : image ou surface représentant la voiture
