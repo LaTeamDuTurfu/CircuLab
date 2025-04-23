@@ -124,6 +124,7 @@ class Circulab():
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
                 self.current_save = None
                 self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/4)
+                
                 pygame.display.set_caption(f'CircuLab - Home Page')
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pygame.display.set_caption(f'CircuLab - Settings')
@@ -152,7 +153,9 @@ class Circulab():
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
 
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
-
+                    
+                    print(self.current_save.building_data[5][5].image)
+                    
                     self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
             elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIGNALISATION:
                 self.mode_selector.mode_selector_window.show()
@@ -251,7 +254,7 @@ class Circulab():
                     continue
 
             if event.type == pygame.KEYDOWN:
-                if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
+                if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
                     if event.key == pygame.K_LEFT:
                         self.current_save.horizontal_scroll = -1
                     if event.key == pygame.K_RIGHT:
@@ -277,7 +280,7 @@ class Circulab():
                         self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
 
             if event.type == pygame.KEYUP:
-                if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR]:
+                if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                         self.current_save.horizontal_scroll = 0
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:

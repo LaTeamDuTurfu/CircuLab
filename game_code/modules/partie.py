@@ -177,8 +177,8 @@ class Partie():
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
                     if (state_manager.état_courant == 2 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.building_tile_images[int(id_bouton_actif)]) or (state_manager.état_courant == 7 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.signalisation_tile_images[int(id_bouton_actif)]):
+                        print(state_manager.état_courant)
                         if state_manager.état_courant == 2:
-                            print("Tuile de construction")
                             
                             new_tile = Tuile(self.TILE_SIZE, toolbar.building_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                             self.building_data[y_pos][x_pos] = new_tile
