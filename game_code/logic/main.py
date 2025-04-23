@@ -140,7 +140,9 @@ class Circulab():
                     self.window_border.show_all_btns()
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
 
-                    self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
+                    self.mode_selector.mode_selector_btns[0].select()
+                    self.mode_selector.check_change_mode()
+
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
                 self.load_save_window.file_explorer_window.show()
                 pygame.display.set_caption(f'CircuLab - Load Game')
@@ -156,7 +158,9 @@ class Circulab():
                     
                     print(self.current_save.building_data[5][5].image)
                     
-                    self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
+                    self.mode_selector.mode_selector_btns[0].select()
+                    self.mode_selector.check_change_mode()
+                    
             elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIGNALISATION:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
