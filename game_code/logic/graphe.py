@@ -71,7 +71,6 @@ class Graphe:
 
     def add_trafficlight(self, point):
         self.inter_points[self.scale_point(point)] = True
-        print(self.inter_points)
 
     def build_intersections(self):
         for pos, has_light in self.inter_points.items():
