@@ -2,7 +2,9 @@ import sys
 import os
 import pygame
 import pygame_gui
+from pygame.examples.grid import TILE_SIZE
 
+from game_code.modules import NewSaveWindow
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -95,7 +97,7 @@ class Circulab():
         self.current_save = None
 
         # Graph
-        self.graphe = Graphe()
+        self.graphe = Graphe(TILE_SIZE=NewSaveWindow.TILE_SIZE)
 
         # Flag pour le graph
         self.graph_created = False
@@ -169,14 +171,9 @@ class Circulab():
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
-                        self.graphe.create_vehicles(100)
+                        self.graphe.create_vehicles(10)
                         self.graph_created = True
                         self.graphe.show_graph()
-                    # if not self.graphe.simulation_finished:
-                    #     self.graphe.update(time_delta, self.screen, self.current_save.scrollx,
-                    #                        self.current_save.scrolly)
-                    # else:
-                    #     self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:

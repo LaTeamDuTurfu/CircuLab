@@ -4,6 +4,7 @@ import pygame
 import networkx as nx
 import random
 import matplotlib.pyplot as plt
+from PIL.ImageOps import scale
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -12,27 +13,9 @@ sys.path.append(os.path.join(project_root, "game_code"))
 from modules import Voiture, Intersection, TrafficLight, Route
 
 class Graphe:
-    def __init__(self, current_save = None, nb_voitures = 3, max_lanes=1):
-        """
-        Building_data = [
-            [Tuile, Tuile, Tuile],
-            [Tuile, Tuile, Tuile],
-            [Tuile, Tuile, Tuile]
-        ]
-
-        Tuile -->
-        self.image = image
-        self.tile_type = tile_type --> @empty, @road
-        self.orientation = orientation --> 0, 1, 2, 3
-        self.rect = image.get_rect() --> width, height, x, y
-        """
-        # self.current_save = current_save
-        # self.name = current_save.name
-        # self.building_data = current_save.building_data
-        # self.tile_size = current_save.TILE_SIZE
-        # self.scrollx = current_save.scrollx
-        # self.scrolly = current_save.scrolly
+    def __init__(self,TILE_SIZE, current_save = None, nb_voitures = 3, max_lanes=1):
         self.max_lanes = max_lanes
+        self.TILE_SIZE = TILE_SIZE
 
         # Charger l'image de voiture ; si le fichier n'existe pas, utiliser un rectangle rouge
         try:
@@ -62,13 +45,18 @@ class Graphe:
         # Vérifier si la simulation est terminée
         self.simulation_finished = False
 
-    def add_inter_points(self, point,TILE_SIZE):
-        scaled_point = (point[0] * TILE_SIZE + TILE_SIZE // 2, point[1] * TILE_SIZE + TILE_SIZE // 2)
+
+    def scale_point(self, point):
+        scaled_point = (point[0] * self.TILE_SIZE + self.TILE_SIZE // 2, point[1] * self.TILE_SIZE + self.TILE_SIZE // 2)
+        return scaled_point
+
+    def add_inter_points(self, point):
+        scaled_point = self.scale_point(point)
         self.inter_points[scaled_point] = False # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
         self.nb_points += 1
 
-    def remove_inter_point(self, point, TILE_SIZE):
-        scaled_point = (point[0] * TILE_SIZE + TILE_SIZE // 2, point[1] * TILE_SIZE + TILE_SIZE // 2)
+    def remove_inter_point(self, point):
+        scaled_point = self.scale_point(point)
 
         self.inter_points.pop(scaled_point, None)
         self.intersections.pop(scaled_point, None)
@@ -80,6 +68,10 @@ class Graphe:
 
         if self.nb_points > 0:
             self.nb_points -= 1
+
+    def add_trafficlight(self, point):
+        self.inter_points[self.scale_point(point)] = True
+        print(self.inter_points)
 
     def build_intersections(self):
         for pos, has_light in self.inter_points.items():
