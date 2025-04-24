@@ -67,10 +67,13 @@ class Tuile(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, 90)
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect)
+        image_a_draw = self.image.copy()
+        image_a_draw = pygame.transform.scale(image_a_draw, (self.rect.width, self.rect.height))
+        surface.blit(image_a_draw, self.rect)
     
     def change_size(self, new_size):
-        self.image = pygame.transform.scale(self.image, (new_size, new_size))
+        self.rect.width = new_size
+        self.rect.height = new_size
     
     def get_x_tile(self, tile_size):
         return self.rect.x // tile_size

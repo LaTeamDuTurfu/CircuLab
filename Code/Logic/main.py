@@ -25,6 +25,7 @@ class Circulab():
     WHITE = "#fcfffc"
     BLUE_GREY = "#7E99CF"
     YELLOW = "#D6E026"
+    RED = "#FF0000"
 
     def __init__(self, height: int = 720, width: int = 1280):
         # Setup Window
@@ -86,6 +87,7 @@ class Circulab():
         # Variable de jeu
         self.build_orientation = 0
         self.see_build_preview = False
+        self.debug_view = False
         self.running = True
         
         # Position de la souris
@@ -198,8 +200,16 @@ class Circulab():
                 # Dessine les éléments du GUI (si le user veut voir le preview [P])
                 if self.see_build_preview:
                     pygame.draw.rect(self.screen, self.BLUE_GREY, (self.x_pos * self.current_save.TILE_SIZE - self.current_save.scrollx, self.y_pos * self.current_save.TILE_SIZE - self.current_save.scrolly, self.current_save.TILE_SIZE, self.current_save.TILE_SIZE))
-                    self.draw_text(f"Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
+                    self.draw_text(f"Build Orientation: {Tuile.BUILD_ORIENTATIONS[self.build_orientation]}", self.font_text, self.WHITE, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE/2)
                     self.draw_text(f"X: {int(self.x_pos)} | Y: {int(self.y_pos)}", self.font, self.WHITE, self.pos[0], self.pos[1])
+                
+                if self.debug_view:
+                    hover_tile = self.current_save.building_data[self.y_pos][self.x_pos]
+                    color = self.GREEN
+                    if hover_tile.tile_type == "@empty":
+                        color = self.RED
+                    self.draw_text(f"Type: {hover_tile.tile_type} | Orientation: {Tuile.BUILD_ORIENTATIONS[hover_tile.orientation]}", self.font_text, color, self.pos[0], self.pos[1]-self.current_save.TILE_SIZE)
+                    
             
                 # Dessine la bordure de l'écran
                 self.window_border.draw_border() 
@@ -272,11 +282,13 @@ class Circulab():
                     if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                         self.current_save.scroll_speed = 5
                     if event.key == pygame.K_r:
-                        self.change_build_orientation()
-                    if event.key == pygame.K_q:
                         self.change_build_orientation(-1)
+                    if event.key == pygame.K_q:
+                        self.change_build_orientation(1)
                     if event.key == pygame.K_p:
                         self.see_build_preview = not self.see_build_preview
+                    if event.key == pygame.K_b:
+                        self.debug_view = not self.debug_view
                     if event.key == pygame.K_PLUS or event.key == pygame.K_EQUALS:
                         self.current_save.zoom(1)
                         self.current_save.draw_tuiles(self.screen)
