@@ -44,7 +44,7 @@ class HomeScreen:
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
             object_id=pygame_gui.core.ObjectID(class_id="@home_btn", object_id=f"#quit_btn"),
-            command=None # Placeholder for quit functionality
+            command=self.quit_circulab # Placeholder for quit functionality
         )
 
     def créer_nouvelle_sauvegarde(self):
@@ -54,7 +54,10 @@ class HomeScreen:
     def charger_sauvegarde(self):
         self.state_manager.changer_état(6)  # État.LOAD_GAME = 6
         self.cacher_boutons()
-        
+    
+    def quit_circulab(self):
+        exit()
+    
     def cacher_boutons(self):
         self.new_save_btn.hide()
         self.load_save_btn.hide()

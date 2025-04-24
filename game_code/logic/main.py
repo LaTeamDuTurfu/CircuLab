@@ -161,6 +161,8 @@ class Circulab():
                     self.mode_selector.mode_selector_btns[0].select()
                     self.mode_selector.check_change_mode()
                     
+                    self.current_save.update_all_roads(self.road_orientation_manager)
+                    
             elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIGNALISATION:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()

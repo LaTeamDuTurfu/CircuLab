@@ -211,6 +211,11 @@ class Partie():
                 elif state_manager.état_courant == 7:
                     self.signalisation_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
 
+    def update_all_roads(self, road_orientation_manager):
+        for y, row in enumerate(self.building_data):
+                for x, tile in enumerate(row):
+                    if road_orientation_manager.is_a_road(tile):
+                        road_orientation_manager.check_tile_change(x, y)
 
     def tiles_data_to_bytes(self, tiles_data):
         for ligne in tiles_data:
