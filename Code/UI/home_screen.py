@@ -2,10 +2,11 @@ import pygame
 import pygame_gui
 
 class HomeScreen:
-    def __init__(self, surface, manager, state_manager):
+    def __init__(self, surface, manager, state_manager, config_manager):
         self.surface = surface
         self.manager = manager
         self.state_manager = state_manager
+        self.config_manager = config_manager
         
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
@@ -56,6 +57,7 @@ class HomeScreen:
         self.cacher_boutons()
     
     def quit_circulab(self):
+        self.config_manager.save_config()
         exit()
     
     def cacher_boutons(self):

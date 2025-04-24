@@ -9,8 +9,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "Code"))
 
 
-from Logic.états import *
-from Logic.partie import *
+from Logic import ÉtatJeu, Partie, ConfigsManager
 from Tiles import *
 from UI import *
 from Cars import *
@@ -47,6 +46,9 @@ class Circulab():
         # GUI Manager
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
         
+        # Load configs
+        self.configs_manager = ConfigsManager()
+        
         # State Manager
         self.state_manager = ÉtatJeu(ÉtatJeu.HOME_PAGE)
         
@@ -57,7 +59,7 @@ class Circulab():
         self.clock = pygame.time.Clock()
 
         # Instancie l'écran d'acceuil
-        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager)
+        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager)
         
         # Dessiner les éléments du GUI (En Game)
         self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager, self.home_screen, self.state_manager)
