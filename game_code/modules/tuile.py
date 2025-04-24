@@ -17,7 +17,7 @@ class Tuile(pygame.sprite.Sprite):
     
     SIGNALISATION_TILE_TYPES = {
         1: "Traffic Light",
-        2: "",
+        2: "Stop Sign",
         3: "",
         4: "",
         5: "",

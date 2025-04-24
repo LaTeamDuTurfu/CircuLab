@@ -23,7 +23,7 @@ class ToolBar:
     house4_tile = pygame.image.load("assets/tile_images/house4.png")
 
     # Load tiles images de la toolbar en mode signalisation
-    stop_sign_tile = None
+    stop_sign_tile = pygame.image.load("assets/tile_images/stop_sign.png")
     traffic_light_tile = pygame.image.load("assets/tile_images/traffic_light.png")
     travail_tile = None
     accident_tile = None
@@ -47,7 +47,7 @@ class ToolBar:
         
         # Load tiles images de la toolbar en mode roads
         self.building_tile_images = [self.empty_tile, self.straight_road_tile, self.grass_tile, self.sidewalk_tile, self.intersection_tile, self.house1_tile, self.house2_tile, self.house3_tile, self.house4_tile]
-        self.signalisation_tile_images = [self.empty_tile, self.traffic_light_tile]
+        self.signalisation_tile_images = [self.empty_tile, self.traffic_light_tile, self.stop_sign_tile]
         
         self.tile_images = {
             2: self.building_tile_images,
@@ -99,7 +99,7 @@ class ToolBar:
     def set_signalisation_tool_bar(self):
         # Reset les images des boutons de la toolbar
         self.change_image_btn(1, "assets/tile_images/traffic_light.png")
-        self.change_image_btn(2, "assets/tile_images/none.png")
+        self.change_image_btn(2, "assets/tile_images/stop_sign.png")
         self.change_image_btn(3, "assets/tile_images/none.png")
         self.change_image_btn(4, "assets/tile_images/none.png")
         self.change_image_btn(5, "assets/tile_images/none.png")
