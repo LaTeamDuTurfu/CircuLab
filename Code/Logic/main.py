@@ -179,14 +179,16 @@ class Circulab():
                  
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
-            elif self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2:
-                    if not self.graph_created:
+            elif self.state_manager.état_courant == ÉtatJeu.SIMULATION:
+                    if not self.graph_created and self.graphe.nb_points()>1:
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
                         self.graphe.create_vehicles(10)
                         self.graph_created = True
                         self.graphe.show_graph()
+                    else:
+                        print("Il n'y a pas assez de routes placées! (Minimum 2)")
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:

@@ -42,9 +42,6 @@ class Graphe:
         # Créer les véhicules avec départ et arrivée aléatoires et chemin calculé
         self.voitures = []
 
-        # Nombre de points (routes) pour construire le graph
-        self.nb_points = 0
-
         # Vérifier si la simulation est terminée
         self.simulation_finished = False
 
@@ -56,7 +53,6 @@ class Graphe:
     def add_inter_points(self, point):
         scaled_point = self.scale_point(point)
         self.inter_points[scaled_point] = False # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
-        self.nb_points += 1
 
     def remove_inter_point(self, point):
         scaled_point = self.scale_point(point)
@@ -69,9 +65,6 @@ class Graphe:
         if self.G.has_node(scaled_point):
             self.G.remove_node(scaled_point)
 
-        if self.nb_points > 0:
-            self.nb_points -= 1
-
     def add_trafficlight(self, point):
         self.inter_points[self.scale_point(point)] = True
 
@@ -79,12 +72,11 @@ class Graphe:
         for pos, has_light in self.inter_points.items():
             self.intersections[pos] = Intersection(pos, has_traffic_light=has_light)
 
+    def nb_points(self):
+        return len(self.inter_points.keys())
+
     def build_routes(self):
         points = list(self.inter_points.keys())
-        # Vérifie qu'on a au moins 2 points
-        if len(points) < 2:
-            print("Il n'y a pas assez de routes placées! (Minimum 2)")
-            return
 
         for i in range(len(points) - 1):
             try:
