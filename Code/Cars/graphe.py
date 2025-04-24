@@ -10,7 +10,10 @@ from PIL.ImageOps import scale
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "Code"))
 
-from Cars import Voiture, Intersection, TrafficLight, Route
+from Cars.Intersection import Intersection
+from Cars.Route import Route
+from Cars.Voiture import Voiture
+from Cars.TrafficLight import TrafficLight
 
 class Graphe:
     def __init__(self,TILE_SIZE, current_save = None, nb_voitures = 3, max_lanes=1):

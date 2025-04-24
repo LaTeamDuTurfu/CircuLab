@@ -213,8 +213,8 @@ class Circulab():
 
             if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2 and not self.graphe.simulation_finished:
                 self.graphe.update(time_delta, self.screen, self.current_save.scrollx, self.current_save.scrolly)
-            elif self.current_save is not None:
-                self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
+            # elif self.current_save is not None:
+            #     self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
             
             # Update l'écran
             pygame.display.flip()
