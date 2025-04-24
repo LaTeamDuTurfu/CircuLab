@@ -273,6 +273,8 @@ class Circulab():
                         self.current_save.scroll_speed = 5
                     if event.key == pygame.K_r:
                         self.change_build_orientation()
+                    if event.key == pygame.K_q:
+                        self.change_build_orientation(-1)
                     if event.key == pygame.K_p:
                         self.see_build_preview = not self.see_build_preview
                     if event.key == pygame.K_PLUS or event.key == pygame.K_EQUALS:
@@ -333,7 +335,7 @@ class Circulab():
         except AttributeError:
             pass
 
-    def change_build_orientation(self):
+    def change_build_orientation(self, increment: int = 1):
         """
         Cycles through the build orientations in a clockwise manner.
 
@@ -341,9 +343,11 @@ class Circulab():
         the orientation of a building. If the orientation exceeds 3, it resets to 0,
         ensuring the orientation remains within the valid range of 0 to 3.
         """
-        self.build_orientation += 1
+        self.build_orientation += increment
         if self.build_orientation > 3:
             self.build_orientation = 0
+        elif self.build_orientation < 0:
+            self.build_orientation = 3
     
     def check_debut_simulation(self):
         current_mode = self.mode_selector.get_selected_btn()
