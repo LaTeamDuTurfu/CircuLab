@@ -1,11 +1,11 @@
 import pygame
 
 class TrafficLight:
-    def __init__(self, green_duration=3, red_duration=3):
+    def __init__(self, timer_depart = 0, green_duration=3, red_duration=3):
         self.green_duration = green_duration
         self.red_duration = red_duration
         self.state = "green"  # état initial
-        self.timer = 0.0
+        self.timer = 0.0 + timer_depart
 
         self.green_image = pygame.image.load("assets/tile_images/traffic_light_green_only.png").convert_alpha()
         self.red_image = pygame.image.load("assets/tile_images/traffic_light_red_only.png").convert_alpha()
