@@ -30,8 +30,12 @@ class ToolBar:
     accident_tile = None
     
     def __init__(self, surface, manager, mode_selector, window_frame):
-        self.WIDTH = surface.get_width()
-        self.HEIGHT = surface.get_height()
+        
+        self.screen = surface
+        
+        self.WIDTH = self.screen.get_width()
+        self.HEIGHT = self.screen.get_height()
+        
         self.manager = manager
         self.window_frame = window_frame
 
@@ -75,8 +79,10 @@ class ToolBar:
                         )
         
         for i in range(len(Tuile.TILE_TYPES[self.mode_selector.current_mode])):
+            x = self.TOOL_BAR_BTN_SIZE * (i + 1) + (((self.TOOL_BAR_WIDTH - self.TOOL_BAR_BTN_SIZE * 9)/len(Tuile.TILE_TYPES[self.mode_selector.current_mode])) * i)
             new_btn = pygame_gui.elements.UIButton(
-                        relative_rect=pygame.Rect(((43/32 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/4), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
+                        # relative_rect=pygame.Rect(((43/32 * i * self.TOOL_BAR_BTN_SIZE) + self.TOOL_BAR_BTN_SIZE, self.window_frame.thickness/4), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
+                        relative_rect=pygame.Rect((x, self.window_frame.thickness/4), (self.TOOL_BAR_BTN_SIZE, self.TOOL_BAR_BTN_SIZE)),
                         text="",
                         manager=self.manager,
                         anchors={"centery": "centery"},
@@ -86,8 +92,14 @@ class ToolBar:
             self.tool_bar_btns.append(new_btn)
     
 
+    def update_screen_size(self):
+        self.WIDTH = self.screen.get_width()
+        self.HEIGHT = self.screen.get_height()
+        
+        self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
+        self.TOOL_BAR_WIDTH = self.WIDTH * 3/4 - self.TOOL_BAR_BTN_SIZE/2
+    
     def set_building_tool_bar(self):
-        # Reset les images des boutons de la toolbar
         self.change_image_btn(1, "assets/tile_images/road.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
         self.change_image_btn(3, "assets/tile_images/sidewalk.png")

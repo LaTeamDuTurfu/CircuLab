@@ -39,9 +39,12 @@ class Circulab():
         # Taille de la fenêtre
         self.HEIGHT = height
         self.WIDTH = width
+        
+        self.MIN_WIDTH = 1280
+        self.MIN_HEIGHT = 720
 
         # Surface de la fenêtre
-        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.RESIZABLE)
 
         # GUI Manager
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
@@ -251,6 +254,34 @@ class Circulab():
                 self.running = False
                 exit()
             
+            if event.type == pygame.VIDEORESIZE:
+                # Mettre à jour les variables width et height lorsque la fenêtre est redimensionnée
+                self.WIDTH, self.HEIGHT = event.size
+                if self.WIDTH < self.MIN_WIDTH:
+                    self.WIDTH = self.MIN_WIDTH
+                if self.HEIGHT < self.MIN_HEIGHT:
+                    self.HEIGHT = self.MIN_HEIGHT
+                
+                # Mettre à jour la taille de la fenêtre
+                self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.RESIZABLE)
+                self.manager.set_window_resolution((self.WIDTH, self.HEIGHT))
+                self.window_border.update_border()
+                self.build_tool_bar.update_screen_size()
+                
+                # Instancie la tool_bar (cachée par défaut)
+                show = self.build_tool_bar.show
+                self.build_tool_bar.tool_bar_window.kill()
+                self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border)
+                if not self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
+                    self.build_tool_bar.tool_bar_window.hide()
+                
+                if not show:
+                    self.build_tool_bar.change_tool_bar_state()
+                # Associe la tool_bar au mode_selector
+                self.mode_selector.set_tool_bar(self.build_tool_bar)
+                self.window_border.tool_bar = self.build_tool_bar
+
+                
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.build_tool_bar.tool_bar_btns:
                 btn = event.ui_element
                 if not btn.is_selected:

@@ -17,11 +17,7 @@ class WindowFrame:
         self.mode_selector = None   
         self.game = None
         
-        # Build Rectangles
-        self.top = pygame.Rect(0, 0, self.screen.get_width(), self.thickness)
-        self.bottom = pygame.Rect(0, self.screen.get_height() - self.bottom_thickness, self.screen.get_width(), self.bottom_thickness)
-        self.left = pygame.Rect(0, 0, self.thickness, self.screen.get_height())
-        self.right = pygame.Rect(self.screen.get_width() - self.thickness, 0, self.thickness, self.screen.get_height())
+        self.update_border()
         
         self.menu_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.thickness, 0), (self.screen.get_width()/12, self.thickness)),
@@ -40,7 +36,14 @@ class WindowFrame:
             visible=False,
             command=self.update_game
         )
-        
+    
+    def update_border(self):
+        # Build Rectangles
+        self.top = pygame.Rect(0, 0, self.screen.get_width(), self.thickness)
+        self.bottom = pygame.Rect(0, self.screen.get_height() - self.bottom_thickness, self.screen.get_width(), self.bottom_thickness)
+        self.left = pygame.Rect(0, 0, self.thickness, self.screen.get_height())
+        self.right = pygame.Rect(self.screen.get_width() - self.thickness, 0, self.thickness, self.screen.get_height())
+    
     def draw_border(self, top: bool = 1, bottom: bool = 1, left: bool = 1, right: bool = 1):
         if top:
             pygame.draw.rect(self.screen, self.color, self.top)
