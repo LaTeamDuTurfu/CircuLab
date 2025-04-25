@@ -130,8 +130,10 @@ class Graphe:
 
     def update(self, dt, screen, scrollx, scrolly):
         # Mise à jour des intersections (et de leurs feux)
-        for inter in self.intersections.values():
+        for pos, inter in self.intersections.items():
             inter.update(dt)
+            if inter.traffic_light:
+                inter.traffic_light.draw(screen, pos, scrollx, scrolly)
         # Mise à jour des véhicules
         for v in self.voitures:
             v.update(dt)

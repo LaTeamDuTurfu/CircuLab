@@ -180,15 +180,16 @@ class Circulab():
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             elif self.state_manager.état_courant == ÉtatJeu.SIMULATION:
-                    if not self.graph_created and self.graphe.nb_points()>1:
+                if self.graphe.nb_points()>1:
+                    if not self.graph_created:
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
                         self.graphe.create_vehicles(10)
                         self.graph_created = True
                         self.graphe.show_graph()
-                    else:
-                        print("Il n'y a pas assez de routes placées! (Minimum 2)")
+                else:
+                    print("Il n'y a pas assez de routes placées! (Minimum 2)")
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
@@ -225,10 +226,8 @@ class Circulab():
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
 
-            if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points >= 2 and not self.graphe.simulation_finished:
+            if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points() >= 2 and not self.graphe.simulation_finished:
                 self.graphe.update(time_delta, self.screen, self.current_save.scrollx, self.current_save.scrolly)
-            # elif self.current_save is not None:
-            #     self.graphe.draw_vehicles(self.screen, self.current_save.scrollx, self.current_save.scrolly)
             
             # Update l'écran
             pygame.display.flip()

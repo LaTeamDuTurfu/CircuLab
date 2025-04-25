@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17b27f95-70f2-4b85-96a7-c9cf2ee37fdf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/tile_images/traffic_light_green_only.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/tile_images/traffic_light_red_only.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/Cars/TrafficLight.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/TrafficLight.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/Cars/Voiture.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/Voiture.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/Cars/graphe.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/graphe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/Logic/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Logic/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/config/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/config/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/theme_manager/styles_real.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/theme_manager/styles_real.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,14 +44,14 @@
   }
 }</component>
   <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="4aa378d0-a1b8-4407-b532-c9ef06e8b8b0" />
+    <option name="defaultAccountId" value="b7d5f04f-c392-4dbc-96d3-786c195c6bc9" />
   </component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/LaTeamDuTurfu/CircuLab.git&quot;,
-    &quot;accountId&quot;: &quot;4aa378d0-a1b8-4407-b532-c9ef06e8b8b0&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/LaTeamDuTurfu/CircuLab",
+    "accountId": "b7d5f04f-c392-4dbc-96d3-786c195c6bc9"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -53,17 +63,24 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Python.Circulab.executor": "Run",
+    "Python.Circulab.executor": "Debug",
     "Python.tuile.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "develop",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "settings.editor.selected.configurable": "editor.preferences.inline.completion",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets/tile_images" />
       <recent name="$PROJECT_DIR$/assets/cars" />
     </key>
   </component>
@@ -148,8 +165,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23726.102" />
-        <option value="bundled-python-sdk-5e1850174b45-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23726.102" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-PY-251.23774.444" />
+        <option value="bundled-python-sdk-890ed5b35930-d9c5bdb153f4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.23774.444" />
       </set>
     </attachedChunks>
   </component>
@@ -163,8 +180,12 @@
       <updated>1742994097724</updated>
       <workItem from="1744657049221" duration="3000" />
       <workItem from="1745103605200" duration="5000" />
+      <workItem from="1745550006939" duration="7961000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -191,6 +212,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Code/Logic/main.py</url>
+          <line>229</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -199,5 +227,8 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CircuLab$Circulab.coverage" NAME="Circulab Coverage Results" MODIFIED="1745604854204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

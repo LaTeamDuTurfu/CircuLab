@@ -1,7 +1,7 @@
 import math
 
 class Voiture:
-    def __init__(self, route_list, car_image, speed=1000):
+    def __init__(self, route_list, car_image, speed=100):
         """
         route_list : liste d'objets Route formant le trajet à suivre (dans l'ordre)
         car_image  : image ou surface représentant la voiture
@@ -30,7 +30,7 @@ class Voiture:
         distance_to_travel = self.speed * dt
 
         # Arrêt devant un feu rouge si on est proche de l'intersection de fin
-        if current_route.end.traffic_light and (segment_length - self.progress < 20): #Le paramètre 20 ici sert à arrêter le véhicule si celui-ci est à une distance inférieure à 20m de la lumière.
+        if current_route.end.traffic_light and (segment_length - self.progress < 64): #Le paramètre 64 ici sert à arrêter le véhicule si celui-ci est à une distance inférieure à 64m de la lumière.
             if current_route.end.traffic_light.state == "red":
                 distance_to_travel = 0
 
