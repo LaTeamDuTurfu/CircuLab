@@ -20,8 +20,11 @@ class TrafficLight:
             self.timer = 0.0
 
     def draw(self, screen, position, scrollx=0, scrolly=0):
+        rect = self.green_image.get_rect()
         if self.state == "green":
-            screen.blit(self.green_image, (position[0] - scrollx, position[1]-scrolly))
+            screen.blit(self.green_image, (position[0] - scrollx- rect.width // 2, position[1]-scrolly- rect.height // 2))
         else:
-            screen.blit(self.red_image, (position[0] - scrollx, position[1]-scrolly))
+            screen.blit(self.red_image, (position[0] - scrollx- rect.width // 2, position[1]-scrolly- rect.width // 2))
+
+
 

@@ -5,17 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17b27f95-70f2-4b85-96a7-c9cf2ee37fdf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/tile_images/traffic_light_green_only.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/tile_images/traffic_light_red_only.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/Cars/Intersection.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/Intersection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/Cars/TrafficLight.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/TrafficLight.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/Cars/Voiture.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/Voiture.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/Cars/graphe.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/graphe.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/Logic/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Logic/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/config/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/config/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/theme_manager/styles_real.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/theme_manager/styles_real.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tile_images/traffic_light.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +57,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Python.Circulab.executor": "Debug",
+    "Python.Circulab.executor": "Run",
     "Python.tuile.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -180,7 +174,7 @@
       <updated>1742994097724</updated>
       <workItem from="1744657049221" duration="3000" />
       <workItem from="1745103605200" duration="5000" />
-      <workItem from="1745550006939" duration="7961000" />
+      <workItem from="1745550006939" duration="10419000" />
     </task>
     <servers />
   </component>
@@ -229,6 +223,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CircuLab$Circulab.coverage" NAME="Circulab Coverage Results" MODIFIED="1745604854204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CircuLab$Circulab.coverage" NAME="Circulab Coverage Results" MODIFIED="1745610742326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
