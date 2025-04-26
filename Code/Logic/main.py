@@ -188,7 +188,7 @@ class Circulab():
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
-                        self.graphe.create_vehicles(10)
+                        self.graphe.create_vehicles(3)
                         self.graph_created = True
                         self.graphe.show_graph()
                 else:

@@ -101,7 +101,8 @@ class Graphe:
 
     def create_vehicles(self, nb):
         positions = list(self.intersections.keys())
-        for _ in range(nb):
+        vehicles_created = 0
+        while vehicles_created < nb:
             dep = random.choice(positions)
             arr = random.choice(positions)
             while arr == dep:
@@ -121,12 +122,12 @@ class Graphe:
                 edges = self.G.get_edge_data(u, v)
                 if edges is None:
                     continue
-                # Chaque edge a un attribut 'route'
                 available_routes = [edges[key]['route'] for key in edges]
                 chosen_route = random.choice(available_routes)
                 route_list.append(chosen_route)
             if route_list:
                 self.voitures.append(Voiture(route_list, self.car_image))
+                vehicles_created += 1
 
     def update(self, dt, screen, scrollx, scrolly):
         # Mise à jour des intersections (et de leurs feux)

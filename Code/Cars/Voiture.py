@@ -9,6 +9,8 @@ class Voiture:
         self.route_list = route_list
         self.car_image = car_image
         self.speed = speed
+        self.current_speed = 0
+        self.acceleration = 70 # valeur arbitraire de l'accélération
         self.current_index = 0  # indice de la route en cours dans route_list
         self.progress = 0.0  # distance parcourue sur la voie actuelle
         # Position initiale sur la première voie (en tenant compte du décalage)
@@ -27,12 +29,16 @@ class Voiture:
         current_route = self.route_list[self.current_index]
         start_pos, end_pos = current_route.get_positions()
         segment_length = math.dist(start_pos, end_pos)
-        distance_to_travel = self.speed * dt
+        self.current_speed += self.acceleration * dt
+        if self.current_speed > self.speed:
+            self.current_speed = self.speed
+        distance_to_travel = self.current_speed * dt
 
         # Arrêt devant un feu rouge si on est proche de l'intersection de fin
         if current_route.end.traffic_light and (segment_length - self.progress < 64): #Le paramètre 64 ici sert à arrêter le véhicule si celui-ci est à une distance inférieure à 64m de la lumière.
             if current_route.end.traffic_light.state == "red":
                 distance_to_travel = 0
+                self.current_speed = 0
 
         self.progress += distance_to_travel
 
