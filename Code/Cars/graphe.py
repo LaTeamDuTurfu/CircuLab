@@ -52,7 +52,7 @@ class Graphe:
 
     def add_inter_points(self, point):
         scaled_point = self.scale_point(point)
-        self.inter_points[scaled_point] = False # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
+        self.inter_points[scaled_point] = {'has_light': False} # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
 
     def remove_inter_point(self, point):
         scaled_point = self.scale_point(point)
@@ -65,12 +65,20 @@ class Graphe:
         if self.G.has_node(scaled_point):
             self.G.remove_node(scaled_point)
 
-    def add_trafficlight(self, point):
-        self.inter_points[self.scale_point(point)] = True
+    def add_signalisation(self, point, has_light = False,is_stop = False):
+        scaled_point = self.scale_point(point)
+        if scaled_point not in self.inter_points:
+            self.inter_points[scaled_point] = {}
+
+        self.inter_points[scaled_point]['has_light'] = has_light
+        self.inter_points[scaled_point]['is_stop'] = is_stop
 
     def build_intersections(self):
-        for pos, has_light in self.inter_points.items():
-            self.intersections[pos] = Intersection(pos, has_traffic_light=has_light)
+        for pos, info in self.inter_points.items():
+            has_light = info.get('has_light', False) # info est un dict tel que {'has_light': True, 'is_stop': False}, donc on récupère l'info, si elle existe, sinon fausse
+            is_stop = info.get('is_stop', False) # Pareil ici
+            self.intersections[pos] = Intersection(pos, has_traffic_light=has_light, is_stop=is_stop)
+
 
     def nb_points(self):
         return len(self.inter_points.keys())

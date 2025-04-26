@@ -196,7 +196,9 @@ class Partie():
                             self.signalisation_data[y_pos][x_pos] = new_tile
 
                             if new_tile.tile_type == Tuile.SIGNALISATION_TILE_TYPES[1]:
-                                graphe.add_trafficlight((x_pos, y_pos))
+                                graphe.add_signalisation((x_pos, y_pos), has_light=True)
+                            elif new_tile.tile_type == Tuile.SIGNALISATION_TILE_TYPES[2]:
+                                graphe.add_signalisation((x_pos, y_pos), is_stop=True)
                         
                 except UnboundLocalError:
                     pass
