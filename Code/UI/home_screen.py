@@ -36,7 +36,8 @@ class HomeScreen:
             text="Paramètres",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
-            object_id=pygame_gui.core.ObjectID(class_id="@home_btn", object_id=f"#settings_btn")
+            object_id=pygame_gui.core.ObjectID(class_id="@home_btn", object_id=f"#settings_btn"),
+            command=self.ouvrir_paramètres
         )
         
         self.quit_btn = pygame_gui.elements.UIButton(
@@ -56,6 +57,10 @@ class HomeScreen:
         self.state_manager.changer_état(6)  # État.LOAD_GAME = 6
         self.cacher_boutons()
     
+    def ouvrir_paramètres(self):
+        self.state_manager.changer_état(4)
+        self.cacher_boutons()
+
     def quit_circulab(self):
         self.config_manager.save_config()
         exit()

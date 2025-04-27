@@ -1,6 +1,6 @@
 {
-    "Music_Volume": 0.5,
-    "SFX_Volume": 0.5,
-    "Save_on_exit": true,
-    "Tile_size": 64
+    "Music Volume": 0.5,
+    "SFX Volume": 0.5,
+    "Save on exit": true,
+    "Tile size": 64
 }

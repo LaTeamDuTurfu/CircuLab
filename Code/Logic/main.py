@@ -82,6 +82,9 @@ class Circulab():
         self.window_border.mode_selector = self.mode_selector
         self.window_border.tool_bar = self.build_tool_bar
 
+        # Instancie la fenêtre des settings
+        self.settings = Settings(self.screen, self.manager, self.configs_manager.config, self.home_screen)
+
         # Instancie les fenêtres de sauvegarde (cachée par défaut)
         self.default_path = "../Circulab/data/saves/"
         self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)
@@ -135,6 +138,7 @@ class Circulab():
                 pygame.display.set_caption(f'CircuLab - Home Page')
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pygame.display.set_caption(f'CircuLab - Settings')
+                self.settings.show_UI()
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
                 pygame.display.set_caption(f'CircuLab - New Game')
                 self.new_save_window.show()
@@ -267,7 +271,9 @@ class Circulab():
                 self.manager.set_window_resolution((self.WIDTH, self.HEIGHT))
                 self.window_border.update_border()
                 self.build_tool_bar.update_screen_size()
-                
+                self.load_save_window.change_pos(self.WIDTH/2, self.HEIGHT/2)
+                self.new_save_window.change_pos(self.WIDTH/2, self.HEIGHT/2)
+
                 # Instancie la tool_bar (cachée par défaut)
                 show = self.build_tool_bar.show
                 self.build_tool_bar.tool_bar_window.kill()

@@ -1,9 +1,161 @@
 import pygame_gui
 import json
+from Code.Logic.configs_management import ConfigsManager
+import pygame
 
 class Settings:
-    def __init__(self, manager, configs: dict):
+    def __init__(self, surface, manager, configs: dict, home_screen):
         self.manager = manager
+        self.screen = surface
         self.configs = configs
+        self.home_screen = home_screen
+
+        self.font_title = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
+        self.font_text = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 64)
+
+        self.width = self.screen.get_width()    
+        self.height = self.screen.get_height()
+
+        self.back_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((self.width/40, self.height * 1/24), (self.width/15, self.height * 1/12)),
+            text="Back",
+            manager=self.manager,
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#back_btn"),
+            visible=False,
+            command=self.back_to_home
+        )
+
+        self.window_frame = pygame_gui.elements.UIWindow(
+            rect=pygame.Rect((self.width/2 - self.width * 0.7/2, self.height/2 - self.height * 0.7/3), (self.width * 0.7, self.height * 0.7)),
+            manager=self.manager,
+            window_display_title="Settings",
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_window", object_id="#settings_window"),
+            resizable=False,
+            draggable=False,
+            visible=False
+        ) 
+
+        self.music_volume_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-self.window_frame.get_relative_rect().width * 5/8, self.window_frame.get_relative_rect().height/8), (self.window_frame.get_relative_rect().width, 50)),
+            text="Music Volume",
+            manager=self.manager,
+            anchors={"centerx": "right", "top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_label", object_id="#music_volume_label"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False
+        )
+
+        self.music_volume_slider = pygame_gui.elements.UIHorizontalSlider(
+            relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width/2, self.window_frame.get_relative_rect().height/8), (self.window_frame.get_relative_rect().width/3, 50)),
+            manager=self.manager,
+            anchors={"top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_slider", object_id="#music_volume_slider"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False,
+            start_value=50,
+            value_range=(0, 100)
+        )
+
+        self.sfx_volume_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-self.window_frame.get_relative_rect().width * 5/8, self.window_frame.get_relative_rect().height * 3/8), (self.window_frame.get_relative_rect().width, 50)),
+            text="SFX Volume",
+            manager=self.manager,
+            anchors={"centerx": "right", "top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_label", object_id="#sfx_volume_label"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False
+        )
+
+        self.SFX_volume_slider = pygame_gui.elements.UIHorizontalSlider(
+            relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width/2, self.window_frame.get_relative_rect().height * 3/8), (self.window_frame.get_relative_rect().width/3, 50)),
+            manager=self.manager,
+            anchors={"top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_slider", object_id="#sfx_volume_slider"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False,
+            start_value=50,
+            value_range=(0, 100)
+        )
+
+
+        self.save_on_exit_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-self.window_frame.get_relative_rect().width * 5/8, self.window_frame.get_relative_rect().height * 5/8), (self.window_frame.get_relative_rect().width, 50)),
+            text="Save On Exit",
+            manager=self.manager,
+            anchors={"centerx": "centerx", "top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_label", object_id="#save_on_exit_volume_label"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False
+        )
+
+        self.save_on_exit_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width/2, self.window_frame.get_relative_rect().height * 5/8), (self.window_frame.get_relative_rect().width/15, self.window_frame.get_relative_rect().width/15)),
+            text="Save On Exit",
+            manager=self.manager,
+            anchors={"top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#save_on_exit_btn"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False
+        )
+
+        self.reset_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width/8, self.window_frame.get_relative_rect().height * 13/16), (self.window_frame.get_relative_rect().width/4, self.window_frame.get_relative_rect().width/15)),
+            text="Reset",
+            manager=self.manager,
+            anchors={"right": "centerx", "top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#reset_btn"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False
+        )
+
+        self.apply_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width * 5/8, self.window_frame.get_relative_rect().height * 13/16), (self.window_frame.get_relative_rect().width/4, self.window_frame.get_relative_rect().width/15)),
+            text="Apply",
+            manager=self.manager,
+            anchors={"right": "centerx", "top": "centery"},
+            object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#apply_btn"),
+            container=self.window_frame,
+            parent_element=self.window_frame,
+            visible=False
+        )
+
+    def show_UI(self):
+        self.draw_text("Settings", self.font_title, (255, 255, 255), self.width/2, self.height/6)
+        self.back_btn.show()
+        self.window_frame.show()
+
+    def hide_UI(self):
+        self.back_btn.hide()
+        self.window_frame.hide()
+
+    def draw_text(self, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int) -> None:
+        """
+        Render the given text on the screen at the given position.
+
+        Args:
+            text (str): The text to render.
+            font (pygame.font.Font): The font to use.
+            text_col (tuple of int): The color of the text in RGB format.
+            x (int): The x-coordinate of the center of the text.
+            y (int): The y-coordinate of the center of the text.
+        """
+        # Render the text using the given font
+        img = font.render(text, True, text_col)
+        # Get the bounding rectangle of the rendered text
+        img_rect = img.get_rect()
+        # Set the center of the bounding rectangle to the given position
+        img_rect.center = (x, y)
+        # Blit the rendered text onto the main surface at the given position
+        self.screen.blit(img, img_rect)
     
-    
+    def back_to_home(self):
+        self.hide_UI()
+        self.home_screen.montrer_boutons()
+        self.home_screen.state_manager.changer_état(1)

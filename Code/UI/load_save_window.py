@@ -28,7 +28,7 @@ class LoadSaveWindow:
             allow_existing_files_only=True,
             always_on_top=True,
             object_id="#load_save_window",
-            allowed_suffixes={".clab"}
+            allowed_suffixes={".clab"},
         )
         
         self.file_explorer_window.draggable = False
@@ -81,3 +81,8 @@ class LoadSaveWindow:
             self.file_explorer_window.hide()
             return True
         return False
+
+    def change_pos(self, x, y):
+        x = x - self.file_explorer_window.rect.width / 2
+        y = y - self.file_explorer_window.rect.height / 2
+        self.file_explorer_window.set_position((x, y))
