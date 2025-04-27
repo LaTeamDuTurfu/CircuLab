@@ -9,6 +9,7 @@ class Voiture:
         """
         self.route_list = route_list
         self.car_image = car_image
+        self.last_min_distance = None
         self.stop_timer = 0
         self.is_waiting_at_stop = False
         self.stop_done = False
@@ -22,9 +23,12 @@ class Voiture:
         self.finished = False
         self.rect = self.car_image.get_rect(center=(int(self.position[0]), int(self.position[1])))
 
-    def update(self, dt):
+    def update(self, dt, list_voitures):
         if self.finished:
             return
+
+        distance_securite = 64 # distance de sécurité arbitraire, pour éviter les collisions
+        min_gap = self.rect.width
 
         if self.current_index >= len(self.route_list):
             self.finished = True
@@ -33,12 +37,40 @@ class Voiture:
         current_route = self.route_list[self.current_index]
         start_pos, end_pos = current_route.get_positions()
         segment_length = math.dist(start_pos, end_pos)
+
         self.current_speed += self.acceleration * dt
         if self.current_speed > self.speed:
             self.current_speed = self.speed
+
+        #TODO CODE POUR ÉVITER LES COLLISIONS NE FONCTIONNE PAS 
+        for autre in list_voitures:
+            if autre is self or autre.finished:
+                continue
+            dx = autre.position[0] - self.position[0]
+            dy = autre.position[1] - self.position[1]
+            distance = math.hypot(dx, dy)
+
+            if distance < distance_securite:
+                if self.last_min_distance is None:
+                    self.last_min_distance = distance
+
+                if distance < self.last_min_distance:
+                    # Se rapproche trop → ralentir
+                    factor = (distance - min_gap) / (distance_securite - min_gap)
+                    factor = max(0.0, min(1.0, factor))
+                    target_speed = self.speed * factor
+                    self.current_speed = min(self.current_speed, target_speed)
+                else:
+                    # S'éloigne → autoriser accélération
+                    self.current_speed = min(self.speed, self.current_speed + self.acceleration * dt)
+
+                self.last_min_distance = distance
+            else:
+                self.last_min_distance = None
+
         distance_to_travel = self.current_speed * dt
 
-        # Arrêt devant un feu rouge si on est proche de l'intersection de fin
+        # Arrêt devant un feu rouge ou stop si on est proche de l'intersection de fin
         if current_route.end.traffic_light and (segment_length - self.progress < 64):
             tl = current_route.end.traffic_light
             if tl.is_stop:
