@@ -30,7 +30,7 @@ class Settings:
         )
 
         self.window_frame = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((self.width/2 - self.width * 0.7/2, self.height/2 - self.height * 0.7/3), (self.width * 0.7, self.height * 0.7)),
+            rect=pygame.Rect((self.width/2 - self.width * 0.7/2, self.height/2 - self.height * 0.7/2), (self.width * 0.7, self.height * 0.7)),
             manager=self.manager,
             window_display_title="Settings",
             object_id=pygame_gui.core.ObjectID(class_id="@settings_window", object_id="#settings_window"),
@@ -144,8 +144,10 @@ class Settings:
             self.reset_btn
         ]
 
+        self.title_x_pos = self.width/2
+
     def show_UI(self):
-        self.draw_text("Settings", self.font_title, (255, 255, 255), self.width/2, self.height/6)
+        self.draw_text("Settings", self.font_title, (255, 255, 255), self.title_x_pos, self.height/2 - self.window_frame.get_relative_rect().height/2 - 50)
         self.back_btn.show()
         self.window_frame.show()
         
@@ -224,3 +226,10 @@ class Settings:
             self.save_on_exit_btn.select()
         else:
             self.save_on_exit_btn.unselect()
+    
+    def change_pos(self, x, y):
+        self.title_x_pos = x
+
+        x = x - self.window_frame.rect.width / 2
+        y = y - self.window_frame.rect.height / 2
+        self.window_frame.set_position((x, y))

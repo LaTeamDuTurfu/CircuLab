@@ -75,7 +75,7 @@ class Circulab():
         self.mode_selector.mode_selector_window.hide()
         
         # Instancie la tool_bar (cachée par défaut)
-        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border)
+        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, self.audio_manager)
         self.build_tool_bar.tool_bar_window.hide()
 
         # Associe la tool_bar au mode_selector
@@ -282,6 +282,7 @@ class Circulab():
                 self.build_tool_bar.update_screen_size()
                 self.load_save_window.change_pos(self.WIDTH/2, self.HEIGHT/2)
                 self.new_save_window.change_pos(self.WIDTH/2, self.HEIGHT/2)
+                self.settings.change_pos(self.WIDTH/2, self.HEIGHT/2)
 
                 # Instancie la tool_bar (cachée par défaut)
                 show = self.build_tool_bar.show
