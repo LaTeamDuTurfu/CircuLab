@@ -79,7 +79,6 @@ class Graphe:
             is_stop = info.get('is_stop', False) # Pareil ici
             self.intersections[pos] = Intersection(pos, has_traffic_light=has_light, is_stop=is_stop)
 
-
     def nb_points(self):
         return len(self.inter_points.keys())
 
@@ -143,7 +142,7 @@ class Graphe:
             inter.update(dt, screen, scrollx, scrolly)
         # Mise à jour des véhicules
         for v in self.voitures:
-            v.update(dt)
+            v.update(dt, self.voitures)
             v.draw(screen, scrollx, scrolly)
         pygame.display.flip()
         if all(v.finished for v in self.voitures):
