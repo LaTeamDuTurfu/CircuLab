@@ -15,6 +15,7 @@ class Partie():
     vertical_scroll = 0
     horizontal_scroll = 0
     scroll_speed = 1
+    DEFAULT_TILE_SIZE = 64
     
     def __init__(self, save_data: dict):
         self.name = save_data["name"]
@@ -153,6 +154,7 @@ class Partie():
                 for x, tile in enumerate(row):
                     if tile.tile_type != "@empty":
                         tile.change_size(self.TILE_SIZE)
+                        print("New Tile Size:", self.TILE_SIZE)
     
     def change_tuiles(self, screen, toolbar, pos, window_border, state_manager, road_orientation_manager, build_orientation, graphe):
         """
@@ -237,7 +239,7 @@ class Partie():
             tuiles_ligne = []
             for tuile in ligne:
                 # On convertit les bytes en image
-                image = pygame.image.frombytes(tuile.image, (self.TILE_SIZE, self.TILE_SIZE), "RGBA")
-                tuiles_ligne.append(Tuile(self.TILE_SIZE, image, tuile.orientation, tuile.tile_type))
+                image = pygame.image.frombytes(tuile.image, (self.DEFAULT_TILE_SIZE, self.DEFAULT_TILE_SIZE), "RGBA")
+                tuiles_ligne.append(Tuile(self.DEFAULT_TILE_SIZE, image, tuile.orientation, tuile.tile_type))
             tiles_data.append(tuiles_ligne)
         return tiles_data

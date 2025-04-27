@@ -84,8 +84,11 @@ class ModeSelector:
     
     def check_change_mode(self):
         current_mode = self.get_selected_btn()
-        id_bouton_actif = int(current_mode.object_ids[-1][-1])
-
+        try:
+            id_bouton_actif = int(current_mode.object_ids[-1][-1])
+        except AttributeError:
+            id_bouton_actif = 0
+            
         if id_bouton_actif == 1 and self.state_manager.état_courant != 2:
             self.window_frame.color = self.BLUE_GREY
             self.tool_bar.set_building_tool_bar()
