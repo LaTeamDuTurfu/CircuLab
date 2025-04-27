@@ -83,7 +83,7 @@ class Circulab():
         self.window_border.tool_bar = self.build_tool_bar
 
         # Instancie la fenêtre des settings
-        self.settings = Settings(self.screen, self.manager, self.configs_manager.config, self.home_screen)
+        self.settings = Settings(self.screen, self.manager, self.configs_manager, self.home_screen)
 
         # Instancie les fenêtres de sauvegarde (cachée par défaut)
         self.default_path = "../Circulab/data/saves/"

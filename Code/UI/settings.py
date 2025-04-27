@@ -4,14 +4,17 @@ from Code.Logic.configs_management import ConfigsManager
 import pygame
 
 class Settings:
-    def __init__(self, surface, manager, configs: dict, home_screen):
+    def __init__(self, surface, manager, configs, home_screen):
         self.manager = manager
         self.screen = surface
-        self.configs = configs
+        self.config_manager = configs
         self.home_screen = home_screen
 
         self.font_title = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
         self.font_text = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 64)
+
+        self.saved_configs = self.config_manager.config
+        self.changed_configs = self.saved_configs.copy()
 
         self.width = self.screen.get_width()    
         self.height = self.screen.get_height()
@@ -54,8 +57,8 @@ class Settings:
             container=self.window_frame,
             parent_element=self.window_frame,
             visible=False,
-            start_value=50,
-            value_range=(0, 100)
+            start_value=self.saved_configs["music_volume"],
+            value_range=(0, 1)
         )
 
         self.sfx_volume_label = pygame_gui.elements.UILabel(
@@ -77,8 +80,8 @@ class Settings:
             container=self.window_frame,
             parent_element=self.window_frame,
             visible=False,
-            start_value=50,
-            value_range=(0, 100)
+            start_value=self.saved_configs["sfx_volume"],
+            value_range=(0, 1)
         )
 
 
@@ -112,7 +115,8 @@ class Settings:
             object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#reset_btn"),
             container=self.window_frame,
             parent_element=self.window_frame,
-            visible=False
+            visible=False,
+            command=self.reset_settings
         )
 
         self.apply_btn = pygame_gui.elements.UIButton(
@@ -123,7 +127,8 @@ class Settings:
             object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#apply_btn"),
             container=self.window_frame,
             parent_element=self.window_frame,
-            visible=False
+            visible=False,
+            command=self.apply_settings
         )
 
     def show_UI(self):
@@ -159,3 +164,19 @@ class Settings:
         self.hide_UI()
         self.home_screen.montrer_boutons()
         self.home_screen.state_manager.changer_état(1)
+    
+    def reset_settings(self):
+        self.config_manager.config = self.config_manager.default_config.copy()
+
+        self.music_volume_slider.set_current_value(self.config_manager.config["music_volume"])
+        self.SFX_volume_slider.set_current_value(self.config_manager.config["sfx_volume"])
+        self.save_on_exit_btn.is_selected = self.config_manager.config["save_on_exit"]
+
+        self.config_manager.save_config()
+    
+    def apply_settings(self):
+        self.changed_configs["music_volume"] = self.music_volume_slider.get_current_value()
+        self.changed_configs["sfx_volume"] = self.SFX_volume_slider.get_current_value()
+        self.changed_configs["save_on_exit"] = self.save_on_exit_btn.is_selected
+        self.config_manager.config = self.changed_configs.copy()
+        self.config_manager.save_config()
