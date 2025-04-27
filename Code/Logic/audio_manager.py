@@ -15,6 +15,7 @@ class AudioManager:
         # Dictionnaire accessible par le nom de l'effet sonore
         self.sound_effects = {
             "tile_placed": pygame.mixer.Sound("assets/audio/sfx/tile_placed.mp3"),
+            "tile_removed": pygame.mixer.Sound("assets/audio/sfx/tile_removed.mp3"),
             "button_click": pygame.mixer.Sound("assets/audio/sfx/button_click.mp3"),
         }
 

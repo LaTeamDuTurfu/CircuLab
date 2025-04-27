@@ -185,7 +185,13 @@ class Circulab():
                 self.current_save.change_scroll(self.screen)
 
                 # Change l'apparence des tuiles si la souris est sur la grille
-                self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
+                result = self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
+
+                if result is not None:
+                    if result[1] == "placed":
+                        self.audio_manager.play_sfx("tile_placed")
+                    elif result[1] == "removed":
+                        self.audio_manager.play_sfx("tile_removed")
                  
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
