@@ -4,11 +4,12 @@ from Code.Logic.configs_management import ConfigsManager
 import pygame
 
 class Settings:
-    def __init__(self, surface, manager, configs, home_screen):
+    def __init__(self, surface, manager, configs, home_screen, audio_manager):
         self.manager = manager
         self.screen = surface
         self.config_manager = configs
         self.home_screen = home_screen
+        self.audio_manager = audio_manager
 
         self.font_title = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 96)
         self.font_text = pygame.font.Font("assets/font/Jersey25-Regular.ttf", 64)
@@ -58,7 +59,8 @@ class Settings:
             parent_element=self.window_frame,
             visible=False,
             start_value=self.saved_configs["music_volume"],
-            value_range=(0, 1)
+            value_range=(0, 1),
+            click_increment=0.1
         )
 
         self.sfx_volume_label = pygame_gui.elements.UILabel(
@@ -81,9 +83,9 @@ class Settings:
             parent_element=self.window_frame,
             visible=False,
             start_value=self.saved_configs["sfx_volume"],
-            value_range=(0, 1)
+            value_range=(0, 1),
+            click_increment=0.1
         )
-
 
         self.save_on_exit_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((-self.window_frame.get_relative_rect().width * 5/8, self.window_frame.get_relative_rect().height * 5/8), (self.window_frame.get_relative_rect().width, 50)),
@@ -136,6 +138,12 @@ class Settings:
 
         self.checked = False
 
+        self.settings_btns = [
+            self.back_btn,
+            self.apply_btn,
+            self.reset_btn
+        ]
+
     def show_UI(self):
         self.draw_text("Settings", self.font_title, (255, 255, 255), self.width/2, self.height/6)
         self.back_btn.show()
@@ -177,6 +185,7 @@ class Settings:
         self.screen.blit(img, img_rect)
     
     def back_to_home(self):
+        self.audio_manager.play_sfx("button_click")
         self.hide_UI()
         self.home_screen.montrer_boutons()
         self.home_screen.state_manager.changer_état(1)
@@ -187,8 +196,11 @@ class Settings:
         self.music_volume_slider.set_current_value(self.config_manager.config["music_volume"])
         self.SFX_volume_slider.set_current_value(self.config_manager.config["sfx_volume"])
         self.save_on_exit_btn.is_selected = self.config_manager.config["save_on_exit"]
+        self.change_selection()
 
         self.config_manager.save_config()
+
+        self.audio_manager.play_sfx("button_click")
     
     def apply_settings(self):
         self.changed_configs["music_volume"] = self.music_volume_slider.get_current_value()
@@ -196,10 +208,18 @@ class Settings:
         self.changed_configs["save_on_exit"] = self.save_on_exit_btn.is_selected
         self.config_manager.config = self.changed_configs.copy()
         self.config_manager.save_config()
+
+        self.audio_manager.load_config()
+
+        self.audio_manager.play_sfx("button_click")
     
     def change_save_on_exit(self):
+        self.audio_manager.play_sfx("button_click")
         self.save_on_exit_btn.is_selected = not self.save_on_exit_btn.is_selected
-        # print(self.save_on_exit_btn.is_selected)
+        self.change_selection()
+        
+    
+    def change_selection(self):
         if self.save_on_exit_btn.is_selected:
             self.save_on_exit_btn.select()
         else:

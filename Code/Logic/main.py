@@ -9,7 +9,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "Code"))
 
 
-from Logic import ÉtatJeu, Partie, ConfigsManager
+from Logic import ÉtatJeu, ConfigsManager, AudioManager
 from Tiles import *
 from UI import *
 from Cars import *
@@ -52,6 +52,9 @@ class Circulab():
         # Load configs
         self.configs_manager = ConfigsManager()
         
+        # Audio Manager
+        self.audio_manager = AudioManager(self.configs_manager)
+
         # State Manager
         self.state_manager = ÉtatJeu(ÉtatJeu.HOME_PAGE)
         
@@ -62,7 +65,7 @@ class Circulab():
         self.clock = pygame.time.Clock()
 
         # Instancie l'écran d'acceuil
-        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager)
+        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager, self.audio_manager)
         
         # Dessiner les éléments du GUI (En Game)
         self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager, self.home_screen, self.state_manager)
@@ -83,7 +86,7 @@ class Circulab():
         self.window_border.tool_bar = self.build_tool_bar
 
         # Instancie la fenêtre des settings
-        self.settings = Settings(self.screen, self.manager, self.configs_manager, self.home_screen)
+        self.settings = Settings(self.screen, self.manager, self.configs_manager, self.home_screen, self.audio_manager)
 
         # Instancie les fenêtres de sauvegarde (cachée par défaut)
         self.default_path = "../Circulab/data/saves/"
@@ -253,7 +256,7 @@ class Circulab():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                if self.current_save is not None:
+                if self.configs_manager.config["save_on_exit"]:
                      self.current_save.update_save()
                 self.running = False
                 exit()
@@ -287,6 +290,9 @@ class Circulab():
                 self.mode_selector.set_tool_bar(self.build_tool_bar)
                 self.window_border.tool_bar = self.build_tool_bar
 
+            
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                self.audio_manager.play_sfx("button_click")
                 
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.build_tool_bar.tool_bar_btns:
                 btn = event.ui_element
