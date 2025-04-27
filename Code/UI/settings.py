@@ -98,14 +98,17 @@ class Settings:
 
         self.save_on_exit_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width/2, self.window_frame.get_relative_rect().height * 5/8), (self.window_frame.get_relative_rect().width/15, self.window_frame.get_relative_rect().width/15)),
-            text="Save On Exit",
+            text="",
             manager=self.manager,
             anchors={"top": "centery"},
-            object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#save_on_exit_btn"),
+            object_id=pygame_gui.core.ObjectID(object_id="#save_on_exit_btn"),
             container=self.window_frame,
             parent_element=self.window_frame,
-            visible=False
+            visible=False,
+            command=self.change_save_on_exit
         )
+
+        
 
         self.reset_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.window_frame.get_relative_rect().width/8, self.window_frame.get_relative_rect().height * 13/16), (self.window_frame.get_relative_rect().width/4, self.window_frame.get_relative_rect().width/15)),
@@ -131,14 +134,27 @@ class Settings:
             command=self.apply_settings
         )
 
+        self.checked = False
+
     def show_UI(self):
         self.draw_text("Settings", self.font_title, (255, 255, 255), self.width/2, self.height/6)
         self.back_btn.show()
         self.window_frame.show()
+        
+        if not self.checked:
+            self.config_manager.load_config()
+            if self.config_manager.config["save_on_exit"]:
+                self.save_on_exit_btn.select()
+            else:
+                self.save_on_exit_btn.unselect()
+
+        self.checked = True
 
     def hide_UI(self):
         self.back_btn.hide()
         self.window_frame.hide()
+
+        self.checked = False
 
     def draw_text(self, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int) -> None:
         """
@@ -180,3 +196,11 @@ class Settings:
         self.changed_configs["save_on_exit"] = self.save_on_exit_btn.is_selected
         self.config_manager.config = self.changed_configs.copy()
         self.config_manager.save_config()
+    
+    def change_save_on_exit(self):
+        self.save_on_exit_btn.is_selected = not self.save_on_exit_btn.is_selected
+        # print(self.save_on_exit_btn.is_selected)
+        if self.save_on_exit_btn.is_selected:
+            self.save_on_exit_btn.select()
+        else:
+            self.save_on_exit_btn.unselect()
