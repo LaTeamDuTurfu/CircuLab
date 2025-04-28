@@ -226,11 +226,6 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.path_text_box.set_text("")
         self.name_text_box.set_text("")
 
-        # Create empty data files
-        building_data = self.fill_empty_tile(n_rows, n_cols)
-        car_data = self.fill_empty_tile(n_rows, n_cols)
-        signalisation_data = self.fill_empty_tile(n_rows, n_cols)
-
         # Check save data
         if n_cols == "" or n_rows == "" or path == "" or name == "":
             self.show_error_msg("Veuillez remplir tous les champs")
@@ -240,6 +235,11 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             self.show_error_msg(f"Le nombre de colonnes doit être entre {self.MIN_COLS} et {self.MAX_COLS}, puis le nombre de lignes entre {self.MIN_ROWS} et {self.MAX_ROWS}")
             return
 
+        # Create empty data files
+        building_data = self.fill_empty_tile(n_rows, n_cols)
+        car_data = None
+        signalisation_data = self.fill_empty_tile(n_rows, n_cols)
+        
         save_data = {
             "name": name,
             "cols": n_cols,
@@ -254,13 +254,10 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         }
 
         new_save = Partie(save_data)
-        if new_save.update_save():
-            self.created_game = new_save
-            print("Partie sauvegardée")
-        else:
-            self.show_error_msg("Le chemin de sauvegarde n'est pas correct")
+        self.created_game = new_save
+        print("Sauvegarde créée")
     
-    def fill_empty_tile(self, n_rows, n_cols, data_set=[]):
+    def fill_empty_tile(self, n_rows, n_cols, data_set=None):
         """
         Fill a 2D array with empty tiles
 
@@ -278,10 +275,11 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         data_set : list
             A 2D array with n_rows and n_cols of empty tiles
         """
+        if data_set == None:
+            data_set = []
         for _ in range(n_rows):
             new_tile = [Tuile(self.TILE_SIZE, self.empty_tile, tile_type="@empty")] * n_cols
             data_set.append(new_tile)
-        # print(data_set)
         return data_set
 
     def check_save_created(self):

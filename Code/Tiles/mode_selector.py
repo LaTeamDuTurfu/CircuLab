@@ -93,10 +93,13 @@ class ModeSelector:
             self.window_frame.color = self.BLUE_GREY
             self.tool_bar.set_building_tool_bar()
             self.state_manager.changer_état(2)  # Building
+            self.tool_bar.unselect_all_btns()
         elif id_bouton_actif == 2 and self.state_manager.état_courant != 7:
             self.window_frame.color = self.YELLOW
             self.tool_bar.set_signalisation_tool_bar()
             self.state_manager.changer_état(7)
+            self.tool_bar.unselect_all_btns()
         if id_bouton_actif == 3 and self.state_manager.état_courant != 3:
             self.window_frame.color = self.GREEN
             self.state_manager.changer_état(3)  # Simulation
+            self.tool_bar.unselect_all_btns()
