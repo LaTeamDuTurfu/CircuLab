@@ -193,6 +193,8 @@ class Partie():
                             road_orientation_manager.set_game_data(self.building_data)
                             road_orientation_manager.check_tile_change(x_pos, y_pos)
 
+                            return True, "placed"
+
                         elif state_manager.état_courant == 7:
                             new_tile = Tuile(self.TILE_SIZE, toolbar.signalisation_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.SIGNALISATION_TILE_TYPES[int(id_bouton_actif)])
                             self.signalisation_data[y_pos][x_pos] = new_tile
@@ -201,6 +203,8 @@ class Partie():
                                 graphe.add_signalisation((x_pos, y_pos), has_light=True)
                             elif new_tile.tile_type == Tuile.SIGNALISATION_TILE_TYPES[2]:
                                 graphe.add_signalisation((x_pos, y_pos), is_stop=True)
+                            
+                            return True, "placed"
                         
                 except UnboundLocalError:
                     pass
@@ -214,6 +218,8 @@ class Partie():
                     road_orientation_manager.check_tile_change(x_pos, y_pos + 1)
                 elif state_manager.état_courant == 7:
                     self.signalisation_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
+                
+                return True, "removed"
 
     def update_all_roads(self, road_orientation_manager):
         for y, row in enumerate(self.building_data):

@@ -29,7 +29,7 @@ class ToolBar:
     travail_tile = None
     accident_tile = None
     
-    def __init__(self, surface, manager, mode_selector, window_frame):
+    def __init__(self, surface, manager, mode_selector, window_frame, audio_manager):
         
         self.screen = surface
         
@@ -38,6 +38,7 @@ class ToolBar:
         
         self.manager = manager
         self.window_frame = window_frame
+        self.audio_manager = audio_manager
 
         self.TILE_SIZE = NewSaveWindow.TILE_SIZE
         self.TOOL_BAR_BTN_SIZE = 78
@@ -184,6 +185,7 @@ class ToolBar:
         displaying its buttons. It also updates the position of the close
         button accordingly and prints the current positions for debugging.
         """
+        self.audio_manager.play_sfx("button_click")
         if self.show:
             self.tool_bar_window.rect.x = self.WIDTH - self.window_frame.thickness - self.TOOL_BAR_BTN_SIZE * 3/4
             self.close_btn.relative_rect.x = self.TOOL_BAR_WIDTH - self.TOOL_BAR_BTN_SIZE * 3/4

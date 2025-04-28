@@ -9,7 +9,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(os.path.join(project_root, "Code"))
 
 
-from Logic import ÉtatJeu, Partie, ConfigsManager
+from Logic import ÉtatJeu, ConfigsManager, AudioManager
 from Tiles import *
 from UI import *
 from Cars import *
@@ -52,6 +52,9 @@ class Circulab():
         # Load configs
         self.configs_manager = ConfigsManager()
         
+        # Audio Manager
+        self.audio_manager = AudioManager(self.configs_manager)
+
         # State Manager
         self.state_manager = ÉtatJeu(ÉtatJeu.HOME_PAGE)
         
@@ -62,7 +65,7 @@ class Circulab():
         self.clock = pygame.time.Clock()
 
         # Instancie l'écran d'acceuil
-        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager)
+        self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager, self.audio_manager)
         
         # Dessiner les éléments du GUI (En Game)
         self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager, self.home_screen, self.state_manager)
@@ -72,7 +75,7 @@ class Circulab():
         self.mode_selector.mode_selector_window.hide()
         
         # Instancie la tool_bar (cachée par défaut)
-        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border)
+        self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, self.audio_manager)
         self.build_tool_bar.tool_bar_window.hide()
 
         # Associe la tool_bar au mode_selector
@@ -81,6 +84,9 @@ class Circulab():
         # Relie la tool_bar à la bordure de fenêtre
         self.window_border.mode_selector = self.mode_selector
         self.window_border.tool_bar = self.build_tool_bar
+
+        # Instancie la fenêtre des settings
+        self.settings = Settings(self.screen, self.manager, self.configs_manager, self.home_screen, self.audio_manager)
 
         # Instancie les fenêtres de sauvegarde (cachée par défaut)
         self.default_path = "../Circulab/data/saves/"
@@ -135,6 +141,7 @@ class Circulab():
                 pygame.display.set_caption(f'CircuLab - Home Page')
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pygame.display.set_caption(f'CircuLab - Settings')
+                self.settings.show_UI()
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
                 pygame.display.set_caption(f'CircuLab - New Game')
                 self.new_save_window.show()
@@ -178,7 +185,13 @@ class Circulab():
                 self.current_save.change_scroll(self.screen)
 
                 # Change l'apparence des tuiles si la souris est sur la grille
-                self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
+                result = self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
+
+                if result is not None:
+                    if result[1] == "placed":
+                        self.audio_manager.play_sfx("tile_placed")
+                    elif result[1] == "removed":
+                        self.audio_manager.play_sfx("tile_removed")
                  
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
@@ -249,7 +262,7 @@ class Circulab():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                if self.current_save is not None:
+                if self.configs_manager.config["save_on_exit"]:
                      self.current_save.update_save()
                 self.running = False
                 exit()
@@ -267,7 +280,10 @@ class Circulab():
                 self.manager.set_window_resolution((self.WIDTH, self.HEIGHT))
                 self.window_border.update_border()
                 self.build_tool_bar.update_screen_size()
-                
+                self.load_save_window.change_pos(self.WIDTH/2, self.HEIGHT/2)
+                self.new_save_window.change_pos(self.WIDTH/2, self.HEIGHT/2)
+                self.settings.change_pos(self.WIDTH/2, self.HEIGHT/2)
+
                 # Instancie la tool_bar (cachée par défaut)
                 show = self.build_tool_bar.show
                 self.build_tool_bar.tool_bar_window.kill()
@@ -281,6 +297,9 @@ class Circulab():
                 self.mode_selector.set_tool_bar(self.build_tool_bar)
                 self.window_border.tool_bar = self.build_tool_bar
 
+            
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                self.audio_manager.play_sfx("button_click")
                 
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element in self.build_tool_bar.tool_bar_btns:
                 btn = event.ui_element

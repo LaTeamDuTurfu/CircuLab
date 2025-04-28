@@ -2,11 +2,12 @@ import pygame
 import pygame_gui
 
 class HomeScreen:
-    def __init__(self, surface, manager, state_manager, config_manager):
+    def __init__(self, surface, manager, state_manager, config_manager, audio_manager):
         self.surface = surface
         self.manager = manager
         self.state_manager = state_manager
         self.config_manager = config_manager
+        self.audio_manager = audio_manager
         
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
@@ -36,7 +37,8 @@ class HomeScreen:
             text="Paramètres",
             manager=self.manager,
             anchors={"centerx": "centerx", "centery": "centery"},
-            object_id=pygame_gui.core.ObjectID(class_id="@home_btn", object_id=f"#settings_btn")
+            object_id=pygame_gui.core.ObjectID(class_id="@home_btn", object_id=f"#settings_btn"),
+            command=self.ouvrir_paramètres
         )
         
         self.quit_btn = pygame_gui.elements.UIButton(
@@ -48,15 +50,30 @@ class HomeScreen:
             command=self.quit_circulab # Placeholder for quit functionality
         )
 
+        self.home_buttons = [
+            self.new_save_btn,
+            self.load_save_btn,
+            self.settings_btn,
+            self.quit_btn
+        ]
+
     def créer_nouvelle_sauvegarde(self):
+        self.audio_manager.play_sfx("button_click")
         self.state_manager.changer_état(5)  # État.NEW_GAME = 5
         self.cacher_boutons()
     
     def charger_sauvegarde(self):
+        self.audio_manager.play_sfx("button_click")
         self.state_manager.changer_état(6)  # État.LOAD_GAME = 6
         self.cacher_boutons()
     
+    def ouvrir_paramètres(self):
+        self.audio_manager.play_sfx("button_click")
+        self.state_manager.changer_état(4)
+        self.cacher_boutons()
+
     def quit_circulab(self):
+        self.audio_manager.play_sfx("button_click")
         self.config_manager.save_config()
         exit()
     

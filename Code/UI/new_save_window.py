@@ -306,4 +306,9 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.state_manager.changer_état(1)
         self.hide()
         self.home_screen.montrer_boutons()
+    
+    def change_pos(self, x, y):
+        x = x - self.rect.width / 2
+        y = y - self.rect.height / 2
+        self.set_position((x, y))
 
