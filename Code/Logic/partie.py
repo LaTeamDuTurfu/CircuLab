@@ -2,6 +2,7 @@ import dill
 import os, sys
 import pygame
 import copy
+from Code.Logic.états import ÉtatJeu
 
 # Permet de charger les modules dans le dossier game_code
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -184,6 +185,7 @@ class Partie():
                         if state_manager.état_courant == 2:
                             
                             new_tile = Tuile(self.TILE_SIZE, toolbar.building_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
+                            print("Placé dans building")
                             self.building_data[y_pos][x_pos] = new_tile
                             
                             road_orientation_manager.set_game_data(self.building_data)
@@ -193,6 +195,8 @@ class Partie():
 
                         elif state_manager.état_courant == 7:
                             new_tile = Tuile(self.TILE_SIZE, toolbar.signalisation_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.SIGNALISATION_TILE_TYPES[int(id_bouton_actif)])
+                            print("Placé dans signalisation")
+                            print(len(self.signalisation_data))
                             self.signalisation_data[y_pos][x_pos] = new_tile
 
                             if new_tile.tile_type == Tuile.SIGNALISATION_TILE_TYPES[1]:
