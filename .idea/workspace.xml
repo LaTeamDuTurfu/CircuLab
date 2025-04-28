@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="17b27f95-70f2-4b85-96a7-c9cf2ee37fdf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/Cars/graphe.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Cars/graphe.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/Logic/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/Logic/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -172,7 +171,7 @@
       <updated>1742994097724</updated>
       <workItem from="1744657049221" duration="3000" />
       <workItem from="1745103605200" duration="5000" />
-      <workItem from="1745550006939" duration="41889000" />
+      <workItem from="1745550006939" duration="43631000" />
     </task>
     <servers />
   </component>
@@ -214,6 +213,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CircuLab$Circulab.coverage" NAME="Circulab Coverage Results" MODIFIED="1745867344558" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CircuLab$Circulab.coverage" NAME="Circulab Coverage Results" MODIFIED="1745870062889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
