@@ -178,7 +178,7 @@ class Partie():
                 pass
             if pygame.mouse.get_pressed()[0] == 1:
                 try:
-                    if (state_manager.état_courant == 2 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.building_tile_images[int(id_bouton_actif)]) or (state_manager.état_courant == 7 and self.game_data[state_manager.état_courant][y_pos][x_pos].image != toolbar.signalisation_tile_images[int(id_bouton_actif)]):
+                    if (state_manager.état_courant == 2 and self.building_data[y_pos][x_pos].tile_type != Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)]) or (state_manager.état_courant == 7 and self.signalisation_data[y_pos][x_pos].tile_type != Tuile.SIGNALISATION_TILE_TYPES[int(id_bouton_actif)]):
                         print(state_manager.état_courant)
                         if state_manager.état_courant == 2:
                             
