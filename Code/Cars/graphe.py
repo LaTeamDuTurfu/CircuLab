@@ -30,8 +30,9 @@ class Graphe:
             self.car_image.fill((255, 0, 0))
 
         # Créer les intersections avec ou sans feux de circulation
-        self.intersections = {} #contient les Objets Intersection, utilisés pour créer le graph
-        self.inter_points = {} #contient les points où créer des intersections
+        self.intersections = {} # Contient les Objets Intersection, utilisés pour créer le graph
+        self.inter_points = {} # Contient les points où créer des intersections
+        self.ordered_points = [] # Conserver l'ordre de placement des points
 
         # Créer les routes (chaque segment sera décliné en plusieurs voies, sens unique)
         self.routes = []
@@ -50,9 +51,29 @@ class Graphe:
         scaled_point = (point[0] * self.TILE_SIZE + self.TILE_SIZE // 2, point[1] * self.TILE_SIZE + self.TILE_SIZE // 2)
         return scaled_point
 
+    def build_routes(self):
+        seq = self.ordered_points
+
+        for i in range(len(seq) - 1):
+            start_pos, end_pos = seq[i], seq[i + 1]
+
+            if start_pos is None or end_pos is None:
+                continue  # on saute la coupure
+
+            # S’assure que les Intersection objets existent
+            start = self.intersections[start_pos]
+            end = self.intersections[end_pos]
+
+            # Crée une arête par voie
+            for lane in range(1, self.max_lanes + 1):
+                self.routes.append(Route(start, end, lane, self.max_lanes))
+
     def add_inter_points(self, point):
         scaled_point = self.scale_point(point)
         self.inter_points[scaled_point] = {'has_light': False} # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
+        self.ordered_points.append(scaled_point)
+        print(self.inter_points)
+        print(self.ordered_points)
 
     def remove_inter_point(self, point):
         scaled_point = self.scale_point(point)
@@ -73,6 +94,9 @@ class Graphe:
         self.inter_points[scaled_point]['has_light'] = has_light
         self.inter_points[scaled_point]['is_stop'] = is_stop
 
+    def unbind_graph(self):
+        self.ordered_points.append(None) # Crée une coupure dans la création des routes
+
     def build_intersections(self):
         for pos, info in self.inter_points.items():
             has_light = info.get('has_light', False) # info est un dict tel que {'has_light': True, 'is_stop': False}, donc on récupère l'info, si elle existe, sinon fausse
@@ -81,20 +105,6 @@ class Graphe:
 
     def nb_points(self):
         return len(self.inter_points.keys())
-
-    def build_routes(self):
-        points = list(self.inter_points.keys())
-
-        for i in range(len(points) - 1):
-            try:
-                start = self.intersections[points[i]]
-                end = self.intersections[points[i + 1]]
-            except KeyError as e:
-                print(f"Point manquant dans self.intersections: {e}")
-                continue  # Ignore cette route si un point est absent
-
-            for lane in range(1, self.max_lanes + 1):
-                self.routes.append(Route(start, end, lane, self.max_lanes))
 
     def build_graph(self):
         # Utiliser un MultiDiGraph pour représenter les voies à sens unique

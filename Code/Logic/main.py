@@ -201,7 +201,7 @@ class Circulab():
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
-                        self.graphe.create_vehicles(3)
+                        self.graphe.create_vehicles(10)
                         self.graph_created = True
                         self.graphe.show_graph()
                 else:
@@ -348,6 +348,9 @@ class Circulab():
                     if event.key == pygame.K_MINUS:
                         self.current_save.zoom(-1)
                         self.current_save.draw_tuiles(self.screen)
+                    if event.key == pygame.K_a:
+                        self.graphe.unbind_graph()
+                        print('Graph unbinded')
                 if event.key == pygame.K_h:
                     if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.simulation_finished:
                         self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)
