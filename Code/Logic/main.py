@@ -201,11 +201,14 @@ class Circulab():
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
-                        self.graphe.create_vehicles(3)
+                        self.graphe.create_vehicles(10)
                         self.graph_created = True
                         self.graphe.show_graph()
                 else:
                     print("Il n'y a pas assez de routes placées! (Minimum 2)")
+                    self.mode_selector.unselect_all_btns()
+                    self.mode_selector.mode_selector_btns[0].select()
+                    self.mode_selector.check_change_mode()
 
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
             if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
@@ -287,7 +290,7 @@ class Circulab():
                 # Instancie la tool_bar (cachée par défaut)
                 show = self.build_tool_bar.show
                 self.build_tool_bar.tool_bar_window.kill()
-                self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border)
+                self.build_tool_bar = ToolBar(self.screen, self.manager, self.mode_selector, self.window_border, self.audio_manager)
                 if not self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
                     self.build_tool_bar.tool_bar_window.hide()
                 
@@ -348,6 +351,9 @@ class Circulab():
                     if event.key == pygame.K_MINUS:
                         self.current_save.zoom(-1)
                         self.current_save.draw_tuiles(self.screen)
+                    if event.key == pygame.K_a:
+                        self.graphe.unbind_graph()
+                        print('Graph unbinded')
                 if event.key == pygame.K_h:
                     if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.simulation_finished:
                         self.state_manager.changer_état(ÉtatJeu.GAME_EDITOR)

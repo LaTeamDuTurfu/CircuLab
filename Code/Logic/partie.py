@@ -220,9 +220,10 @@ class Partie():
                     road_orientation_manager.check_tile_change(x_pos + 1, y_pos)
                     road_orientation_manager.check_tile_change(x_pos, y_pos - 1)
                     road_orientation_manager.check_tile_change(x_pos, y_pos + 1)
+                    graphe.remove_inter_point((x_pos, y_pos))
                 elif state_manager.état_courant == 7:
                     self.signalisation_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
-                
+
                 return True, "removed"
 
     def update_all_roads(self, road_orientation_manager):
