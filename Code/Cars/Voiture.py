@@ -3,10 +3,6 @@ import random
 
 class Voiture:
     def __init__(self, route_list, car_image, speed=100):
-        """
-        route_list : liste d'objets Route formant le trajet à suivre (dans l'ordre)
-        car_image  : image ou surface représentant la voiture
-        """
         self.route_list = route_list
         self.car_image = car_image
         self.last_min_distance = None
@@ -42,7 +38,7 @@ class Voiture:
         if self.current_speed > self.speed:
             self.current_speed = self.speed
 
-        #TODO CODE POUR ÉVITER LES COLLISIONS NE FONCTIONNE PAS 
+        #TODO CODE POUR ÉVITER LES COLLISIONS NE FONCTIONNE PAS
         for autre in list_voitures:
             if autre is self or autre.finished:
                 continue
@@ -55,13 +51,11 @@ class Voiture:
                     self.last_min_distance = distance
 
                 if distance < self.last_min_distance:
-                    # Se rapproche trop → ralentir
                     factor = (distance - min_gap) / (distance_securite - min_gap)
                     factor = max(0.0, min(1.0, factor))
                     target_speed = self.speed * factor
                     self.current_speed = min(self.current_speed, target_speed)
                 else:
-                    # S'éloigne → autoriser accélération
                     self.current_speed = min(self.speed, self.current_speed + self.acceleration * dt)
 
                 self.last_min_distance = distance
