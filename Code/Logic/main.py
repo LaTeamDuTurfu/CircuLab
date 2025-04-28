@@ -186,6 +186,7 @@ class Circulab():
 
                 # Change l'apparence des tuiles si la souris est sur la grille
                 result = self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
+                self.current_save.modifier_points_graphe(self.pos, self.road_orientation_manager, self.graphe)
 
                 if result is not None:
                     if result[1] == "placed":
@@ -205,7 +206,12 @@ class Circulab():
                         self.graph_created = True
                         self.graphe.show_graph()
                 else:
-                    print("Il n'y a pas assez de routes placées! (Minimum 2)")
+                    pygame_gui.windows.UIMessageWindow(
+                        rect=pygame.Rect((self.WIDTH / 2 - 150, self.HEIGHT / 2 - 75), (300, 150)),
+                        manager=self.manager,
+                        window_title="Erreur",
+                        html_message="Il n'y a pas assez de routes placées ! Veuillez placer au moins 2 routes pour commencer la simulation."
+                    )
                     self.mode_selector.unselect_all_btns()
                     self.mode_selector.mode_selector_btns[0].select()
                     self.mode_selector.check_change_mode()

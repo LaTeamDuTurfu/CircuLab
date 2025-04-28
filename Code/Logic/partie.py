@@ -18,6 +18,7 @@ class Partie():
     DEFAULT_TILE_SIZE = 64
     
     def __init__(self, save_data: dict):
+        self.last_tuile_checked = None
         self.name = save_data["name"]
         self.columns = save_data["cols"]
         self.rows = save_data["rows"]
@@ -184,11 +185,6 @@ class Partie():
                             
                             new_tile = Tuile(self.TILE_SIZE, toolbar.building_tile_images[int(id_bouton_actif[-1])], orientation=build_orientation, tile_type=Tuile.BUILD_TILE_TYPES[int(id_bouton_actif)])
                             self.building_data[y_pos][x_pos] = new_tile
-
-                            if road_orientation_manager.is_a_road(new_tile):
-                                graphe.add_inter_points((x_pos, y_pos))
-                            else:
-                                graphe.remove_inter_point((x_pos, y_pos))
                             
                             road_orientation_manager.set_game_data(self.building_data)
                             road_orientation_manager.check_tile_change(x_pos, y_pos)
@@ -205,7 +201,7 @@ class Partie():
                                 graphe.add_signalisation((x_pos, y_pos), is_stop=True)
                             
                             return True, "placed"
-                        
+
                 except UnboundLocalError:
                     pass
             if pygame.mouse.get_pressed()[2] == 1:
@@ -221,6 +217,21 @@ class Partie():
                     self.signalisation_data[y_pos][x_pos] = Tuile(self.TILE_SIZE, Tuile.empty_tile, orientation=build_orientation)
 
                 return True, "removed"
+            return None
+        return None
+
+    def modifier_points_graphe(self, pos, road_orientation_manager, graphe):
+        if pygame.mouse.get_pressed()[0] == 1:
+            x_pos = int((pos[0] + self.scrollx) // self.TILE_SIZE)
+            y_pos = int((pos[1] + self.scrolly) // self.TILE_SIZE)
+
+            if self.last_tuile_checked != self.building_data[y_pos][x_pos]:
+                if road_orientation_manager.is_a_road(self.building_data[y_pos][x_pos]):
+                    graphe.add_inter_points((x_pos, y_pos))
+                else:
+                    graphe.remove_inter_point((x_pos, y_pos))
+
+                self.last_tuile_checked = self.building_data[y_pos][x_pos]
 
     def update_all_roads(self, road_orientation_manager):
         for y, row in enumerate(self.building_data):
