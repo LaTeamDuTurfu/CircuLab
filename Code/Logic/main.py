@@ -48,6 +48,7 @@ class Circulab():
 
         # GUI Manager
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
+        self.manager.add_font_paths('Jersey25-Regular', 'assets/font/Jersey25-Regular.ttf')
         
         # Load configs
         self.configs_manager = ConfigsManager()
@@ -136,7 +137,7 @@ class Circulab():
             self.traiter_inputs()
             
             # Remplit le fond de couleur grise
-            self.screen.fill(self.GREY)
+            self.screen.fill("#142452")
 
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
                 self.current_save = None

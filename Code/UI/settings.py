@@ -21,7 +21,7 @@ class Settings:
         self.height = self.screen.get_height()
 
         self.back_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((self.width/40, self.height * 1/24), (self.width/15, self.height * 1/12)),
+            relative_rect=pygame.Rect((self.width/40, self.height * 1/24), (self.width/12, self.height * 1/12)),
             text="Back",
             manager=self.manager,
             object_id=pygame_gui.core.ObjectID(class_id="@settings_btn", object_id="#back_btn"),

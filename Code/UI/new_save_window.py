@@ -51,7 +51,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="Nom de la sauvegarde",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#name_label"))
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_label", object_id="#name_label"))
         
         self.name_text_box = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect((0, self.name_label.get_relative_rect().height), (self.window_container.get_relative_rect().width * 27/32, 50)),
@@ -69,7 +69,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="Nombre de colonnes",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#cols_label"))
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_label", object_id="#cols_label"))
 
         self.cols_text_box = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect((-self.window_container.get_relative_rect().width/4, self.cols_label.get_relative_rect().y + self.cols_label.get_relative_rect().height), (self.window_container.get_relative_rect().width/3, 50)),
@@ -87,7 +87,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="Nombre de lignes",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#rows_label"))
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_label", object_id="#rows_label"))
 
         self.rows_text_box = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect((self.window_container.get_relative_rect().width/4, self.rows_label.get_relative_rect().y + self.rows_label.get_relative_rect().height), (self.window_container.get_relative_rect().width/3, 50)),
@@ -105,7 +105,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="Chemin de la sauvegarde",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#name_label"))
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_label", object_id="#name_label"))
 
         self.path_text_box = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect((-self.window_container.get_relative_rect().width/16, self.path_label.get_relative_rect().height + self.path_label.get_relative_rect().y), (self.window_container.get_relative_rect().width * 23/32, 50)),
@@ -128,7 +128,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#error_label"),
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_label", object_id="#error_label"),
             visible=False)
 
         self.save_btn = pygame_gui.elements.UIButton(
@@ -215,7 +215,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             n_cols = int(self.cols_text_box.get_text())
             n_rows = int(self.rows_text_box.get_text())
         except ValueError:
-            self.show_error_msg("Veuillez entrer un nombre entier pour le nombre de colonnes et de lignes")
+            self.show_error_msg("Nombre de lignes ou de colonnes invalide")
             return
         path = self.path_text_box.get_text()
         name = self.name_text_box.get_text()
@@ -232,7 +232,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             return
 
         if not (self.MIN_COLS < int(n_cols) < self.MAX_COLS and self.MIN_ROWS < int(n_rows) < self.MAX_ROWS):
-            self.show_error_msg(f"Le nombre de colonnes doit être entre {self.MIN_COLS} et {self.MAX_COLS}, puis le nombre de lignes entre {self.MIN_ROWS} et {self.MAX_ROWS}")
+            self.show_error_msg(f"Les colonnes et rangées doivent être entre {self.MIN_COLS} et {self.MAX_COLS}")
             return
 
         # Create empty data files
