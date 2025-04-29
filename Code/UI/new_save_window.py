@@ -120,7 +120,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="...",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#file_explorer_btn")
+            object_id=pygame_gui.core.ObjectID(object_id="#file_explorer_btn")
         )
 
         self.error_label = pygame_gui.elements.UILabel(
@@ -136,7 +136,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="Créer",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#save_btn"),
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_btn", object_id="#save_btn"),
             anchors={"centerx": "centerx"}
         )
         self.save_btn.bind(pygame_gui.UI_BUTTON_PRESSED, self.save_new)
@@ -146,7 +146,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             text="Annuler",
             manager=manager,
             container=self.window_container,
-            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window", object_id="#cancel_btn"),
+            object_id=pygame_gui.core.ObjectID(class_id="@new_save_window_btn", object_id="#cancel_btn"),
             anchors={"centerx": "centerx"},
             command=self.return_to_home_screen
         )

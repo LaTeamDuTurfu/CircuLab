@@ -70,7 +70,7 @@ class Circulab():
         self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager, self.audio_manager)
         
         # Dessiner les éléments du GUI (En Game)
-        self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager, self.home_screen, self.state_manager)
+        self.window_border = WindowFrame(self.screen, 20, self.BLUE_GREY, self.manager, self.home_screen, self.state_manager, self.audio_manager)
 
         # Instancie la fenêtre de sélection de mode (cachée par défaut)
         self.mode_selector = ModeSelector(self.screen, self.manager, self.window_border, self.state_manager)
@@ -92,7 +92,7 @@ class Circulab():
 
         # Instancie les fenêtres de sauvegarde (cachée par défaut)
         self.default_path = "../Circulab/data/saves/"
-        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)
+        self.new_save_window = NewSaveWindow(pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 7/12)), self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)
         self.new_save_window.hide()
         
         self.load_save_window = LoadSaveWindow(rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), surface=self.screen, manager=self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)

@@ -4,7 +4,7 @@ import time
 import pygame_gui.elements.ui_2d_slider
 
 class WindowFrame:
-    def __init__(self, screen, thickness, color, manager, home_screen, state_manager):
+    def __init__(self, screen, thickness, color, manager, home_screen, state_manager, audio_manager):
         # Border parameters
         self.screen = screen
         self.thickness = thickness
@@ -13,6 +13,7 @@ class WindowFrame:
         self.manager = manager
         self.home_screen = home_screen
         self.state_manager = state_manager
+        self.audio_manager = audio_manager
         self.tool_bar = None
         self.mode_selector = None   
         self.game = None
@@ -23,16 +24,16 @@ class WindowFrame:
             relative_rect=pygame.Rect((self.thickness, 0), (self.screen.get_width()/12, self.thickness)),
             text='Menu',
             manager=self.manager,
-            object_id="#menu_btn",
+            object_id=pygame_gui.core.ObjectID(class_id="@window_frame_btns", object_id="#menu_btn"),
             visible=False,
             command=self.retour_menu
         )
         
         self.save_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((self.menu_btn.relative_rect.width + self.menu_btn.relative_rect.x, 0), (self.screen.get_width()/12, self.thickness)),
+            relative_rect=pygame.Rect((self.menu_btn.relative_rect.width + self.menu_btn.relative_rect.x, 0), (self.screen.get_width()/8, self.thickness)),
             text='Sauvegarder',
             manager=self.manager,
-            object_id="#save_btn",
+            object_id=pygame_gui.core.ObjectID(class_id="@window_frame_btns", object_id="#save_btn"),
             visible=False,
             command=self.update_game
         )
@@ -70,6 +71,7 @@ class WindowFrame:
         self.game = game
 
     def update_game(self):
+        self.audio_manager.play_sfx("button_click")
         self.game.update_save()
 
     def change_save_btn_text(self, text:str, sleep_time:int=0):
@@ -85,6 +87,7 @@ class WindowFrame:
         self.save_btn.hide()
     
     def retour_menu(self):
+        self.audio_manager.play_sfx("button_click")
         self.state_manager.changer_état(1)
         self.hide_all_btns()
         self.tool_bar.tool_bar_window.hide()
