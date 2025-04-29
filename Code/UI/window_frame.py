@@ -20,6 +20,9 @@ class WindowFrame:
         
         self.update_border()
         
+        self.WIDTH = self.screen.get_width()
+        self.HEIGHT = self.screen.get_height()
+        
         self.menu_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.thickness, 0), (self.screen.get_width()/12, self.thickness)),
             text='Menu',
@@ -37,6 +40,7 @@ class WindowFrame:
             visible=False,
             command=self.update_game
         )
+        
     
     def update_border(self):
         # Build Rectangles
@@ -71,8 +75,25 @@ class WindowFrame:
         self.game = game
 
     def update_game(self):
+        
+        self.saving_window = pygame_gui.windows.UIMessageWindow(
+                        rect=pygame.Rect((self.WIDTH / 2 - 150, self.HEIGHT / 2 - 75), (300, 150)),
+                        manager=self.manager,
+                        window_title="Sauvegarde de la partie",
+                        html_message="Sauvegarde en cours..."
+                    )
+        self.saving_window.dismiss_button.set_text("Continuer")
+        self.saving_window.set_blocking(True)
+        self.saving_window.enable_title_bar = False
+        
         self.audio_manager.play_sfx("button_click")
-        self.game.update_save()
+        self.saving_window.dismiss_button.disable()
+        if self.game.update_save():
+            self.saving_window.text_block.set_text("Sauvegarde réussie! ✅")
+        else:
+            self.saving_window.text_block.set_text("Sauvegarde echouée! ❌")
+        self.saving_window.dismiss_button.enable()
+        
 
     def change_save_btn_text(self, text:str, sleep_time:int=0):
         time.sleep(sleep_time)
