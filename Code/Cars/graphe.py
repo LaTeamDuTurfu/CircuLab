@@ -79,6 +79,8 @@ class Graphe:
         scaled_point = self.scale_point(point)
 
         self.inter_points.pop(scaled_point, None)
+        if scaled_point in self.ordered_points:
+            self.ordered_points.remove(scaled_point)
         self.intersections.pop(scaled_point, None)
 
         self.routes = [r for r in self.routes if r.start.position != scaled_point and r.end.position != scaled_point]
