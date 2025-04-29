@@ -17,6 +17,63 @@ Il permet aux utilisateurs de construire des routes, de placer de la signalisati
 
 ---
 
+## 🎮 Comment jouer
+
+### 📝 Créer une nouvelle sauvegarde
+
+1. **Lancer l'application** :
+
+   - Exécute `Circulab.py` pour ouvrir CircuLab.
+
+2. **Créer une nouvelle partie** :
+
+   - Sur l'écran d'accueil, cliquez sur **"Créer une nouvelle sauvegarde"**.
+
+3. **Remplir les champs** :
+
+   - **Nom de la sauvegarde** : Entrez un nom sans espaces ni caractères spéciaux (30 caractères maximum).
+   - **Nombre de colonnes et de lignes** : Choisissez un nombre entre **50** et **300** pour chaque dimension.
+   - **Chemin de la sauvegarde** : Cliquez sur le bouton `...` pour choisir un dossier où sera enregistrée votre carte.
+
+4. **Valider la création** :
+   - Cliquez sur **"Créer"** pour générer une nouvelle carte vide.
+   - Si tout est correct, une nouvelle partie est automatiquement créée et ouverte.
+
+---
+
+### 📂 Charger une sauvegarde existante
+
+1. **Depuis l'écran d'accueil** :
+
+   - Cliquez sur **"Charger une sauvegarde"**.
+
+2. **Sélection du fichier** :
+
+   - Une fenêtre d'explorateur de fichiers s'ouvre automatiquement.
+   - Par défaut, l'explorateur vous dirige vers le chemin initial :
+     ```bash
+     ../CircuLab/data/saves/
+     ```
+     _(C'est là que vos sauvegardes `.clab` sont stockées.)_
+
+3. **Choisir une sauvegarde** :
+
+   - Sélectionnez un fichier de sauvegarde avec l'extension `.clab`.
+   - Cliquez sur **"OK"** pour valider.
+
+4. **Jouer** :
+   - Après un chargement réussi, vous êtes immédiatement replacé dans l'éditeur avec votre carte restaurée.
+
+---
+
+### 🚨 Remarques importantes
+
+- **Validez toujours vos champs** lors de la création d'une sauvegarde : les colonnes et lignes doivent respecter les limites imposées.
+- **La simulation** ne peut démarrer que si votre réseau est correctement connecté.
+- **Deux routes minimum** sont requises pour une simulation fonctionnelle.
+
+---
+
 ## 🎮 Contrôles importants (Touches Clavier)
 
 | Touche                      | Fonction                                                                       |
@@ -47,7 +104,10 @@ Il permet aux utilisateurs de construire des routes, de placer de la signalisati
 2. Installez les dépendances :
 
 ```bash
-pip install pygame pygame_gui
+pip install pygame_gui
+pip install pygame
+pip install networkx
+pip install matplotlib
 ```
 
 ---
