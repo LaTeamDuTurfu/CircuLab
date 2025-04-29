@@ -12,6 +12,12 @@ class AudioManager:
         self.music_channel = pygame.mixer.Channel(0)
         self.sfx_channel = pygame.mixer.Channel(1)
 
+        self.music_playlist = [
+            pygame.mixer.Sound("assets/audio/music/music1.mp3"),
+            pygame.mixer.Sound("assets/audio/music/music2.mp3"),
+            ]  # Liste des chemins de fichiers musicaux
+        self.current_track_index = 0
+        
         # Dictionnaire accessible par le nom de l'effet sonore
         self.sound_effects = {
             "tile_placed": pygame.mixer.Sound("assets/audio/sfx/tile_placed.mp3"),
@@ -20,8 +26,24 @@ class AudioManager:
         }
 
         self.load_config()
-
-
+    
+    def play_current_track(self):
+        if self.music_playlist:
+            track_path = self.music_playlist[self.current_track_index]
+            try:
+                self.music_channel.set_volume(self.music_volume)
+                self.music_channel.play(track_path)
+                print(f"Playing: {track_path}")
+            except pygame.error as e:
+                print(f"Error loading {track_path}: {e}")
+        else:
+            print("No music loaded in the playlist.")
+    
+    def play_next_track(self):
+        if self.music_playlist:
+            self.current_track_index = (self.current_track_index + 1) % len(self.music_playlist)
+            self.play_current_track()
+    
     def load_config(self):
         self.music_volume = self.config_manager.config["music_volume"]
         self.sfx_volume = self.config_manager.config["sfx_volume"]

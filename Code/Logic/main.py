@@ -54,6 +54,7 @@ class Circulab():
         
         # Audio Manager
         self.audio_manager = AudioManager(self.configs_manager)
+        self.audio_manager.play_current_track()
 
         # State Manager
         self.state_manager = ÉtatJeu(ÉtatJeu.HOME_PAGE)
@@ -127,6 +128,9 @@ class Circulab():
             # FPS Capping
             time_delta = self.clock.tick(60)/1000
 
+            if not self.audio_manager.music_channel.get_busy():
+                self.audio_manager.play_next_track()
+            
             # Logic
             self.get_mouse_pos()
             self.traiter_inputs()
