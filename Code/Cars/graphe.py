@@ -16,7 +16,7 @@ from Cars.Voiture import Voiture
 from Cars.TrafficLight import TrafficLight
 
 class Graphe:
-    def __init__(self,TILE_SIZE, current_save = None, nb_voitures = 3, max_lanes=1):
+    def __init__(self,TILE_SIZE, nb_voitures = 3, max_lanes=1):
         self.max_lanes = max_lanes
         self.TILE_SIZE = TILE_SIZE
 
@@ -29,10 +29,12 @@ class Graphe:
             self.car_image = pygame.Surface((40, 20))
             self.car_image.fill((255, 0, 0))
 
+        self.current_save = None
+        
         # Créer les intersections avec ou sans feux de circulation
-        self.intersections = {} # Contient les Objets Intersection, utilisés pour créer le graph
-        self.inter_points = {} # Contient les points où créer des intersections
-        self.ordered_points = [] # Conserver l'ordre de placement des points
+        self.intersections = None # Contient les Objets Intersection, utilisés pour créer le graph
+        self.inter_points = None # Contient les points où créer des intersections
+        self.ordered_points = None # Conserver l'ordre de placement des points
 
         # Créer les routes (chaque segment sera décliné en plusieurs voies, sens unique)
         self.routes = []
@@ -47,6 +49,18 @@ class Graphe:
         self.simulation_finished = False
 
 
+    def set_current_save(self, partie=None):
+        self.current_save = partie
+        
+        if self.current_save != None:
+            self.intersections = self.current_save.intersections # Contient les Objets Intersection, utilisés pour créer le graph
+            self.inter_points = self.current_save.inter_points # Contient les points où créer des intersections
+            self.ordered_points = self.current_save.ordered_points # Conserver l'ordre de placement des points
+        else:
+            self.intersections = None
+            self.inter_points = None
+            self.ordered_points = None
+    
     def scale_point(self, point):
         scaled_point = (point[0] * self.TILE_SIZE + self.TILE_SIZE // 2, point[1] * self.TILE_SIZE + self.TILE_SIZE // 2)
         return scaled_point

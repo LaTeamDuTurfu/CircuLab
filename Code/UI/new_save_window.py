@@ -250,7 +250,10 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             "path": path,
             "building_data": building_data,
             "car_data": car_data,
-            "signalisation_data": signalisation_data
+            "signalisation_data": signalisation_data,
+            "intersections": {},
+            "inter_points": {},
+            "ordered_points": []
         }
 
         new_save = Partie(save_data)

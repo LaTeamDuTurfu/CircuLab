@@ -28,8 +28,11 @@ class Partie():
         self.path = save_data["path"]
         self.TILE_SIZE = save_data["tile_size"]
         self.building_data = save_data["building_data"]
-        self.car_data = None
         self.signalisation_data = save_data["signalisation_data"]
+        self.intersections = save_data["intersections"]
+        self.inter_points = save_data["inter_points"]
+        self.ordered_points = save_data["ordered_points"]
+        
         self.font = pygame.font.Font("freesansbold.ttf", 32)
         
         self.game_data = {
@@ -70,8 +73,10 @@ class Partie():
             "scroll_y": self.scrolly,
             "path": self.path,
             "building_data": serialized_building_data,
-            "car_data": self.car_data,
-            "signalisation_data": serialized_signalisation_data
+            "signalisation_data": serialized_signalisation_data,
+            "intersections": self.intersections,
+            "inter_points": self.inter_points,
+            "ordered_points": self.ordered_points
         }
 
         print(f"[3/3] {self.name}.clab : Enregistrement des données...")
@@ -224,8 +229,8 @@ class Partie():
             return None
         return None
 
-    def modifier_points_graphe(self, pos, road_orientation_manager, graphe):
-        if pygame.mouse.get_pressed()[0] == 1:
+    def modifier_points_graphe(self, pos, road_orientation_manager, graphe, state_manager):
+        if pygame.mouse.get_pressed()[0] == 1 and state_manager.état_courant == 2:
             x_pos = int((pos[0] + self.scrollx) // self.TILE_SIZE)
             y_pos = int((pos[1] + self.scrolly) // self.TILE_SIZE)
 

@@ -141,6 +141,7 @@ class Circulab():
 
             if self.state_manager.état_courant == ÉtatJeu.HOME_PAGE:
                 self.current_save = None
+                self.graphe.set_current_save(None)
                 self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/4)
                 
                 pygame.display.set_caption(f'CircuLab - Home Page')
@@ -156,6 +157,7 @@ class Circulab():
 
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
                     self.window_border.set_game(self.current_save)
+                    self.graphe.set_current_save(self.current_save)
                     self.window_border.show_all_btns()
                     pygame.display.set_caption(f'CircuLab - {self.current_save.name}')
 
@@ -170,6 +172,7 @@ class Circulab():
                     self.load_save_window.loaded_game = None
 
                     self.window_border.set_game(self.current_save)
+                    self.graphe.set_current_save(self.current_save)
                     self.window_border.show_all_btns()
                     self.road_orientation_manager.set_game_data(self.current_save.building_data)
 
@@ -191,7 +194,7 @@ class Circulab():
 
                 # Change l'apparence des tuiles si la souris est sur la grille
                 result = self.current_save.change_tuiles(self.screen, self.build_tool_bar, self.pos, self.window_border, self.state_manager, self.road_orientation_manager, self.build_orientation, self.graphe)
-                self.current_save.modifier_points_graphe(self.pos, self.road_orientation_manager, self.graphe)
+                self.current_save.modifier_points_graphe(self.pos, self.road_orientation_manager, self.graphe, self.state_manager)
 
                 if result is not None:
                     if result[1] == "placed":

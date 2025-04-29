@@ -64,8 +64,10 @@ class LoadSaveWindow:
             "scroll_y": save["scroll_y"],
             "path": save["path"],
             "building_data": save["building_data"],
-            "car_data": save["car_data"],
-            "signalisation_data": save["signalisation_data"]
+            "signalisation_data": save["signalisation_data"],
+            "intersections": save["intersections"],
+            "inter_points": save["inter_points"],
+            "ordered_points": save["ordered_points"]
         }
 
         game = Partie(save_data)

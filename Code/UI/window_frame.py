@@ -84,8 +84,9 @@ class WindowFrame:
                     )
         self.saving_window.dismiss_button.set_text("Continuer")
         self.saving_window.set_blocking(True)
-        self.saving_window.enable_title_bar = False
-        
+        self.saving_window.title_bar.hide()
+        self.saving_window.close_window_button.hide()
+            
         self.audio_manager.play_sfx("button_click")
         self.saving_window.dismiss_button.disable()
         if self.game.update_save():
