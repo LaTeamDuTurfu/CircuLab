@@ -210,7 +210,7 @@ class Circulab():
                         self.graphe.build_intersections()
                         self.graphe.build_routes()
                         self.graphe.build_graph()
-                        self.graphe.create_vehicles(10)
+                        self.graphe.create_vehicles(2)
                         self.graph_created = True
                         self.graphe.show_graph()
                 else:
@@ -259,9 +259,15 @@ class Circulab():
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
 
-            if self.state_manager.état_courant == ÉtatJeu.SIMULATION and self.graphe.nb_points() >= 2 and not self.graphe.simulation_finished:
+            if self.state_manager.état_courant == ÉtatJeu.SIMULATION and not self.graphe.simulation_finished:
                 self.graphe.update(time_delta, self.screen, self.current_save.scrollx, self.current_save.scrolly)
-            
+            elif self.graphe.simulation_finished:
+                self.graphe.reset_simulation()
+                self.graph_created = False
+                self.mode_selector.unselect_all_btns()
+                self.mode_selector.mode_selector_btns[0].select()
+                self.mode_selector.check_change_mode()
+
             # Update l'écran
             pygame.display.flip()
     
