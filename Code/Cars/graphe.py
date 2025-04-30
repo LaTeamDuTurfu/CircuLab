@@ -83,6 +83,11 @@ class Graphe:
                 self.routes.append(Route(start, end, lane, self.max_lanes))
 
     def add_inter_points(self, point):
+        """
+        Ajoute un point à la liste des points d'intersection.
+
+        :param point: un tuple (x, y) représentant le point à ajouter
+        """
         scaled_point = self.scale_point(point)
         self.inter_points[scaled_point] = {'has_light': False} # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
         self.ordered_points.append(scaled_point)

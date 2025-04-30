@@ -60,7 +60,6 @@ class Tuile(pygame.sprite.Sprite):
         self.tile_type = tile_type
         self.orientation = orientation
         self.image = pygame.transform.scale(image, (size, size))
-        self.image = pygame.transform.rotate(self.image, self.orientation * 90)
         self.rect = image.get_rect()
     
     def rotate_clockwise(self):
@@ -69,6 +68,7 @@ class Tuile(pygame.sprite.Sprite):
     def draw(self, surface):
         image_a_draw = self.image.copy()
         image_a_draw = pygame.transform.scale(image_a_draw, (self.rect.width, self.rect.height))
+        image_a_draw = pygame.transform.rotate(self.image, self.orientation * 90)
         surface.blit(image_a_draw, self.rect)
     
     def change_size(self, new_size):
