@@ -68,11 +68,14 @@ class Graphe:
     def build_routes(self):
         seq = self.ordered_points
 
+
         for i in range(len(seq) - 1):
             start_pos, end_pos = seq[i], seq[i + 1]
 
             if start_pos is None or end_pos is None:
-                continue  # on saute la coupure
+                continue  # coupure volontaire
+            if start_pos not in self.intersections or end_pos not in self.intersections:
+                continue  # intersection supprimée
 
             # S’assure que les Intersection objets existent
             start = self.intersections[start_pos]
@@ -162,6 +165,14 @@ class Graphe:
                 self.voitures.append(Voiture(route_list, self.car_image))
                 vehicles_created += 1
 
+    def reset_simulation(self):
+        self.voitures.clear()
+        self.routes.clear()
+        self.G.clear()
+        if self.intersections:
+            self.intersections.clear()
+        self.simulation_finished = False
+
     def update(self, dt, screen, scrollx, scrolly):
         # Mise à jour des intersections (et de leurs feux)
         for pos, inter in self.intersections.items():
@@ -173,10 +184,6 @@ class Graphe:
         pygame.display.flip()
         if all(v.finished for v in self.voitures):
             self.simulation_finished = True
-
-    def draw_vehicles(self, screen, scrollx, scrolly):
-        for v in self.voitures:
-            v.draw(screen, scrollx, scrolly)
 
     def show_graph(self):
         pos = {node: node for node in self.G.nodes()}
