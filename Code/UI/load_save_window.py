@@ -1,3 +1,8 @@
+"""
+Module LoadSaveWindow
+Interface de sélection de fichier pour charger une sauvegarde existante dans CircuLab.
+Utilise un explorateur de fichiers intégré pour lire et désérialiser les données d’une partie sauvegardée.
+"""
 import os, sys
 import pygame_gui
 import dill
@@ -8,7 +13,19 @@ sys.path.append(os.path.join(project_root, "Code"))
 
 from Logic import Partie
 
+# Classe gérant la fenêtre de chargement d’une sauvegarde utilisateur
 class LoadSaveWindow:
+    """
+    Initialise la fenêtre de sélection de fichier pour le chargement de parties.
+
+    Args:
+        rect (pygame.Rect): Dimensions de la fenêtre.
+        surface (pygame.Surface): Surface principale du jeu.
+        manager (UIManager): Gestionnaire d’interface UI.
+        default_path (str): Répertoire par défaut de recherche de fichiers.
+        home_screen (HomeScreen): Référence à l’écran d’accueil.
+        state_manager (ÉtatJeu): Gestionnaire de l’état du jeu.
+    """
     def __init__(self, rect, surface, manager, default_path, home_screen, state_manager):
         self.WIDTH = surface.get_width()
         self.HEIGHT = surface.get_height()
@@ -41,11 +58,13 @@ class LoadSaveWindow:
         
         self.file_explorer_window.hide()
     
+    # Retourne à l’accueil sans charger de sauvegarde
     def return_to_home_screen(self):
         self.state_manager.changer_état(1)
         self.file_explorer_window.hide()
         self.home_screen.montrer_boutons()
     
+    # Lit et charge le fichier de sauvegarde sélectionné dans l’explorateur
     def read_save_file(self):
         current_file_path = self.file_explorer_window.current_file_path
         
@@ -78,12 +97,14 @@ class LoadSaveWindow:
         print("Sauvegarde chargée avec succès")
 
     
+    # Vérifie si un fichier a été chargé avec succès
     def check_save_created(self):
         if self.loaded_game != None:
             self.file_explorer_window.hide()
             return True
         return False
 
+    # Centre dynamiquement la fenêtre selon les nouvelles coordonnées
     def change_pos(self, x, y):
         x = x - self.file_explorer_window.rect.width / 2
         y = y - self.file_explorer_window.rect.height / 2

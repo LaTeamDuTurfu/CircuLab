@@ -1,3 +1,7 @@
+"""
+Fichier principal du jeu CircuLab. Gère l'initialisation, la boucle principale, l'interface utilisateur, et les transitions d'état.
+Il constitue le point d'entrée du jeu.
+"""
 import sys
 import os
 import pygame
@@ -14,6 +18,7 @@ from Tiles import *
 from UI import *
 from Cars import *
 
+# Classe principale qui contient toute la logique d'exécution et de rendu du jeu CircuLab.
 class Circulab():
     
     # Color palette
@@ -27,7 +32,9 @@ class Circulab():
     RED = "#FF0000"
 
     def __init__(self, height: int = 720, width: int = 1280):
-        # Setup Window
+        # Définition d'une palette de couleurs pour l'interface utilisateur
+
+        # Initialise Pygame et configure la fenêtre principale
         pygame.init()
         pygame.display.set_caption('CircuLab')
 
@@ -46,7 +53,7 @@ class Circulab():
         # Surface de la fenêtre
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.RESIZABLE)
 
-        # GUI Manager
+        # Initialise l'interface graphique avec le thème personnalisé
         self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT), theme_path="data/theme_manager/styles_real.json")
         self.manager.add_font_paths('Jersey25-Regular', 'assets/font/Jersey25-Regular.ttf')
         
@@ -66,6 +73,7 @@ class Circulab():
         # Horloge (pour les FPS)
         self.clock = pygame.time.Clock()
 
+        # Création des différents composants de l'interface et du jeu
         # Instancie l'écran d'acceuil
         self.home_screen = HomeScreen(self.screen, self.manager, self.state_manager, self.configs_manager, self.audio_manager)
         
@@ -97,7 +105,7 @@ class Circulab():
         
         self.load_save_window = LoadSaveWindow(rect=pygame.Rect((self.WIDTH/4, self.HEIGHT/6), (self.WIDTH/2, self.HEIGHT * 2/3)), surface=self.screen, manager=self.manager, default_path=self.default_path, state_manager=self.state_manager, home_screen=self.home_screen)
         
-        # Variable de jeu
+        # Variables d'état pour la construction et le mode debug
         self.build_orientation = 0
         self.see_build_preview = False
         self.debug_view = False
@@ -111,7 +119,7 @@ class Circulab():
         # Data 
         self.current_save = None
 
-        # Graph
+        # Initialisation du graphe de simulation routière
         self.graphe = Graphe(TILE_SIZE=NewSaveWindow.TILE_SIZE)
 
         # Flag pour le graph
@@ -129,6 +137,7 @@ class Circulab():
             # FPS Capping
             time_delta = self.clock.tick(60)/1000
 
+            # Redémarre la musique si elle s'est arrêtée
             if not self.audio_manager.music_channel.get_busy():
                 self.audio_manager.play_next_track()
             
@@ -145,9 +154,11 @@ class Circulab():
                 self.draw_text("CircuLab", self.font_title, "white", self.WIDTH/2, self.HEIGHT/4)
                 
                 pygame.display.set_caption(f'CircuLab - Home Page')
+            # Écran de paramètres
             elif self.state_manager.état_courant == ÉtatJeu.SETTINGS:
                 pygame.display.set_caption(f'CircuLab - Settings')
                 self.settings.show_UI()
+            # Écran de création de nouvelle partie
             elif self.state_manager.état_courant == ÉtatJeu.NEW_GAME:
                 pygame.display.set_caption(f'CircuLab - New Game')
                 self.new_save_window.show()
@@ -164,6 +175,7 @@ class Circulab():
                     self.mode_selector.mode_selector_btns[0].select()
                     self.mode_selector.check_change_mode()
 
+            # Écran de chargement de partie
             elif self.state_manager.état_courant == ÉtatJeu.LOAD_GAME:
                 self.load_save_window.file_explorer_window.show()
                 pygame.display.set_caption(f'CircuLab - Load Game')
@@ -185,6 +197,7 @@ class Circulab():
                     
                     self.current_save.update_all_roads(self.road_orientation_manager)
                     
+            # Éditeur de jeu ou mode signalisation
             elif self.state_manager.état_courant == ÉtatJeu.GAME_EDITOR or self.state_manager.état_courant == ÉtatJeu.SIGNALISATION:
                 self.mode_selector.mode_selector_window.show()
                 self.build_tool_bar.tool_bar_window.show()
@@ -204,6 +217,7 @@ class Circulab():
                  
             
             # Dessine la bordure de l'écran si le game editor ou la simulation est en cours
+            # Simulation en cours
             elif self.state_manager.état_courant == ÉtatJeu.SIMULATION:
                 if self.graphe.nb_points()>1:
                     if not self.graph_created:
@@ -255,7 +269,7 @@ class Circulab():
                 self.window_border.draw_border(bottom=False)
                     
         
-            # Gère les éléments de pygame_GUI
+            # Mise à jour et rendu de l'interface utilisateur (UI)
             self.manager.update(time_delta)
             self.manager.draw_ui(self.screen)
 
@@ -284,12 +298,14 @@ class Circulab():
         """
 
         for event in pygame.event.get():
+            # Gestion de la fermeture du jeu
             if event.type == pygame.QUIT:
                 if self.configs_manager.config["save_on_exit"]:
                      self.current_save.update_save()
                 self.running = False
                 exit()
             
+            # Adaptation de l'interface lors du redimensionnement de la fenêtre
             if event.type == pygame.VIDEORESIZE:
                 # Mettre à jour les variables width et height lorsque la fenêtre est redimensionnée
                 self.WIDTH, self.HEIGHT = event.size
@@ -321,6 +337,7 @@ class Circulab():
                 self.window_border.tool_bar = self.build_tool_bar
 
             
+            # Gestion des clics sur les boutons du GUI
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 self.audio_manager.play_sfx("button_click")
                 
@@ -345,6 +362,7 @@ class Circulab():
                     btn.unselect()
                     continue
 
+            # Raccourcis clavier en mode éditeur, signalisation ou simulation
             if event.type == pygame.KEYDOWN:
                 if self.state_manager.état_courant in [ÉtatJeu.GAME_EDITOR, ÉtatJeu.SIMULATION, ÉtatJeu.SIGNALISATION]:
                     if event.key == pygame.K_LEFT:
@@ -391,14 +409,14 @@ class Circulab():
     
     def draw_text(self, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int) -> None:
         """
-        Render the given text on the screen at the given position.
+        Affiche un texte centré à l'écran.
 
         Args:
-            text (str): The text to render.
-            font (pygame.font.Font): The font to use.
-            text_col (tuple of int): The color of the text in RGB format.
-            x (int): The x-coordinate of the center of the text.
-            y (int): The y-coordinate of the center of the text.
+            text (str): Le texte à afficher.
+            font (pygame.font.Font): La police à utiliser.
+            text_col (tuple[int, int, int]): Couleur RGB du texte.
+            x (int): Coordonnée X du centre du texte.
+            y (int): Coordonnée Y du centre du texte.
         """
         # Render the text using the given font
         img = font.render(text, True, text_col)
@@ -424,6 +442,7 @@ class Circulab():
             self.x_pos = (self.pos[0] + self.current_save.scrollx) // self.current_save.TILE_SIZE
             self.y_pos = (self.pos[1] + self.current_save.scrolly) // self.current_save.TILE_SIZE
         except AttributeError:
+            # En cas d'absence de sauvegarde courante (ex. menu principal), ignore l'erreur
             pass
 
     def change_build_orientation(self, increment: int = 1):
@@ -441,6 +460,7 @@ class Circulab():
             self.build_orientation = 3
     
     def check_debut_simulation(self):
+        # Vérifie si le mode sélectionné correspond à la simulation
         current_mode = self.mode_selector.get_selected_btn()
         id_mode_actif = int(current_mode.object_ids[-1][-1])
         print(id_mode_actif)

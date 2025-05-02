@@ -1,7 +1,14 @@
+"""
+Module Settings
+Gère l’interface des paramètres utilisateur dans CircuLab (volume, sauvegarde automatique, etc.).
+Affiche une fenêtre avec des sliders et boutons pour modifier les configurations et les sauvegarder.
+"""
 import pygame_gui
 import json
 from Code.Logic.configs_management import ConfigsManager
 import pygame
+
+# Classe gérant l’interface graphique des paramètres utilisateur
 
 class Settings:
     def __init__(self, surface, manager, configs, home_screen, audio_manager):
@@ -29,6 +36,7 @@ class Settings:
             command=self.back_to_home
         )
 
+        # Fenêtre principale contenant tous les éléments de l’interface des paramètres
         self.window_frame = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((self.width/2 - self.width * 0.7/2, self.height/2 - self.height * 0.7/2), (self.width * 0.7, self.height * 0.7)),
             manager=self.manager,
@@ -37,7 +45,7 @@ class Settings:
             resizable=False,
             draggable=False,
             visible=False
-        ) 
+        )
 
         self.music_volume_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((-self.window_frame.get_relative_rect().width * 5/8, self.window_frame.get_relative_rect().height/8), (self.window_frame.get_relative_rect().width, 50)),
@@ -146,6 +154,7 @@ class Settings:
 
         self.title_x_pos = self.width/2
 
+    # Affiche l’interface des paramètres et recharge les options si nécessaire
     def show_UI(self):
         self.draw_text("Settings", self.font_title, (255, 255, 255), self.title_x_pos, self.height/2 - self.window_frame.get_relative_rect().height/2 - 50)
         self.back_btn.show()
@@ -160,12 +169,14 @@ class Settings:
 
         self.checked = True
 
+    # Cache l’interface des paramètres
     def hide_UI(self):
         self.back_btn.hide()
         self.window_frame.hide()
 
         self.checked = False
 
+    # Affiche du texte centré sur l’écran
     def draw_text(self, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int) -> None:
         """
         Render the given text on the screen at the given position.
@@ -186,12 +197,14 @@ class Settings:
         # Blit the rendered text onto the main surface at the given position
         self.screen.blit(img, img_rect)
     
+    # Revenir à l’écran d’accueil en jouant un son
     def back_to_home(self):
         self.audio_manager.play_sfx("button_click")
         self.hide_UI()
         self.home_screen.montrer_boutons()
         self.home_screen.state_manager.changer_état(1)
     
+    # Réinitialise les paramètres aux valeurs par défaut
     def reset_settings(self):
         self.config_manager.config = self.config_manager.default_config.copy()
 
@@ -204,6 +217,7 @@ class Settings:
 
         self.audio_manager.play_sfx("button_click")
     
+    # Applique les modifications des paramètres et les sauvegarde
     def apply_settings(self):
         self.changed_configs["music_volume"] = self.music_volume_slider.get_current_value()
         self.changed_configs["sfx_volume"] = self.SFX_volume_slider.get_current_value()
@@ -215,18 +229,21 @@ class Settings:
 
         self.audio_manager.play_sfx("button_click")
     
+    # Inverse l’état de la case « Save On Exit »
     def change_save_on_exit(self):
         self.audio_manager.play_sfx("button_click")
         self.save_on_exit_btn.is_selected = not self.save_on_exit_btn.is_selected
         self.change_selection()
         
     
+    # Sélectionne ou désélectionne le bouton de sauvegarde automatique visuellement
     def change_selection(self):
         if self.save_on_exit_btn.is_selected:
             self.save_on_exit_btn.select()
         else:
             self.save_on_exit_btn.unselect()
     
+    # Centre dynamiquement la fenêtre des paramètres selon les coordonnées fournies
     def change_pos(self, x, y):
         self.title_x_pos = x
 

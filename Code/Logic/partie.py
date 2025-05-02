@@ -1,3 +1,9 @@
+"""
+Module Partie
+Représente une instance de partie dans CircuLab, avec la gestion des tuiles, du défilement, du zoom,
+des modifications sur la grille, et la sauvegarde/chargement des données du jeu.
+"""
+
 import dill
 import os, sys
 import pygame
@@ -10,6 +16,7 @@ sys.path.append(os.path.join(project_root, "Code"))
 
 from Tiles.tuile import Tuile
 
+# Classe Partie — gère l'état courant d'une partie, les interactions avec la grille, et la persistance des données.
 class Partie():
     
     empty_tile = pygame.image.load("assets/tile_images/none.png")
@@ -19,6 +26,12 @@ class Partie():
     DEFAULT_TILE_SIZE = 64
     
     def __init__(self, save_data: dict):
+        """
+        Initialise une nouvelle instance de Partie à partir d'un dictionnaire de sauvegarde.
+
+        Args:
+            save_data (dict): Données sérialisées provenant d'une sauvegarde de partie.
+        """
         self.last_tuile_checked = None
         self.name = save_data["name"]
         self.columns = save_data["cols"]
@@ -42,6 +55,7 @@ class Partie():
         
     
     def check_correct_path(self):
+        # Vérifie si le chemin de sauvegarde est valide
         return os.path.exists(self.path)
 
     def update_save(self):
@@ -89,6 +103,7 @@ class Partie():
         print("[Erreur]: Le chemin de sauvegarde est incorrect ❌")
         return False
     
+    # Dessine les tuiles de construction et de signalisation visibles à l'écran.
     def draw_tuiles(self, surface):
         """
         Dessine les tuiles sur l'écran, en fonction de la
@@ -110,6 +125,7 @@ class Partie():
                         # print(f"{tile.tile_type}({tile.orientation}) X:{tile.rect.x // self.TILE_SIZE} Y:{tile.rect.y // self.TILE_SIZE}")
 
     def change_scroll(self, surface):
+        # Met à jour les positions de défilement horizontal et vertical selon la direction et la vitesse
         """
         Adjusts the scroll position based on the current scroll direction and speed.
 
@@ -137,6 +153,7 @@ class Partie():
             self.scrolly -= 5 * self.scroll_speed
     
     def draw_grid(self, surface):
+        # Trace les lignes du quadrillage sur la surface de jeu
         """
         Dessine un quadrillage sur la surface.
         
@@ -149,6 +166,7 @@ class Partie():
             pygame.draw.line(surface, "#FFFFFF", (0, c * self.TILE_SIZE - self.scrolly), (surface.get_width(), c * self.TILE_SIZE - self.scrolly))
     
     def zoom(self, modificateur):
+        # Change la taille des tuiles et ajuste leur rendu
         """
         Modifie la taille des tuiles de la partie.
 
@@ -164,6 +182,7 @@ class Partie():
                         print("New Tile Size:", self.TILE_SIZE)
     
     def change_tuiles(self, screen, toolbar, pos, window_border, state_manager, road_orientation_manager, build_orientation, graphe):
+        # Gère le placement ou la suppression de tuiles via les clics souris selon l'état actif
         """
         Updates the tile at the current mouse position to the selected tile
         image from the toolbar, but only if the left mouse button is pressed
@@ -229,6 +248,7 @@ class Partie():
             return None
         return None
 
+    # Ajoute ou retire dynamiquement les points d’intersection dans le graphe selon la route ciblée
     def modifier_points_graphe(self, pos, road_orientation_manager, graphe, state_manager):
         if pygame.mouse.get_pressed()[0] == 1 and state_manager.état_courant == 2:
             x_pos = int((pos[0] + self.scrollx) // self.TILE_SIZE)
@@ -242,12 +262,14 @@ class Partie():
 
                 self.last_tuile_checked = self.building_data[y_pos][x_pos]
 
+    # Met à jour toutes les connexions routières de la grille selon leur orientation
     def update_all_roads(self, road_orientation_manager):
         for y, row in enumerate(self.building_data):
                 for x, tile in enumerate(row):
                     if road_orientation_manager.is_a_road(tile):
                         road_orientation_manager.check_tile_change(x, y)
 
+    # Convertit les images des tuiles en données binaires pour la sérialisation
     def tiles_data_to_bytes(self, tiles_data):
         for ligne in tiles_data:
             for t in ligne:
@@ -260,6 +282,7 @@ class Partie():
         
         return tiles_data
 
+    # Reconvertit les données binaires des tuiles en objets Tuile avec image
     def bytes_to_tiles_data(self, serialized_data):
         tiles_data = []
         for ligne in serialized_data:

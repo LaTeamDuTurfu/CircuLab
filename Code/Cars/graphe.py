@@ -1,3 +1,9 @@
+"""
+Module Graphe
+Gère la simulation du trafic routier dans CircuLab, incluant la construction d’un graphe orienté,
+les intersections, les routes, la génération de véhicules et l’affichage de la simulation.
+"""
+
 import sys
 import os
 import pygame
@@ -14,6 +20,7 @@ from Cars.Route import Route
 from Cars.Voiture import Voiture
 from Cars.TrafficLight import TrafficLight
 
+# Classe centrale de la simulation de circulation dans CircuLab
 class Graphe:
     """
     Classe représentant un graphe de circulation routière.
@@ -83,6 +90,7 @@ class Graphe:
         :param point: Tuple (x, y) représentant la position en indices de grille.
         :return: Tuple (x_pixel, y_pixel) position centrée dans la tuile.
         """
+        # Convertit les coordonnées de la grille (logiques) en coordonnées pixel centrées dans la tuile
         scaled_point = (point[0] * self.TILE_SIZE + self.TILE_SIZE // 2, point[1] * self.TILE_SIZE + self.TILE_SIZE // 2)
         return scaled_point
 
@@ -98,6 +106,7 @@ class Graphe:
         """
         Ajoute une coupure dans la liste ordonnée des points pour séparer les routes.
         """
+        # Insère un séparateur pour interrompre la création automatique de routes consécutives
         self.ordered_points.append(None)
 
     def add_inter_points(self, point):
@@ -106,6 +115,7 @@ class Graphe:
 
         :param point: un tuple (x, y) représentant le point à ajouter
         """
+        # Ajoute un point d’intersection avec un feu désactivé par défaut
         scaled_point = self.scale_point(point)
         self.inter_points[scaled_point] = {'has_light': False} # prend un point scalé comme paramètre, qui est un tuple, et l'ajoute au dict d'inter_points
         self.ordered_points.append(scaled_point)
@@ -117,6 +127,7 @@ class Graphe:
 
         :param point: Tuple (x, y) représentant le point à supprimer.
         """
+        # Supprime le point et nettoie toutes ses dépendances : routes, intersection, nœud du graphe
         scaled_point = self.scale_point(point)
 
         self.inter_points.pop(scaled_point, None)
@@ -138,6 +149,7 @@ class Graphe:
         :param has_light: Booléen indiquant la présence d'un feu de circulation.
         :param is_stop: Booléen indiquant la présence d'un panneau stop.
         """
+        # Ajoute ou met à jour la signalisation (feu ou arrêt) à une intersection existante
         scaled_point = self.scale_point(point)
         if scaled_point not in self.inter_points:
             self.inter_points[scaled_point] = {}
@@ -149,6 +161,7 @@ class Graphe:
         """
         Construit la liste des routes entre les points ordonnés, en ignorant les coupures.
         """
+        # Construit les routes entre chaque paire de points ordonnés, en sautant les coupures
         seq = self.ordered_points
 
         # Parcours séquentiel des points pour créer des routes entre points consécutifs valides
@@ -193,6 +206,7 @@ class Graphe:
 
         :param nb: Nombre de véhicules à créer.
         """
+        # Génère aléatoirement des trajets entre intersections valides, avec des routes disponibles
         positions = list(self.intersections.keys())
         vehicles_created = 0
         # Créer des véhicules avec départ et arrivée aléatoires, et calculer leur chemin
@@ -227,6 +241,7 @@ class Graphe:
         """
         Réinitialise la simulation en vidant les véhicules, routes et le graphe.
         """
+        # Vide tous les éléments dynamiques de la simulation, sauf les intersections
         self.voitures.clear()
         self.routes.clear()
         self.G.clear()
@@ -259,6 +274,7 @@ class Graphe:
         """
         Affiche une représentation visuelle du graphe de circulation à l'aide de matplotlib.
         """
+        # Affiche le graphe de circulation dans une fenêtre matplotlib
         pos = {node: node for node in self.G.nodes()}
         plt.figure("Graphe de circulation")
         nx.draw(self.G,pos,with_labels=False,node_size=300,arrows=True)

@@ -1,3 +1,9 @@
+"""
+Module ToolBar
+Gère l’affichage et le comportement de la barre d’outils contextuelle selon le mode de jeu (construction ou signalisation).
+Permet à l’utilisateur de sélectionner une tuile à placer ou masquer la barre.
+"""
+
 import pygame_gui
 import pygame
 import json
@@ -10,9 +16,10 @@ sys.path.append(os.path.join(project_root, "Code"))
 from Tiles.tuile import Tuile
 from UI.new_save_window import NewSaveWindow
 
+# Classe de gestion de la barre d’outils pour la sélection et le placement de tuiles
 class ToolBar:
 
-    # Load tiles images de la toolbar en mode building
+    # Chargement des images de tuiles pour les différents modes
     empty_tile = pygame.image.load("assets/tile_images/none.png")
     straight_road_tile = pygame.image.load("assets/tile_images/road.png")
     grass_tile = pygame.image.load("assets/tile_images/grass.png")
@@ -51,7 +58,7 @@ class ToolBar:
 
         self.mode_selector = mode_selector
         
-        # Load tiles images de la toolbar en mode roads
+        # Attribution des images par mode à un dictionnaire selon le type d'état actif
         self.building_tile_images = [self.empty_tile, self.straight_road_tile, self.grass_tile, self.sidewalk_tile, self.intersection_tile, self.house1_tile, self.house2_tile, self.house3_tile, self.house4_tile]
         self.signalisation_tile_images = [self.empty_tile, self.traffic_light_tile, self.stop_sign_tile]
         
@@ -79,6 +86,7 @@ class ToolBar:
                         command=self.change_tool_bar_state
                         )
         
+        # Création des boutons de sélection de tuiles selon le mode actif
         for i in range(len(Tuile.TILE_TYPES[self.mode_selector.current_mode])):
             x = self.TOOL_BAR_BTN_SIZE * (i + 1) + (((self.TOOL_BAR_WIDTH - self.TOOL_BAR_BTN_SIZE * 9)/len(Tuile.TILE_TYPES[self.mode_selector.current_mode])) * i)
             new_btn = pygame_gui.elements.UIButton(
@@ -93,6 +101,7 @@ class ToolBar:
             self.tool_bar_btns.append(new_btn)
     
 
+    # Met à jour la taille de la barre selon les dimensions de la fenêtre
     def update_screen_size(self):
         self.WIDTH = self.screen.get_width()
         self.HEIGHT = self.screen.get_height()
@@ -100,6 +109,7 @@ class ToolBar:
         self.TOOL_BAR_HEIGHT = self.HEIGHT * 1/8
         self.TOOL_BAR_WIDTH = self.WIDTH * 3/4 - self.TOOL_BAR_BTN_SIZE/2
     
+    # Applique les images des tuiles de construction aux boutons
     def set_building_tool_bar(self):
         self.change_image_btn(1, "assets/tile_images/road.png")
         self.change_image_btn(2, "assets/tile_images/grass.png")
@@ -110,6 +120,7 @@ class ToolBar:
         self.change_image_btn(7, "assets/tile_images/house3.png")
         self.change_image_btn(8, "assets/tile_images/house4.png")
 
+    # Applique les images des tuiles de signalisation aux boutons
     def set_signalisation_tool_bar(self):
         # Reset les images des boutons de la toolbar
         self.change_image_btn(1, "assets/tile_images/traffic_light.png")
@@ -123,29 +134,20 @@ class ToolBar:
 
     def get_selected_btn(self):
         """
-        Returns the currently selected button in the toolbar.
-
-        Iterates through all buttons in the toolbar and checks 
-        if a button is selected. If a selected button is found, 
-        it returns that button. If no button is selected, the 
-        function will return None.
+        Retourne le bouton actuellement sélectionné dans la barre.
         """
-
         for btn in self.tool_bar_btns:
             if  btn.is_selected:
                 return btn
 
     def unselect_all_btns(self):
         """
-        Unselects all buttons in the toolbar.
-
-        Iterates through all buttons in the toolbar and calls
-        the unselect method on each one. This method is used to make
-        sure no button is selected when the user changes the mode.
+        Désélectionne tous les boutons de la barre.
         """
         for btn in self.tool_bar_btns:
             btn.unselect()
     
+    # Remplace dynamiquement l’image affichée sur un bouton de la barre
     def change_image_btn(self, index, image_path):
         """
         Changes the image of a button in the toolbar given its index and the path to the image.
@@ -174,6 +176,7 @@ class ToolBar:
         self.tile_images[index] = pygame.image.load(image_path)
         self.manager.rebuild_all_from_changed_theme_data()
     
+    # Ouvre ou ferme la barre d’outils et ajuste l’état des boutons visuellement
     def change_tool_bar_state(self):
         """
         Toggles the visibility state of the toolbar.

@@ -1,5 +1,11 @@
+"""
+Module RoadOrientationManager
+Gère la logique de détection et de mise à jour des routes dans CircuLab en fonction de leur
+orientation et de leur voisinage. Applique dynamiquement les bonnes images de route.
+"""
 import pygame
 
+# Classe centrale pour la logique d’orientation des routes dans la grille
 class RoadOrientationManager():
     def __init__(self, x_pos: int = 0, y_pos: int = 0, game_data = None):
         self.game_data = game_data
@@ -43,16 +49,19 @@ class RoadOrientationManager():
         self.straight_dotted_yellow_right = pygame.image.load("assets/roads/straight_dotted_yellow_right.png")
         
         self.straight_simple = pygame.image.load("assets/roads/straight_single.png")
-        
+    
+    # Définit les données de jeu (grille des tuiles) à utiliser pour les calculs
     def set_game_data(self, game_data):
         self.game_data = game_data
         
+    # Récupère la tuile à la position actuelle
     def get_tile(self):
         try:
             self.tile = self.game_data[self.y_pos][self.x_pos]
         except IndexError:
             pass
     
+    # Récupère les tuiles adjacentes (horizontales, verticales et diagonales)
     def get_connecting_tiles(self):
         try:
             self.left_tile = self.game_data[self.y_pos][self.x_pos - 1]
@@ -67,20 +76,25 @@ class RoadOrientationManager():
         except IndexError:
             pass
     
+    # Vérifie si une tuile est de type "Route"
     def is_a_road(self, tile):
         if tile.tile_type == "Road":
             return True
         return False
     
+    # Retourne True si l'orientation de la tuile est verticale (0 ou 2)
     def is_up_or_down(self, tile):
         if tile.orientation % 2 == 0:
             return True
         return False
     
+    # Remplace l'image d'une tuile par celle spécifiée
     def change_tile_image(self, tile, image, rotation_manuelle: int = None):
         img_copy = image.copy()
         tile.image = img_copy
     
+    # Fonction principale de mise à jour de l’image d’une route en fonction de ses voisines.
+    # Détecte les connexions, sens de circulation et applique les bons visuels.
     def check_tile_change(self, x_pos, y_pos):
         self.x_pos = x_pos
         self.y_pos = y_pos

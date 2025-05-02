@@ -1,7 +1,15 @@
+"""
+Module Tuile
+Définition de la classe Tuile représentant les éléments de la grille dans CircuLab.
+Contient les types de tuiles, leur orientation, leur rendu visuel et leur position logique.
+"""
+
 import pygame
 
+# Classe représentant une tuile dans la grille de jeu (route, maison, signalisation, etc.)
 class Tuile(pygame.sprite.Sprite):
     
+    # Dictionnaires statiques définissant les types de tuiles et leurs orientations selon le contexte du jeu
     empty_tile = pygame.image.load("assets/tile_images/none.png")
     
     BUILD_TILE_TYPES = {
@@ -51,7 +59,7 @@ class Tuile(pygame.sprite.Sprite):
         orientation : int
             Orientation de la tuile (0: UP, 1: LEFT, 2: DOWN ou 3: RIGHT).
         tile_type : str, optional
-            Type de la tuile. Par d faut, None.
+            Type de la tuile. Par défaut, None.
         sprite_group : pygame.sprite.Group, optional
             Groupe de sprites auquel la tuile sera ajout e.
         """
@@ -63,23 +71,29 @@ class Tuile(pygame.sprite.Sprite):
         self.rect = image.get_rect()
     
     def rotate_clockwise(self):
+        # Tourne l’image de la tuile de 90° dans le sens horaire
         self.image = pygame.transform.rotate(self.image, 90)
 
     def draw(self, surface):
+        # Affiche l’image de la tuile sur la surface donnée, selon son orientation
         image_a_draw = self.image.copy()
         image_a_draw = pygame.transform.scale(image_a_draw, (self.rect.width, self.rect.height))
         image_a_draw = pygame.transform.rotate(self.image, self.orientation * 90)
         surface.blit(image_a_draw, self.rect)
     
     def change_size(self, new_size):
+        # Redimensionne la tuile à la nouvelle taille spécifiée
         self.rect.width = new_size
         self.rect.height = new_size
     
     def get_x_tile(self, tile_size):
+        # Retourne la position X (ou Y) de la tuile dans la grille en unités de tuiles
         return self.rect.x // tile_size
 
     def get_y_tile(self, tile_size):
+        # Retourne la position X (ou Y) de la tuile dans la grille en unités de tuiles
         return self.rect.y // tile_size
 
     def __repr__(self):
+        # Représentation textuelle utile pour le débogage : type et orientation
         return f"{self.tile_type} ({self.BUILD_ORIENTATIONS[self.orientation]})"

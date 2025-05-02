@@ -1,8 +1,16 @@
+"""
+Module ModeSelector
+Gère l’interface de sélection de mode (construction, signalisation, simulation) pour l’utilisateur.
+Permet de changer l’état du jeu et d’adapter dynamiquement la barre d’outils affichée.
+"""
+
 import pygame_gui
 import pygame
 
+# Classe pour la gestion de l’interface de sélection de mode dans CircuLab
 class ModeSelector:
     
+    # Dictionnaire des modes avec leur identifiant numérique
     modes = {
         "Building": 0,
         "Signalisation": 1,
@@ -34,6 +42,7 @@ class ModeSelector:
         
         self.current_mode = self.state_manager.état_courant
                 
+        # Création de la fenêtre flottante contenant les boutons de mode
         self.mode_selector_window = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((self.window_frame.thickness, self.window_frame.thickness), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), 
             object_id="#mode_selector_window", 
@@ -41,6 +50,7 @@ class ModeSelector:
         
         self.mode_selector_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0, 0), (self.MODE_SELECTOR_WIDTH, self.MODE_SELECTOR_HEIGHT)), manager=self.manager, container=self.mode_selector_window, object_id="#mode_selector_container", allow_scroll_y=False)
     
+        # Création et positionnement des trois boutons de mode
         for i in range(3):
             new_btn = pygame_gui.elements.UIButton(
                         relative_rect=pygame.Rect(((5/4 * i * self.MODE_SELECTOR_BTN_SIZE) + self.MODE_SELECTOR_BTN_SIZE/4, self.window_frame.thickness/4), (self.MODE_SELECTOR_BTN_SIZE, self.MODE_SELECTOR_BTN_SIZE)),
@@ -59,12 +69,7 @@ class ModeSelector:
 
     def get_selected_btn(self):
         """
-        Returns the currently selected button in the mode selector.
-
-        Iterates through all buttons in the mode selector and checks 
-        if a button is selected. If a selected button is found, it 
-        returns that button. If no button is selected, the function 
-        will return None.
+        Retourne le bouton actuellement sélectionné.
         """
 
         for btn in self.mode_selector_btns:
@@ -73,11 +78,7 @@ class ModeSelector:
 
     def unselect_all_btns(self):
         """
-        Unselects all buttons in the mode selector.
-
-        Iterates through all buttons in the mode selector and calls
-        the unselect method on each one. This method is used to make
-        sure no button is selected when the user changes the mode.
+        Désélectionne tous les boutons du sélecteur de mode.
         """
         for btn in self.mode_selector_btns:
             btn.unselect()
@@ -89,16 +90,19 @@ class ModeSelector:
         except AttributeError:
             id_bouton_actif = 0
             
+        # Passage au mode de construction
         if id_bouton_actif == 1 and self.state_manager.état_courant != 2:
             self.window_frame.color = self.BLUE_GREY
             self.tool_bar.set_building_tool_bar()
             self.state_manager.changer_état(2)  # Building
             self.tool_bar.unselect_all_btns()
+        # Passage au mode de signalisation
         elif id_bouton_actif == 2 and self.state_manager.état_courant != 7:
             self.window_frame.color = self.YELLOW
             self.tool_bar.set_signalisation_tool_bar()
             self.state_manager.changer_état(7)
             self.tool_bar.unselect_all_btns()
+        # Passage au mode simulation
         if id_bouton_actif == 3 and self.state_manager.état_courant != 3:
             self.window_frame.color = self.GREEN
             self.state_manager.changer_état(3)  # Simulation

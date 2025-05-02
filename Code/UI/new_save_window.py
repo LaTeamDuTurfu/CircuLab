@@ -1,3 +1,8 @@
+"""
+Module NewSaveWindow
+Interface utilisateur permettant à l’utilisateur de créer une nouvelle sauvegarde de jeu.
+Permet de saisir un nom, un chemin, des dimensions de grille, puis de générer une instance de Partie.
+"""
 import pygame
 import pygame_gui
 import os
@@ -10,6 +15,7 @@ sys.path.append(os.path.join(project_root, "Code"))
 from Logic import Partie
 from Tiles.tuile import Tuile
 
+# Classe pour la création interactive d’une nouvelle sauvegarde de partie
 class NewSaveWindow(pygame_gui.elements.UIWindow):
 
     MIN_COLS = 50
@@ -153,6 +159,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
 
         self.file_explorer_btn.bind(pygame_gui.UI_BUTTON_PRESSED, self.open_file_explorer)
 
+    # Ouvre une fenêtre d’exploration de fichiers pour choisir un dossier de sauvegarde
     def open_file_explorer(self):
         """
         Ouvre une fenêtre de sélection de chemin pour que l'utilisateur puisse
@@ -172,6 +179,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
 
         self.file_explorer_window.ok_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.set_new_path)
 
+    # Applique le chemin sélectionné par l’utilisateur dans l’explorateur de fichiers
     def set_new_path(self):
         """
         Called when the user has selected a directory path in the file explorer window.
@@ -182,6 +190,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.path_text_box.set_text(self.path)
         self.file_explorer_window.kill()
 
+    # Affiche dynamiquement un message d’erreur sous les champs de texte
     def show_error_msg(self, message):
         """
         Affiche un message d'erreur en haut de la fenêtre de création de partie.
@@ -191,6 +200,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.error_label.set_text(message)
         self.error_label.visible = True
 
+    # Vérifie les champs, valide les entrées, crée les données initiales et instancie une nouvelle partie
     def save_new(self):
         # Get save data
         """
@@ -260,6 +270,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
         self.created_game = new_save
         print("Sauvegarde créée")
     
+    # Construit un tableau 2D rempli de tuiles vides (type "@empty")
     def fill_empty_tile(self, n_rows, n_cols, data_set=None):
         """
         Fill a 2D array with empty tiles
@@ -285,6 +296,7 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             data_set.append(new_tile)
         return data_set
 
+    # Vérifie si une partie a été créée; ferme la fenêtre si c’est le cas
     def check_save_created(self):
         """
         Checks if a game instance has been successfully created and saved.
@@ -303,13 +315,14 @@ class NewSaveWindow(pygame_gui.elements.UIWindow):
             return True
         return False
     
+    # Revient à l’écran d’accueil sans créer de partie
     def return_to_home_screen(self):
         self.state_manager.changer_état(1)
         self.hide()
         self.home_screen.montrer_boutons()
     
+    # Centre dynamiquement la position de la fenêtre selon x, y donnés
     def change_pos(self, x, y):
         x = x - self.rect.width / 2
         y = y - self.rect.height / 2
         self.set_position((x, y))
-
