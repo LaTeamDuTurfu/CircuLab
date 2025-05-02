@@ -15,6 +15,7 @@ class AudioManager:
         self.music_playlist = [
             pygame.mixer.Sound("assets/audio/music/music1.mp3"),
             pygame.mixer.Sound("assets/audio/music/music2.mp3"),
+            pygame.mixer.Sound("assets/audio/music/music3.mp3"),
             ]  # Liste des chemins de fichiers musicaux
         self.current_track_index = 0
         

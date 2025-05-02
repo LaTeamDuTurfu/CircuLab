@@ -17,6 +17,20 @@ Il permet aux utilisateurs de construire des routes, de placer de la signalisati
 
 ---
 
+## 🛠️ Installation
+
+1. Assurez-vous d'avoir **Python 3.10+** installé.
+2. Installez les dépendances :
+
+```bash
+pip install pygame_gui
+pip install pygame
+pip install networkx
+pip install matplotlib
+```
+
+---
+
 ## 🎮 Comment jouer
 
 ### 📝 Créer une nouvelle sauvegarde
@@ -95,20 +109,6 @@ Il permet aux utilisateurs de construire des routes, de placer de la signalisati
 
 - **Clique gauche** : Placer ou retirer une tuile selon le mode actif.
 - **Boutons GUI** : Sélectionner le type de route, la signalisation ou changer de mode (Édition, Signalisation, Simulation).
-
----
-
-## 🛠️ Installation
-
-1. Assurez-vous d'avoir **Python 3.10+** installé.
-2. Installez les dépendances :
-
-```bash
-pip install pygame_gui
-pip install pygame
-pip install networkx
-pip install matplotlib
-```
 
 ---
 
