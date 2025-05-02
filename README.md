@@ -27,6 +27,7 @@ pip install pygame_gui
 pip install pygame
 pip install networkx
 pip install matplotlib
+pip install dill
 ```
 
 ---
@@ -90,18 +91,17 @@ pip install matplotlib
 
 ## 🎮 Contrôles importants (Touches Clavier)
 
-| Touche                      | Fonction                                                                       |
-| :-------------------------- | :----------------------------------------------------------------------------- |
-| **Flèches directionnelles** | Se déplacer sur la carte (scroll horizontal et vertical)                       |
-| **Shift (⇧)**               | Accélérer le défilement de la carte                                            |
-| **R**                       | Tourner l'orientation de la construction **dans le sens antihoraire**          |
-| **Q**                       | Tourner l'orientation de la construction **dans le sens horaire**              |
-| **P**                       | Activer/Désactiver l'aperçu de la construction ("Build Preview")               |
-| **B**                       | Activer/Désactiver le mode **debug** pour voir des informations sur les tuiles |
-| **+ / =**                   | **Zoom avant** sur la carte                                                    |
-| **-**                       | **Zoom arrière** sur la carte                                                  |
-| **A**                       | Déconnecter le graphe de circulation ("unbind graph")                          |
-| **H**                       | Revenir en mode éditeur après une simulation terminée                          |
+| Touche                      | Fonction                                                              |
+| :-------------------------- | :-------------------------------------------------------------------- |
+| **Flèches directionnelles** | Se déplacer sur la carte (scroll horizontal et vertical)              |
+| **Shift (⇧)**               | Accélérer le défilement de la carte                                   |
+| **R**                       | Tourner l'orientation de la construction **dans le sens antihoraire** |
+| **Q**                       | Tourner l'orientation de la construction **dans le sens horaire**     |
+| **P**                       | Activer/Désactiver l'aperçu de la construction ("Build Preview")      |
+| **+**                       | **Zoom avant** sur la carte                                           |
+| **-**                       | **Zoom arrière** sur la carte                                         |
+| **A**                       | Déconnecter le graphe de circulation ("unbind graph")                 |
+| **H**                       | Revenir en mode éditeur après une simulation terminée                 |
 
 ---
 

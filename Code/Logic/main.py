@@ -226,7 +226,7 @@ class Circulab():
                         self.graphe.build_graph()
                         self.graphe.create_vehicles(2)
                         self.graph_created = True
-                        self.graphe.show_graph()
+                        # self.graphe.show_graph()
                 else:
                     pygame_gui.windows.UIMessageWindow(
                         rect=pygame.Rect((self.WIDTH / 2 - 150, self.HEIGHT / 2 - 75), (300, 150)),
